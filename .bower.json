@@ -1,0 +1,24 @@
+{
+  "name": "adapt-contrib-trickle",
+  "homepage": "https://github.com/adaptlearning/adapt-contrib-trickle",
+  "authors": [
+    "Kevin Corry <kevinc@learningpool.com>"
+  ],
+  "description": "A basic feedback overlay for question components",
+  "main": "/js/adapt-contrib-trickle.js",
+  "keywords": [
+    "adapt-plugin",
+    "adapt-extension"
+  ],
+  "license": "GPLv3",
+  "_release": "02ef6b276c",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "02ef6b276cdbcc6c2fd0b233d0636e390e3dd9c1"
+  },
+  "_source": "git://github.com/adaptlearning/adapt-contrib-trickle.git",
+  "_target": "*",
+  "_originalSource": "adapt-contrib-trickle",
+  "_direct": true
+}

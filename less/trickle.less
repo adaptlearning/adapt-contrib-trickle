@@ -1,0 +1,39 @@
+.extension-trickle {
+  text-align: center;
+
+  .trickle-button {
+    display:none;
+    position: fixed;
+    z-index: 500; 
+    bottom: 0; 
+    left: 0;
+    width: 100%;
+    outline: none;
+    text-decoration: none;
+    background-color: @item-color;
+    color: @item-text-color;
+    padding: @item-padding;
+  }
+
+  .trickle-button-show {
+    display:block;
+    visibility:visible;
+  }
+
+}
+
+.no-touch {
+  .extension-trickle {
+    .trickle-button {
+      &:hover{
+        color: @item-text-hover-color;
+        background-color: @item-hover-color;
+      }
+    }
+  }
+}
+
+.trickle-hidden {
+  display:none;
+  visibility:hidden;
+}
