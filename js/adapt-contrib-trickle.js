@@ -1,234 +1,261 @@
 /*
 * adapt-contrib-trickle
 * License - http://github.com/adaptlearning/adapt_framework/LICENSE
-* Maintainers - Kevin Corry <kevinc@learningpool.com>
+* Maintainers - Kevin Corry <kevinc@learningpool.com>, Daryl Hedley <darylhedley@hotmail.com>
 */
 define(function(require) {
 
-  var Adapt = require('coreJS/adapt');
-  var trickleEnabled = false;
-  function setupTrickleView (model) {
+    var Adapt = require('coreJS/adapt');
 
-    var TrickleView = Backbone.View.extend({
+    function setupTrickleView (pageModel, trickleArticles) {
+    // Passes in page model
+        var TrickleView = Backbone.View.extend({
 
-      className: "extension-trickle",
+            className: "extension-trickle",
 
-      events: {
-        'click .trickle-button':'onTrickleButtonClicked'
-      },
+            events: {
+                'click .trickle-button':'onTrickleButtonClicked'
+            },
 
-      initialize: function() {
-        this.setupTrickle();
-        this.listenTo(Adapt, 'remove', this.removeTrickle);
-        this.listenTo(Adapt, 'pageView:ready', this.startTrickle);
-        this.render();
-      },
+            initialize: function() {
+                this.setupTrickle();
+                this.listenTo(Adapt, 'remove', this.remove);
+                this.listenTo(Adapt, 'pageView:ready', this.startTrickle);
+                this.listenTo(Adapt, 'blockView:preRender', this.hideView);
+                this.listenTo(Adapt, 'articleView:preRender', this.hideView);
+                this.listenTo(Adapt.blocks, 'change:_isComplete', this.blockSetToComplete);
+                this.listenTo(Adapt.blocks, 'change:_isVisible', this.elementSetToVisible);
+                this.listenTo(Adapt.articles, 'change:_isVisible', this.elementSetToVisible);
+                this.render();
+            },
 
-      render: function () {
-        this.$el.appendTo('#wrapper');
-        return this;
-      },
+            render: function () {
+                this.$el.appendTo('body');
+                return this;
+            },
 
-      setupTrickle: function() {
-        // Get all trickle blocks and articles
-        this.trickleElements = new Array();
-        var articleChildren = this.model.getChildren();
+            setupTrickle: function() {
+                this.trickleElements = [];
+                this.pageElements = [];
+                this.trickleCurrentIndex = 0;
+                this.hideAllElements();
+                this.setTrickleArticleChildren();
+                this.setupPageElementsArray();
+            },
 
-        _.each(articleChildren.models, function(article) {
+            hideView: function(view) {
+                view.$el.addClass('trickle-hidden');
+            },
 
-          if (article.get('_trickle')) {
-            // Trickle is set on article, which overrides child block settings
-            article.setOnChildren('_trickle', article.get('_trickle'));
-            this.trickleElements.push(article);
-            this.listenTo(article, "change:_isComplete", this.showContinueButton);
+            hideAllElements: function() {
+                pageModel.getChildren().each(function(article) {
+                    this.hideItem(article);
+                }, this);
+                pageModel.findDescendants('blocks').each(function(block) {
+                    this.hideItem(block);
+                }, this);
+            },
 
-            var articleBlocks = article.findDescendants('blocks');
-            _.each(articleBlocks.models, function(articleBlock) {
-              this.trickleElements.push(articleBlock);
-              this.listenTo(articleBlock, "change:_isComplete", this.showContinueButton);
-            }, this);
+            setTrickleArticleChildren: function() {
+                // done
+                _.each(trickleArticles, function(trickleArticle) {
+                    //this.setTrickleElementVisibility(trickleArticle);
+                    var articlesBlocks = trickleArticle.getChildren();
+                    articlesBlocks.each(function(block) {
+                        if(!block.get('_trickle')) {
+                            block.set('_trickle', true);
+                        }
+                    });
+                }, this);
+            },
 
-          } else {
-            // Individual block setting detected
-            var articleBlocks = article.findDescendants('blocks');
-            articleBlocks = _.filter(articleBlocks.models, function(block) {
-              return block.get('_trickle');
-            });
+            setupPageElementsArray: function() {
+                // done
+                pageModel.getChildren().each(function(article) {
+                    this.pageElements.push(article);
+                    article.getChildren().each(function(block) {
+                        this.pageElements.push(block);
+                    }, this);
+                }, this);
+            },
 
-            // Find the previous sibling block
-            _.each(articleBlocks, function(individualBlock) {
-              var previousSibling = this.getPreviousSibling(individualBlock);
-              if (previousSibling) {
-                previousSibling.set('_isTrickleSibling', true);
-                this.trickleElements.push(previousSibling);
-              }
+            startTrickle: function(pageView) {
+                console.log('router:page event called');
+                this.trickleCurrentIndex = 0;
+                this.trickleStarted = true;
+                this.pageElements[this.trickleCurrentIndex].set('_isVisible', true);               
+            },
 
-              this.trickleElements.push(individualBlock);
-              this.listenTo(individualBlock, "change:_isComplete", this.showContinueButton);
+            elementSetToVisible: function(element) {
+                /*console.log('set to visible... ' + element.get('_id'));
+                console.log('current trickle index', this.trickleCurrentIndex);*/
+                // Should fire anytime an element becomes visible
+                // Check against this elements index and show trickle if next element has _trickle
 
-            }, this);
-          }
+                if (element.get('_type') == "article") {
 
-        }, this);
+                    console.log('article was made visible', element.get('_id'));
 
-        this.lastTrickleIndex = _.indexOf(this.trickleElements, _.last(this.trickleElements));
-      },
+                    if (element.get('_isComplete')) {
+                        this.showItem(this.pageElements[this.trickleCurrentIndex]);
+                        if (this.trickleCurrentIndex == this.pageElements.length-1) {
+                            return;
+                        }
+                        this.changeTrickleCurrentIndex();
+                        this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
+                        return;
+                    }
 
-      startTrickle: function() {
-        this.trickleCurrentIndex = -1;
+                    this.showItem(this.pageElements[this.trickleCurrentIndex]);
+                    this.changeTrickleCurrentIndex();
+                    this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
+                } else if (element.get('_type') == "block") {
 
-        // Hide all elements
-        if (this.trickleElements) {
-          _.each(this.trickleElements, function(element) {
-            if (!element.get('_isTrickleSibling')) {
-              this.hideItem(element);
+                    console.log('block was made visible', element.get('_id'));
+
+                    if (element.get('_isComplete')) {
+                        this.showItem(this.pageElements[this.trickleCurrentIndex]);
+                        if (this.trickleCurrentIndex == this.pageElements.length-1) {
+                            this.changeTrickleCurrentIndex();
+                            return;
+                        }
+                        this.changeTrickleCurrentIndex();
+                        this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
+                        
+                        return;
+                    }
+
+                    this.showItem(this.pageElements[this.trickleCurrentIndex]);
+                    if (this.trickleCurrentIndex == this.pageElements.length-1) {
+                        this.changeTrickleCurrentIndex();
+                        return;
+                    }
+                    this.changeTrickleCurrentIndex();
+                    if (!this.pageElements[this.trickleCurrentIndex].get('_trickle') 
+                    && this.pageElements[this.trickleCurrentIndex].get('_type') == 'block') {
+                        this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
+                    }
+                }
+            },
+
+            blockSetToComplete: function(block) {
+                // Index here is plus one
+                console.log('item complete...' + block.get('_id'));
+                
+                console.log('index', this.trickleCurrentIndex, 'length', this.pageElements.length);
+                if (this.trickleCurrentIndex == this.pageElements.length) {
+                    console.log('getting here');
+                    //this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
+                    return;
+                }
+                if  (this.pageElements[this.trickleCurrentIndex-1].get('_trickle')){
+                    this.showTrickle();
+                } else if (this.pageElements[this.trickleCurrentIndex].get('_trickle')){
+                    this.showTrickle();
+                } else if (!this.pageElements[this.trickleCurrentIndex].get('_trickle')) {
+                    this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
+                }
+                
+            },
+
+            changeTrickleCurrentIndex: function() {
+                this.trickleCurrentIndex++;
+                console.log('trickle index has changed to:', this.trickleCurrentIndex);
+            },
+
+            setItemToVisible: function(model) {
+                model.set('_isVisible', true);
+            },
+
+            showItem: function(model) {
+                $('.' + model.get('_id')).removeClass('trickle-hidden');
+                Adapt.trigger('device:screenSize', Adapt.device.screenWidth);
+            },
+
+            hideItem: function(model) {
+                model.set('_isVisible', false);
+            },
+
+            onTrickleButtonClicked: function(event) {
+                event.preventDefault();
+                var currentTrickleItem = this.pageElements[this.trickleCurrentIndex];
+                if (this.pageElements[this.trickleCurrentIndex].get('_type') == 'article') {
+                    currentTrickleItem = this.pageElements[this.trickleCurrentIndex+1];
+                    this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
+                } else {
+                    this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
+                }
+                this.hideTrickle();
+                
+                _.defer(_.bind(function() {
+                    Adapt.trigger('device:screenSize', Adapt.device.screenWidth);
+                    this.scrollToItem(currentTrickleItem);
+                }, this));
+                
+                // Needs scroll to and fake screensize change
+            },
+
+            showTrickle: function () {
+                var buttonView = new TrickleButtonView({model: new Backbone.Model()});
+                this.$el.html(buttonView.$el).show();
+                this.$('.trickle-button').addClass('trickle-button-show');
+            },
+
+            hideTrickle: function() {
+                this.$el.hide();
+            },
+
+            scrollToItem: function(item, duration) {
+                console.log(item);
+                Adapt.trigger('device:resize');
+                $(window).scrollTo("." + item.get('_id'), {
+                    duration: duration || 300,
+                    offset: {
+                        top:-($('.navigation').height()+10)
+                    }
+                });
             }
-          }, this);
 
-          // Then show the first item, no scroll
-          this.showNextTrickleItem();
-        }
-      },
-
-      showItem: function(item) {
-        $('.' + item.get('_id')).removeClass('trickle-hidden');
-        item.set('_isVisible', true);
-      },
-
-      hideItem: function(item) {
-        $('.' + item.get('_id')).addClass('trickle-hidden');
-        item.set('_isVisible', false);
-      },
-
-      showNextTrickleItem: function (scroll) {
-        var scrollTo = scroll || false;
-        if (this.trickleElements[this.trickleCurrentIndex+1]) {
-          var item = this.trickleElements[this.trickleCurrentIndex+1];
-          if (item.get('_isTrickleSibling')) {
-            if (!item.get('_isComplete')) {
-              if (this.trickleCurrentIndex == -1) {
-                this.trickleCurrentIndex = _.indexOf(this.trickleElements, item);
-              }
-              // Previous sibling is incomplete, scroll to it
-              if (scrollTo) {
-                this.scrollToItem(item);
-              }
-              this.listenTo(item, "change:_isComplete", this.showSiblingContinueButton);
-            } else {
-              // Previous sibling complete, show the next trickle item
-              this.trickleCurrentIndex = _.indexOf(this.trickleElements, item);
-              this.showNextTrickleItem(scrollTo);
-            }
-          } else {
-            this.showItem(item);
-            this.trickleCurrentIndex = _.indexOf(this.trickleElements, item);
-
-            // We need to show the first block also for articles
-            if (item.get('_type') == 'article') {
-              this.showNextTrickleItem(scrollTo);
-              return;
-            }
-            if (scrollTo) {
-              this.scrollToItem(item);
-            }
-          }
-        }
-      },
-
-      getPreviousSibling: function(block) {
-        var previousSibling = false;
-        var trickleSiblings = block.getParent().getChildren();
-        var currentIndex = _.indexOf(trickleSiblings.models, block);
-        var previousIndex = currentIndex - 1;
-        if (previousIndex >= 0) {
-          previousSibling = trickleSiblings.models[previousIndex];
-          // If the previous sibling has trickle setup, don't worry about it
-          previousSibling = previousSibling.get('_trickle') ? false : previousSibling;
-        }
-        return previousSibling;
-      },
-
-      onTrickleButtonClicked: function(event) {
-        event.preventDefault();
-        this.doTrickle();
-        this.hideButton();
-      },
-
-      showContinueButton: function () {
-        // Show a 'continue' button if there are further trickle items
-        if (this.trickleCurrentIndex != this.lastTrickleIndex) {
-          var currentItem = this.trickleElements[this.trickleCurrentIndex];
-          var buttonView = new TrickleButtonView({model: currentItem});
-          this.$el.html(buttonView.$el);
-          this.$('.trickle-button').addClass('trickle-button-show');
-        }
-      },
-
-      showSiblingContinueButton: function () {
-        // Siblings don't have _trickle attributes,
-        // so let the view render the default message
-        var buttonView = new TrickleButtonView({model: new Backbone.Model()});
-        this.$el.html(buttonView.$el);
-        this.$('.trickle-button').addClass('trickle-button-show');
-      },
-
-      hideButton: function () {
-        this.$('.trickle-button').removeClass('trickle-button-show');
-      },
-
-      doTrickle: function() {
-        this.showNextTrickleItem(true);
-      },
-
-      scrollToItem: function(item, duration) {
-        Adapt.trigger('device:resize');
-        $(window).scrollTo("." + item.get('_id'), {
-          duration: duration || 300,
-          offset: {
-            top:-($('.navigation').height()+10)
-          }
         });
-      },
 
-      removeTrickle: function() {
-        trickleEnabled = false;
-        this.remove();
-      }
+        var TrickleButtonView = Backbone.View.extend({
+            initialize: function(){
+                this.render();
+                this.listenTo(Adapt, 'remove', this.remove);
+            },
 
-    });
+            render: function () {
+                var data = this.model.toJSON();
+                var template = Handlebars.templates["trickle-button"];
+                this.$el.html(template(data));
+                return this;
+            }
+        });
 
-    var TrickleButtonView = Backbone.View.extend({
-      initialize: function(){
-        this.render();
-      },
-
-      render: function () {
-        var data = this.model.toJSON();
-        var template = Handlebars.templates["trickle-button"];
-        this.$el.html(template(data));
-        return this;
-      }
-    });
-
-    new TrickleView({model: model});
-  }
-
-  Adapt.on('articleView:preRender', function(view) {
-    if (!view.model.get('_isComplete')) {
-      // If trickle exists on the page
-      var articleBlocks = view.model.findDescendants('blocks');
-      trickleBlocks = _.filter(articleBlocks.models, function(block) {
-        return block.get('_trickle');
-      });
-
-      if (view.model.get('_trickle') || trickleBlocks.length > 0) {
-        if (!trickleEnabled) {
-          trickleEnabled = true;
-          var parentPage = view.model.getParent();
-          setupTrickleView(parentPage);
-        }
-      }
+        new TrickleView({model: pageModel});
     }
-  });
+
+    Adapt.on('router:page', function(model) {
+        console.log('router:page event called');
+        // If trickle exists on the page
+        var availableArticles;
+        var availableBlocks;
+        var trickleArticles;
+        var trickleBlocks;
+        availableArticles = model.getChildren();
+        availableBlocks = model.findDescendants('blocks');
+
+        trickleArticles = _.filter(availableArticles.models, function(article) {
+            return article.get('_trickle');
+        });
+
+        trickleBlocks = _.filter(availableBlocks.models, function(block) {
+            return block.get('_trickle');
+        });
+
+        if (trickleArticles.length > 0 || trickleBlocks.length > 0) {
+            setupTrickleView(model, trickleArticles);
+        }
+    });
 
 });
