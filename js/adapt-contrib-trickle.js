@@ -1,7 +1,11 @@
 /*
 * adapt-contrib-trickle
 * License - http://github.com/adaptlearning/adapt_framework/LICENSE
+<<<<<<< HEAD
 * Maintainers - Kevin Corry <kevinc@learningpool.com>, Daryl Hedley <darylhedley@hotmail.com>
+=======
+* Maintainers - Kevin Corry <kevinc@learningpool.com>
+>>>>>>> develop
 */
 define(function(require) {
 
@@ -59,11 +63,11 @@ define(function(require) {
             setTrickleArticleChildren: function() {
                 // done
                 _.each(trickleArticles, function(trickleArticle) {
-                    //this.setTrickleElementVisibility(trickleArticle);
+
                     var articlesBlocks = trickleArticle.getChildren();
                     articlesBlocks.each(function(block) {
                         if(!block.get('_trickle')) {
-                            block.set('_trickle', true);
+                            block.set('_trickle', trickleArticle.get('_trickle'));
                         }
                     });
                 }, this);
@@ -87,8 +91,7 @@ define(function(require) {
             },
 
             elementSetToVisible: function(element) {
-                /*console.log('set to visible... ' + element.get('_id'));
-                console.log('current trickle index', this.trickleCurrentIndex);*/
+
                 // Should fire anytime an element becomes visible
                 // Check against this elements index and show trickle if next element has _trickle
 
@@ -144,8 +147,6 @@ define(function(require) {
                 
                 console.log('index', this.trickleCurrentIndex, 'length', this.pageElements.length);
                 if (this.trickleCurrentIndex == this.pageElements.length) {
-                    console.log('getting here');
-                    //this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
                     return;
                 }
                 if  (this.pageElements[this.trickleCurrentIndex-1].get('_trickle')){
@@ -196,7 +197,11 @@ define(function(require) {
             },
 
             showTrickle: function () {
-                var buttonView = new TrickleButtonView({model: new Backbone.Model()});
+
+                var buttonView = new TrickleButtonView({
+                    model: this.pageElements[this.trickleCurrentIndex-1]
+                });
+
                 this.$el.html(buttonView.$el).show();
                 this.$('.trickle-button').addClass('trickle-button-show');
             },
@@ -206,7 +211,7 @@ define(function(require) {
             },
 
             scrollToItem: function(item, duration) {
-                console.log(item);
+                
                 Adapt.trigger('device:resize');
                 $(window).scrollTo("." + item.get('_id'), {
                     duration: duration || 300,
