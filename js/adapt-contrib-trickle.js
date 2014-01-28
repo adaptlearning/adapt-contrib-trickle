@@ -1,18 +1,14 @@
 /*
 * adapt-contrib-trickle
 * License - http://github.com/adaptlearning/adapt_framework/LICENSE
-<<<<<<< HEAD
 * Maintainers - Kevin Corry <kevinc@learningpool.com>, Daryl Hedley <darylhedley@hotmail.com>
-=======
-* Maintainers - Kevin Corry <kevinc@learningpool.com>
->>>>>>> develop
 */
 define(function(require) {
 
     var Adapt = require('coreJS/adapt');
 
     function setupTrickleView (pageModel, trickleArticles) {
-    // Passes in page model
+
         var TrickleView = Backbone.View.extend({
 
             className: "extension-trickle",
@@ -61,7 +57,6 @@ define(function(require) {
             },
 
             setTrickleArticleChildren: function() {
-                // done
                 _.each(trickleArticles, function(trickleArticle) {
 
                     var articlesBlocks = trickleArticle.getChildren();
@@ -74,7 +69,6 @@ define(function(require) {
             },
 
             setupPageElementsArray: function() {
-                // done
                 pageModel.getChildren().each(function(article) {
                     this.pageElements.push(article);
                     article.getChildren().each(function(block) {
@@ -84,20 +78,15 @@ define(function(require) {
             },
 
             startTrickle: function(pageView) {
-                console.log('router:page event called');
                 this.trickleCurrentIndex = 0;
                 this.trickleStarted = true;
                 this.pageElements[this.trickleCurrentIndex].set('_isVisible', true);               
             },
 
             elementSetToVisible: function(element) {
-
                 // Should fire anytime an element becomes visible
                 // Check against this elements index and show trickle if next element has _trickle
-
                 if (element.get('_type') == "article") {
-
-                    console.log('article was made visible', element.get('_id'));
 
                     if (element.get('_isComplete')) {
                         this.showItem(this.pageElements[this.trickleCurrentIndex]);
@@ -113,8 +102,6 @@ define(function(require) {
                     this.changeTrickleCurrentIndex();
                     this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
                 } else if (element.get('_type') == "block") {
-
-                    console.log('block was made visible', element.get('_id'));
 
                     if (element.get('_isComplete')) {
                         this.showItem(this.pageElements[this.trickleCurrentIndex]);
@@ -143,9 +130,6 @@ define(function(require) {
 
             blockSetToComplete: function(block) {
                 // Index here is plus one
-                console.log('item complete...' + block.get('_id'));
-                
-                console.log('index', this.trickleCurrentIndex, 'length', this.pageElements.length);
                 if (this.trickleCurrentIndex == this.pageElements.length) {
                     return;
                 }
@@ -156,12 +140,10 @@ define(function(require) {
                 } else if (!this.pageElements[this.trickleCurrentIndex].get('_trickle')) {
                     this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
                 }
-                
             },
 
             changeTrickleCurrentIndex: function() {
                 this.trickleCurrentIndex++;
-                console.log('trickle index has changed to:', this.trickleCurrentIndex);
             },
 
             setItemToVisible: function(model) {
@@ -192,12 +174,9 @@ define(function(require) {
                     Adapt.trigger('device:screenSize', Adapt.device.screenWidth);
                     this.scrollToItem(currentTrickleItem);
                 }, this));
-                
-                // Needs scroll to and fake screensize change
             },
 
             showTrickle: function () {
-
                 var buttonView = new TrickleButtonView({
                     model: this.pageElements[this.trickleCurrentIndex-1]
                 });
@@ -211,7 +190,6 @@ define(function(require) {
             },
 
             scrollToItem: function(item, duration) {
-                
                 Adapt.trigger('device:resize');
                 $(window).scrollTo("." + item.get('_id'), {
                     duration: duration || 300,
@@ -241,8 +219,6 @@ define(function(require) {
     }
 
     Adapt.on('router:page', function(model) {
-        console.log('router:page event called');
-        // If trickle exists on the page
         var availableArticles;
         var availableBlocks;
         var trickleArticles;
@@ -258,6 +234,7 @@ define(function(require) {
             return block.get('_trickle');
         });
 
+        // If trickle exists on the page
         if (trickleArticles.length > 0 || trickleBlocks.length > 0) {
             setupTrickleView(model, trickleArticles);
         }
