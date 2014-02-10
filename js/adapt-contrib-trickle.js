@@ -54,6 +54,9 @@ define(function(require) {
                 pageModel.findDescendants('blocks').each(function(block) {
                     this.hideItem(block);
                 }, this);
+                pageModel.findDescendants('components').each(function(component) {
+                    this.hideItem(component);
+                }, this);
             },
 
             setTrickleArticleChildren: function() {
@@ -148,6 +151,11 @@ define(function(require) {
 
             setItemToVisible: function(model) {
                 model.set('_isVisible', true);
+                console.log(model.get('_type'));
+                if (model.get('_type') == 'block') {
+                    console.log('getting here');
+                    model.setOnChildren('_isVisible', true);
+                }
             },
 
             showItem: function(model) {
