@@ -151,9 +151,7 @@ define(function(require) {
 
             setItemToVisible: function(model) {
                 model.set('_isVisible', true);
-                console.log(model.get('_type'));
                 if (model.get('_type') == 'block') {
-                    console.log('getting here');
                     model.setOnChildren('_isVisible', true);
                 }
             },
