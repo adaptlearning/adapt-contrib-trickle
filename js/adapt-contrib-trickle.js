@@ -224,7 +224,8 @@ define(function(require) {
         new TrickleView({model: pageModel});
     }
 
-    Adapt.on('router:page', function(model) {
+    Adapt.on("pageView:preRender", function(view) {
+        var model = view.model;
         var availableArticles;
         var availableBlocks;
         var trickleArticles;
