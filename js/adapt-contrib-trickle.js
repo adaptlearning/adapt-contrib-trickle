@@ -83,7 +83,7 @@ define(function(require) {
             startTrickle: function(pageView) {
                 this.trickleCurrentIndex = 0;
                 this.trickleStarted = true;
-                this.pageElements[this.trickleCurrentIndex].set('_isVisible', true, {pluginName: "_trickle"});               
+                this.pageElements[this.trickleCurrentIndex].set('_isVisible', true, {pluginName: "_trickle"});             
             },
 
             elementSetToVisible: function(element) {
@@ -234,11 +234,15 @@ define(function(require) {
         availableBlocks = model.findDescendants('blocks');
 
         trickleArticles = _.filter(availableArticles.models, function(article) {
-            return article.get('_trickle');
+            if (article.get('_trickle')) {
+                return article.get('_trickle')._isEnabled === true;
+            }
         });
 
         trickleBlocks = _.filter(availableBlocks.models, function(block) {
-            return block.get('_trickle');
+            if (block.get('_trickle')) {
+                return block.get('_trickle')._isEnabled === true;
+            }
         });
 
         // If trickle exists on the page
