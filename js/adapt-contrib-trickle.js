@@ -197,6 +197,7 @@ define(function(require) {
 
             scrollToItem: function(item, duration) {
                 Adapt.trigger('device:resize');
+                $(window).resize();
                 $(window).scrollTo("." + item.get('_id'), {
                     duration: duration || 300,
                     offset: {
