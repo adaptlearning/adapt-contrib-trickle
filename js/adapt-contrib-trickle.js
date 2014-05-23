@@ -55,6 +55,9 @@ define(function(require) {
                 pageModel.findDescendants('blocks').each(function(block) {
                     this.hideItem(block);
                 }, this);
+                pageModel.findDescendants('components').each(function(component) {
+                    this.hideItem(component);
+                }, this);
             },
 
             setTrickleArticleChildren: function() {
@@ -81,7 +84,7 @@ define(function(require) {
             startTrickle: function(pageView) {
                 this.trickleCurrentIndex = 0;
                 this.trickleStarted = true;
-                this.pageElements[this.trickleCurrentIndex].set('_isVisible', true);
+                this.pageElements[this.trickleCurrentIndex].set('_isVisible', true, {pluginName: "_trickle"});
             },
 
             elementSetToVisible: function(element) {
@@ -151,7 +154,10 @@ define(function(require) {
             },
 
             setItemToVisible: function(model) {
-                model.set('_isVisible', true);
+                model.set('_isVisible', true, {pluginName:'_trickle'});
+                if (model.get('_type') == 'block') {
+                    model.setOnChildren('_isVisible', true, {pluginName: '_trickle'});
+                }
             },
 
             showItem: function(model) {
@@ -160,7 +166,7 @@ define(function(require) {
             },
 
             hideItem: function(model) {
-                model.set('_isVisible', false);
+                model.set('_isVisible', false, {pluginName: '_trickle'});
             },
 
             onTrickleButtonClicked: function(event) {
@@ -208,6 +214,7 @@ define(function(require) {
 
             scrollToItem: function(item, duration) {
                 Adapt.trigger('device:resize');
+                $(window).resize();
                 $(window).scrollTo("." + item.get('_id'), {
                     duration: duration || 300,
                     offset: {
@@ -241,7 +248,8 @@ define(function(require) {
         new TrickleView({model: pageModel});
     }
 
-    Adapt.on('router:page', function(model) {
+    Adapt.on("pageView:preRender", function(view) {
+        var model = view.model;
         var availableArticles;
         var availableBlocks;
         var trickleArticles;
@@ -250,11 +258,15 @@ define(function(require) {
         availableBlocks = model.findDescendants('blocks');
 
         trickleArticles = _.filter(availableArticles.models, function(article) {
-            return article.get('_trickle');
+            if (article.get('_trickle')) {
+                return article.get('_trickle')._isEnabled === true;
+            }
         });
 
         trickleBlocks = _.filter(availableBlocks.models, function(block) {
-            return block.get('_trickle');
+            if (block.get('_trickle')) {
+                return block.get('_trickle')._isEnabled === true;
+            }
         });
 
         // If trickle exists on the page
