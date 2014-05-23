@@ -81,7 +81,7 @@ define(function(require) {
             startTrickle: function(pageView) {
                 this.trickleCurrentIndex = 0;
                 this.trickleStarted = true;
-                this.pageElements[this.trickleCurrentIndex].set('_isVisible', true);               
+                this.pageElements[this.trickleCurrentIndex].set('_isVisible', true);
             },
 
             elementSetToVisible: function(element) {
@@ -122,8 +122,7 @@ define(function(require) {
                         return;
                     }
                     this.changeTrickleCurrentIndex();
-                    if (!this.pageElements[this.trickleCurrentIndex].get('_trickle') 
-                    && this.pageElements[this.trickleCurrentIndex].get('_type') == 'block') {
+                    if (!this.pageElements[this.trickleCurrentIndex].get('_trickle') && this.pageElements[this.trickleCurrentIndex].get('_type') == 'block') {
                         this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
                     }
                 }
@@ -174,7 +173,7 @@ define(function(require) {
                     this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
                 }
                 this.hideTrickle();
-                
+
                 _.defer(_.bind(function() {
                     Adapt.trigger('device:screenSize', Adapt.device.screenWidth);
                     this.scrollToItem(currentTrickleItem);
@@ -183,7 +182,7 @@ define(function(require) {
 
             onMenuClicked: function(event) {
                 event.preventDefault();
-                Adapt.trigger('navigation:menu');
+                Adapt.trigger('navigation:backButton');
             },
 
             showTrickle: function () {
