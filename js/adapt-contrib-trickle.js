@@ -135,7 +135,7 @@ define(function(require) {
                 // Index here is plus one
                 if (this.trickleCurrentIndex == this.pageElements.length) {
                     var finalElement = this.pageElements[this.pageElements.length-1];
-                    if(finalElement.get('_trickle') && finalElement.get('_trickle').button &&  finalElement.get('_trickle').button.final) {
+                    if(finalElement.get('_trickle') && finalElement.get('_trickle').finalButton) {
                         this.showFinal(finalElement);
                     }
                     return;
