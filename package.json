@@ -1,6 +1,6 @@
 {
   "name": "adapt-contrib-trickle",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A basic feedback overlay for question components",
   "main": "",
   "scripts": {
