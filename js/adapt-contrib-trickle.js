@@ -159,6 +159,7 @@ define(function(require) {
             showItem: function(model) {
                 $('.' + model.get('_id')).removeClass('trickle-hidden');
                 Adapt.trigger('device:screenSize', Adapt.device.screenWidth);
+                $(window).resize();
             },
 
             hideItem: function(model) {
