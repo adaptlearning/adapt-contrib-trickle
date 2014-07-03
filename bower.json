@@ -7,11 +7,12 @@
   ],
   "displayName" : "Trickle",
   "extension" : "trickle",
-  "description": "A basic feedback overlay for question components",
+  "description": "An extension which provides vertical locking for articles, blocks and components",
   "main": "/js/adapt-contrib-trickle.js",
   "keywords": [
     "adapt-plugin",
     "adapt-extension"
   ],
-  "license": "GPLv3"
+  "license": "GPLv3",
+  "targetAttribute": "_trickle"
 }
