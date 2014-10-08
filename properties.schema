@@ -26,11 +26,13 @@
               "properties":{
                 "_isEnabled": {
                   "type":"boolean",
-                  "required":false
+                  "required":false,
+                  "title": "Enabled"
                 },
                 "button": {
                   "type":"string",
-                  "required":false
+                  "required":false,
+                  "title": "Button text"
                 }
               }
             }
@@ -45,11 +47,13 @@
               "properties":{
                 "_isEnabled": {
                   "type":"boolean",
-                  "required":false
+                  "required":false,
+                  "title": "Enabled"
                 },
                 "button": {
                   "type":"string",
-                  "required":false
+                  "required":false,
+                  "title": "Button text"
                 }
               }
             }
