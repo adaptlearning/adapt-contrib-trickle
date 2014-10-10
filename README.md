@@ -16,9 +16,8 @@ To setup locking, add the ``_trickle`` attribute to the article or block you wis
 
 ```
 "_trickle": {
-    "button": {
-        "continue" : "Continue"
-    }
+    "_isEnabled":true,
+    "button": "Continue to next question?"
 }
 ```
 

@@ -6,26 +6,7 @@
     "title":"Article 1 title",
     "body":"Body text for article",
     "_trickle": {
-        "button": {
-            "continue" : "Move on"
-        }
+        "_isEnabled":true,
+        "button": "Continue to next question?"
     }
-},
-{
-    "_id":"a-35",
-    "_parentId":"co-20",
-    "_type":"article",
-    "_classes":"",
-    "title":"Article 2 title",
-    "body":"Body text for article",
-    "_trickle": true
-},
-{
-    "_id":"a-40",
-    "_parentId":"co-20",
-    "_type":"article",
-    "_classes":"",
-    "title":"Article 3 title",
-    "body":"Body text for article",
-    "_trickle": true
 }
