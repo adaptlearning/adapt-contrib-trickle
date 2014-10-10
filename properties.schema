@@ -1,0 +1,68 @@
+{
+  "type":"object",
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "id": "http://jsonschema.net",
+  "required":false,
+  "properties":{
+    "pluginLocations": {
+      "type":"object",
+      "required":true,
+      "properties":{
+        "config": {
+          "type":"object"
+        },
+        "course": {
+          "type":"object"
+        },
+        "contentobject": {
+          "type":"object"
+        },
+        "article": {
+          "type":"object",
+          "properties":{
+            "_trickle": {
+              "type":"object",
+              "required":false,
+              "properties":{
+                "_isEnabled": {
+                  "type":"boolean",
+                  "required":false,
+                  "title": "Enabled"
+                },
+                "button": {
+                  "type":"string",
+                  "required":false,
+                  "title": "Button text"
+                }
+              }
+            }
+          }
+        },
+        "block": {
+          "type":"object",
+          "properties":{
+            "_trickle": {
+              "type":"object",
+              "required":false,
+              "properties":{
+                "_isEnabled": {
+                  "type":"boolean",
+                  "required":false,
+                  "title": "Enabled"
+                },
+                "button": {
+                  "type":"string",
+                  "required":false,
+                  "title": "Button text"
+                }
+              }
+            }
+          }
+        },
+        "component": {
+          "type":"object"
+        }
+      }
+    }
+  }
+}
