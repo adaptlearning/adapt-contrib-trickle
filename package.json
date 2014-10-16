@@ -1,6 +1,6 @@
 {
   "name": "adapt-contrib-trickle",
-  "version": "0.0.1",
+  "version": "1.1.2",
   "description": "A basic feedback overlay for question components",
   "main": "",
   "scripts": {
@@ -16,8 +16,8 @@
     "url": "https://github.com/adaptlearning/adapt-contrib-trickle/issues"
   },
   "devDependencies": {
-    "karma": "~0.10",
-    "karma-mocha": "*",
-    "karma-expect": "*"
+    "karma": "0.10",
+    "karma-mocha": "0.1.0",
+    "karma-expect": "1.1.0"
   }
 }
