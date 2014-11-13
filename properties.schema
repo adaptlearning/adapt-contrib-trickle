@@ -23,16 +23,22 @@
             "_trickle": {
               "type":"object",
               "required":false,
+              "legend": "Trickle",
               "properties":{
                 "_isEnabled": {
                   "type":"boolean",
                   "required":false,
-                  "title": "Enabled"
+                  "title": "Enabled",
+                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "validators": []
                 },
                 "button": {
                   "type":"string",
                   "required":false,
-                  "title": "Button text"
+                  "title": "Button text",
+                  "inputType": "Text",
+                  "default": "Click here to continue",
+                  "validators": []
                 }
               }
             }
@@ -44,16 +50,22 @@
             "_trickle": {
               "type":"object",
               "required":false,
+              "legend": "Trickle",
               "properties":{
                 "_isEnabled": {
                   "type":"boolean",
                   "required":false,
-                  "title": "Enabled"
+                  "title": "Enabled",
+                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "validators": []
                 },
                 "button": {
                   "type":"string",
                   "required":false,
-                  "title": "Button text"
+                  "title": "Button text",
+                  "inputType": "Text",
+                  "default": "Click here to continue",
+                  "validators": []
                 }
               }
             }
