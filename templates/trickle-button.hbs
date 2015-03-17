@@ -1,10 +1,10 @@
 {{! Maintainers - Kevin Corry}}
-<a href="#" class="trickle-button">
-  <h6>
+<a href="#" class="trickle-button" role="button" aria-label="{{#if _trickle.button}}{{{_trickle.button}}}{{else}}Continue{{/if}}">
+  <div class="h6">
     {{#if _trickle.button}}
       {{{_trickle.button}}}
     {{else}}
       Continue
     {{/if}}
-  </h6>
+  </div>
 </a>
