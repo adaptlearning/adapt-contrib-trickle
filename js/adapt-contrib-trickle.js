@@ -136,12 +136,15 @@ define(function(require) {
                 if (this.trickleCurrentIndex == this.pageElements.length) {
                     return;
                 }
-                if  (this.pageElements[this.trickleCurrentIndex-1].get('_trickle')){
-                    this.showTrickle();
-                } else if (this.pageElements[this.trickleCurrentIndex].get('_trickle')){
-                    this.showTrickle();
-                } else if (!this.pageElements[this.trickleCurrentIndex].get('_trickle')) {
-                    this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
+                var currentElement = this.pageElements[this.trickleCurrentIndex-1];
+                var nextElement = this.pageElements[this.trickleCurrentIndex];
+                
+                if  (currentElement.get('_trickle')){
+                    this.showTrickle(currentElement);
+                } else if (nextElement.get('_trickle') && currentElement.get('_id') == block.get('_id')){
+                    this.showTrickle(nextElement);
+                } else if (!nextElement.get('_trickle')) {
+                    this.setItemToVisible(nextElement);
                 }
             },
 
@@ -182,9 +185,9 @@ define(function(require) {
                 }, this));
             },
 
-            showTrickle: function () {
+            showTrickle: function (pModel) {
                 var buttonView = new TrickleButtonView({
-                    model: this.pageElements[this.trickleCurrentIndex-1]
+                    model: pModel || this.pageElements[this.trickleCurrentIndex-1]
                 });
 
                 $('body').addClass('trickle-body-padding');
