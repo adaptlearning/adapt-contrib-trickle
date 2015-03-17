@@ -6,9 +6,19 @@
     "title":"Article 1 title",
     "body":"Body text for article",
     "_trickle": {
-        "button": {
-            "continue" : "Move on"
-        }
+        "button": "Move on"
+    }
+},
+{
+    "_id":"a-31",
+    "_parentId":"co-20",
+    "_type":"article",
+    "_classes":"",
+    "title":"Article 1 title",
+    "body":"Body text for article",
+    "_trickle": {
+        "button": "Next",
+        "finalButton": "Finished!"
     }
 },
 {

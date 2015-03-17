@@ -14,7 +14,8 @@ define(function(require) {
             className: "extension-trickle",
 
             events: {
-                'click .trickle-button':'onTrickleButtonClicked'
+                'click .trickle-button':'onTrickleButtonClicked',
+                'click [data-event="menu"]':'onMenuClicked'
             },
 
             initialize: function() {
@@ -83,7 +84,7 @@ define(function(require) {
             startTrickle: function(pageView) {
                 this.trickleCurrentIndex = 0;
                 this.trickleStarted = true;
-                this.pageElements[this.trickleCurrentIndex].set('_isVisible', true, {pluginName: "_trickle"});             
+                this.pageElements[this.trickleCurrentIndex].set('_isVisible', true, {pluginName: "_trickle"});
             },
 
             elementSetToVisible: function(element) {
@@ -124,8 +125,7 @@ define(function(require) {
                         return;
                     }
                     this.changeTrickleCurrentIndex();
-                    if (!this.pageElements[this.trickleCurrentIndex].get('_trickle') 
-                    && this.pageElements[this.trickleCurrentIndex].get('_type') == 'block') {
+                    if (!this.pageElements[this.trickleCurrentIndex].get('_trickle') && this.pageElements[this.trickleCurrentIndex].get('_type') == 'block') {
                         this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
                     }
                 }
@@ -134,6 +134,10 @@ define(function(require) {
             blockSetToComplete: function(block) {
                 // Index here is plus one
                 if (this.trickleCurrentIndex == this.pageElements.length) {
+                    var finalElement = this.pageElements[this.pageElements.length-1];
+                    if(finalElement.get('_trickle') && finalElement.get('_trickle').finalButton) {
+                        this.showFinal(finalElement);
+                    }
                     return;
                 }
                 if  (this.pageElements[this.trickleCurrentIndex-1].get('_trickle')){
@@ -176,11 +180,16 @@ define(function(require) {
                     this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
                 }
                 this.hideTrickle();
-                
+
                 _.defer(_.bind(function() {
                     Adapt.trigger('device:screenSize', Adapt.device.screenWidth);
                     this.scrollToItem(currentTrickleItem);
                 }, this));
+            },
+
+            onMenuClicked: function(event) {
+                event.preventDefault();
+                Adapt.trigger('navigation:backButton');
             },
 
             showTrickle: function () {
@@ -191,6 +200,14 @@ define(function(require) {
                 window.scrollTo(0,$('body')[0].scrollHeight);//could it be animated?
                 this.$el.html(buttonView.$el).show();
                 this.$('.trickle-button').addClass('trickle-button-show');
+            },
+
+            showFinal: function (pageElement) {
+                var buttonView = new TrickleFinalButtonView({
+                    model: pageElement
+                });
+                this.$el.html(buttonView.$el).show();
+                this.$('.trickle-final').addClass('trickle-button-show');
             },
 
             hideTrickle: function() {
@@ -212,6 +229,8 @@ define(function(require) {
         });
 
         var TrickleButtonView = Backbone.View.extend({
+            templateName: "trickle-button",
+
             initialize: function(){
                 this.render();
                 this.listenTo(Adapt, 'remove', this.remove);
@@ -219,10 +238,14 @@ define(function(require) {
 
             render: function () {
                 var data = this.model.toJSON();
-                var template = Handlebars.templates["trickle-button"];
+                var template = Handlebars.templates[this.templateName];
                 this.$el.html(template(data));
                 return this;
             }
+        });
+
+        var TrickleFinalButtonView = TrickleButtonView.extend({
+            templateName: "trickle-final"
         });
 
         new TrickleView({model: pageModel});
