@@ -187,12 +187,14 @@ define(function(require) {
                 var buttonView = new TrickleButtonView({
                     model: this.pageElements[this.trickleCurrentIndex-1]
                 });
-
+                $('body').addClass('trickle-body-padding');
+                window.scrollTo(0,$('body')[0].scrollHeight);//could it be animated?
                 this.$el.html(buttonView.$el).show();
                 this.$('.trickle-button').addClass('trickle-button-show');
             },
 
             hideTrickle: function() {
+                $('body').removeClass('trickle-body-padding');
                 this.$el.hide();
             },
 
