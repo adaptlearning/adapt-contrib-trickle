@@ -83,7 +83,7 @@ define(function(require) {
             startTrickle: function(pageView) {
                 this.trickleCurrentIndex = 0;
                 this.trickleStarted = true;
-                this.pageElements[this.trickleCurrentIndex].set('_isVisible', true, {pluginName: "_trickle"});             
+                this.pageElements[this.trickleCurrentIndex].set('_isVisible', true);             
             },
 
             elementSetToVisible: function(element) {
@@ -150,9 +150,9 @@ define(function(require) {
             },
 
             setItemToVisible: function(model) {
-                model.set('_isVisible', true, {pluginName:'_trickle'});
+                model.set('_isVisible', true);
                 if (model.get('_type') == 'block') {
-                    model.setOnChildren('_isVisible', true, {pluginName: '_trickle'});
+                    model.setOnChildren('_isVisible', true);
                 }
             },
 
@@ -163,7 +163,7 @@ define(function(require) {
             },
 
             hideItem: function(model) {
-                model.set('_isVisible', false, {pluginName: '_trickle'});
+                model.set('_isVisible', false);
             },
 
             onTrickleButtonClicked: function(event) {
