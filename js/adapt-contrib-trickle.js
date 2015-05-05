@@ -194,7 +194,7 @@ define(function(require) {
                 this.$('.trickle-button').addClass('trickle-button-show');
             },
 
-            hideTrickle: function(blockId) {
+            hideTrickle: function() {
                 $(".block").removeClass('trickle-body-padding');
                 this.$el.hide();
             },
