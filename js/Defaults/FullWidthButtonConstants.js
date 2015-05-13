@@ -6,14 +6,11 @@
 
 define(function() {
 
-	var FullWidthButtonDefaults = {
-		_button: {
-			_autoHide: true
-		},
+	var FullWidthButtonConstants = {
 		_stepLocking: {
 			_isEnabled: true
 		}
 	};
 	
-	return FullWidthButtonDefaults;
+	return FullWidthButtonConstants;
 })

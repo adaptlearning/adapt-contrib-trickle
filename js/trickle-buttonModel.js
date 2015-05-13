@@ -6,8 +6,8 @@
 
 define([
     'coreModels/adaptModel',
-    './Defaults/FullWidthButtonDefaults'
-], function(AdaptModel, FullWidthButtonDefaults) {
+    './Defaults/FullWidthButtonConstants'
+], function(AdaptModel, FullWidthButtonConstants) {
 
     var TrickleButtonModel = AdaptModel.extend({
         
@@ -20,8 +20,8 @@ define([
 
             var isFullWidth = (trickleConfig._button._isFullWidth);
             if (isFullWidth) {
-                //setup configuration with FullWidth type defaults
-                $.extend(true, trickleConfig, FullWidthButtonDefaults);
+                //setup configuration with FullWidth type constants
+                $.extend(true, trickleConfig, FullWidthButtonConstants);
             }
 
             this.setupButtonText(trickleConfig);
