@@ -1,11 +1,8 @@
 {
   "name": "adapt-contrib-trickle",
-  "version": "0.0.2",
-  "description": "A basic feedback overlay for question components",
+  "version": "0.0.3",
+  "description": "A vertical locking extension",
   "main": "",
-  "scripts": {
-    "test": "./node_modules/.bin/karma start --single-run --browsers PhantomJS"
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/adaptlearning/adapt-contrib-trickle.git"
@@ -14,10 +11,5 @@
   "license": "GPL v3",
   "bugs": {
     "url": "https://github.com/adaptlearning/adapt-contrib-trickle/issues"
-  },
-  "devDependencies": {
-    "karma": "0.10",
-    "karma-mocha": "0.1.0",
-    "karma-expect": "1.1.0"
   }
 }

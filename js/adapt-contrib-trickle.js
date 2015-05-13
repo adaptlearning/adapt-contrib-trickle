@@ -1,258 +1,540 @@
 /*
-* adapt-contrib-trickle
+* adapt-trickle
 * License - http://github.com/adaptlearning/adapt_framework/LICENSE
-* Maintainers - Kevin Corry <kevinc@learningpool.com>, Daryl Hedley <darylhedley@hotmail.com>
+* Maintainers - Oliver Foster <oliver.foster@kineo.com>
 */
-define(function(require) {
 
-    var Adapt = require('coreJS/adapt');
+define([
+    'coreJS/adapt',
+    './Defaults/DefaultTrickleConfig',
+    './Utility/Models',
+    './trickle-tutorPlugin',
+    './trickle-buttonPlugin',
+    './lib/dom-resize-event'
+], function(Adapt, DefaultTrickleConfig, Models) {
 
-    function setupTrickleView (pageModel, trickleArticles) {
+    var completionAttribute = "_isInteractionComplete";
 
-        var TrickleView = Backbone.View.extend({
+    var Trickle = _.extend({
 
-            className: "extension-trickle",
+        onDataReady: function() {
+            var trickleConfig = Adapt.config.get("_trickle");
+            if (trickleConfig && trickleConfig._completionAttribute) completionAttribute = trickleConfig._completionAttribute;
 
-            events: {
-                'click .trickle-button':'onTrickleButtonClicked'
-            },
+            this.setupEventListeners();
+        },
 
-            initialize: function() {
-                this.setupTrickle();
-                this.listenTo(Adapt, 'remove', this.remove);
-                this.listenTo(Adapt, 'pageView:ready', this.startTrickle);
-                this.listenTo(Adapt, 'blockView:preRender', this.hideView);
-                this.listenTo(Adapt, 'articleView:preRender', this.hideView);
-                this.listenTo(Adapt.blocks, 'change:_isComplete', this.blockSetToComplete);
-                this.listenTo(Adapt.blocks, 'change:_isVisible', this.elementSetToVisible);
-                this.listenTo(Adapt.articles, 'change:_isVisible', this.elementSetToVisible);
-                this.render();
-            },
+        onPagePreRender: function(view) {
+            this.initializePage(view);
+        },
 
-            render: function () {
-                this.$el.appendTo('body');
-                return this;
-            },
+        onArticlePreRender: function(view) {
+            this.checkApplyTrickleToChildren( view.model );
+        },
 
-            setupTrickle: function() {
-                this.trickleElements = [];
-                this.pageElements = [];
-                this.trickleCurrentIndex = 0;
-                this.hideAllElements();
-                this.setTrickleArticleChildren();
-                this.setupPageElementsArray();
-            },
+        onPagePostRender: function(view) {
+            this.resizeBodyToCurrentIndex();
+        },
 
-            hideView: function(view) {
-                view.$el.addClass('trickle-hidden');
-            },
+        onArticleAndBlockPostRender: function(view) {
+            this.setupStep( view.model );
+        },
 
-            hideAllElements: function() {
-                pageModel.getChildren().each(function(article) {
-                    this.hideItem(article);
-                }, this);
-                pageModel.findDescendants('blocks').each(function(block) {
-                    this.hideItem(block);
-                }, this);
-                pageModel.findDescendants('components').each(function(component) {
-                    this.hideItem(component);
-                }, this);
-            },
+        onPageReady: function(view) {
+            this.initializeStep();
+            this.resizeBodyToCurrentIndex();
+            this._listenToResizeEvent = true;
+        },
 
-            setTrickleArticleChildren: function() {
-                _.each(trickleArticles, function(trickleArticle) {
+        onAnyComplete: function(model, value, isPerformingCompletionQueue) {
+            this.queueOrExecuteCompletion(model, value, isPerformingCompletionQueue);
+        },
 
-                    var articlesBlocks = trickleArticle.getChildren();
-                    articlesBlocks.each(function(block) {
-                        if(!block.get('_trickle')) {
-                            block.set('_trickle', trickleArticle.get('_trickle'));
-                        }
-                    });
-                }, this);
-            },
+        onStepUnlockWait: function() {
+            this._waitForUnlockRequestsCount++;
+        },
 
-            setupPageElementsArray: function() {
-                pageModel.getChildren().each(function(article) {
-                    this.pageElements.push(article);
-                    article.getChildren().each(function(block) {
-                        this.pageElements.push(block);
-                    }, this);
-                }, this);
-            },
+        onStepUnlockUnwait: function() {
+            this._waitForUnlockRequestsCount--;
+            if (this._waitForUnlockRequestsCount < 0) this._waitForUnlockRequestsCount = 0;
 
-            startTrickle: function(pageView) {
-                this.trickleCurrentIndex = 0;
-                this.trickleStarted = true;
-                this.pageElements[this.trickleCurrentIndex].set('_isVisible', true);             
-            },
+            if (this._isFinished) return;
 
-            elementSetToVisible: function(element) {
-                // Should fire anytime an element becomes visible
-                // Check against this elements index and show trickle if next element has _trickle
-                if (element.get('_type') == "article") {
+            var descendant = this.getCurrentStepModel();
+            this.checkStepComplete(descendant);
+        },
 
-                    if (element.get('_isComplete')) {
-                        this.showItem(this.pageElements[this.trickleCurrentIndex]);
-                        if (this.trickleCurrentIndex == this.pageElements.length-1) {
-                            return;
-                        }
-                        this.changeTrickleCurrentIndex();
-                        this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
-                        return;
-                    }
+        onWrapperResize: function() {
+            if (!this._listenToResizeEvent) {
+                return;
+            }
 
-                    this.showItem(this.pageElements[this.trickleCurrentIndex]);
-                    this.changeTrickleCurrentIndex();
-                    this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
-                } else if (element.get('_type') == "block") {
+            this.resizeBodyToCurrentIndex();
+            this._listenToResizeEvent = true;
+        },
 
-                    if (element.get('_isComplete')) {
-                        this.showItem(this.pageElements[this.trickleCurrentIndex]);
-                        if (this.trickleCurrentIndex == this.pageElements.length-1) {
-                            this.changeTrickleCurrentIndex();
-                            return;
-                        }
-                        this.changeTrickleCurrentIndex();
-                        this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
-                        
-                        return;
-                    }
+        onRemove: function(view) {
+            this.endTrickle();
+        },
 
-                    this.showItem(this.pageElements[this.trickleCurrentIndex]);
-                    if (this.trickleCurrentIndex == this.pageElements.length-1) {
-                        this.changeTrickleCurrentIndex();
-                        return;
-                    }
-                    this.changeTrickleCurrentIndex();
-                    if (!this.pageElements[this.trickleCurrentIndex].get('_trickle') 
-                    && this.pageElements[this.trickleCurrentIndex].get('_type') == 'block') {
-                        this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
-                    }
-                }
-            },
 
-            blockSetToComplete: function(block) {
-                // Index here is plus one
-                if (this.trickleCurrentIndex == this.pageElements.length) {
-                    return;
-                }
-                if  (this.pageElements[this.trickleCurrentIndex-1].get('_trickle')){
-                    this.showTrickle();
-                } else if (this.pageElements[this.trickleCurrentIndex].get('_trickle')){
-                    this.showTrickle();
-                } else if (!this.pageElements[this.trickleCurrentIndex].get('_trickle')) {
-                    this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
-                }
-            },
+        model: new Backbone.Model({}),
 
-            changeTrickleCurrentIndex: function() {
-                this.trickleCurrentIndex++;
-            },
+        _listenToResizeEvent: false,
+        _isPageInitialized: false,
+        _isFinished: false,
+        _currentStepIndex: 0,
+        _descendantsChildrenFirst: null,
+        _descendantsParentFirst: null,
+        _pageView: null,
 
-            setItemToVisible: function(model) {
-                model.set('_isVisible', true);
-                if (model.get('_type') == 'block') {
-                    model.setOnChildren('_isVisible', true);
-                }
-            },
+        initialize: function() {
+            this.listenToOnce(Adapt, "app:dataReady", this.onDataReady);
+        },
 
-            showItem: function(model) {
-                $('.' + model.get('_id')).removeClass('trickle-hidden');
-                Adapt.trigger('device:screenSize', Adapt.device.screenWidth);
-                $(window).resize();
-            },
+        setupEventListeners: function() {
+            this._onWrapperResize = _.bind(Trickle.onWrapperResize, Trickle);
+            $("#wrapper").on('resize', this._onWrapperResize );
 
-            hideItem: function(model) {
-                model.set('_isVisible', false);
-            },
+            this.listenTo(Adapt, "remove", this.onRemove);
+            this.listenTo(Adapt, "pageView:preRender", this.onPagePreRender);
+            this.listenTo(Adapt, "pageView:postRender", this.onPagePostRender);
+            this.listenTo(Adapt, "pageView:ready", this.onPageReady);
 
-            onTrickleButtonClicked: function(event) {
-                event.preventDefault();
-                var currentTrickleItem = this.pageElements[this.trickleCurrentIndex];
-                if (this.pageElements[this.trickleCurrentIndex].get('_type') == 'article') {
-                    currentTrickleItem = this.pageElements[this.trickleCurrentIndex+1];
-                    this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
-                } else {
-                    this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
-                }
-                this.hideTrickle();
+            this.listenTo(Adapt, "articleView:preRender", this.onArticlePreRender);
+            this.listenTo(Adapt, "blockView:postRender articleView:postRender", this.onArticleAndBlockPostRender);
+
+            this.listenTo(Adapt.articles, "change:"+completionAttribute, this.onAnyComplete);
+            this.listenTo(Adapt.blocks, "change:"+completionAttribute, this.onAnyComplete);
+            this.listenTo(Adapt.components, "change:"+completionAttribute, this.onAnyComplete);           
+
+            this.listenTo(Adapt, "trickle:interactionComplete", this.onAnyComplete);
+
+            this.listenTo(Adapt, "steplocking:wait", this.onStepUnlockWait);
+            this.listenTo(Adapt, "steplocking:unwait", this.onStepUnlockUnwait);
+
+            this.listenTo(Adapt, "trickle:relativeScrollTo", this.relativeScrollTo);
+        },
+
+        initializePage: function(view) {
+            var pageId = view.model.get("_id");
+
+            var pageConfig = Adapt.course.get("_trickle");
+            if (pageConfig && pageConfig._isEnabled === false) return;
+
+            this._descendantsChildrenFirst =  Models.getDescendantsFlattened(pageId);
+            this._descendantsParentFirst = Models.getDescendantsFlattened(pageId, true);
+            this._currentStepIndex = 0;
+            this._isFinished = false;
+            this._listenToResizeEvent = false;
+            this._pageView = view;
+
+            this.checkResetChildren();
+
+            this.initializeStepUnlockWait();
+
+            this._isPageInitialized = true;
+
+        },
+
+        checkResetChildren: function() {
+            var descendantsChildrenFirst = this._descendantsChildrenFirst;
+            for (var i = 0, model; model = descendantsChildrenFirst.models[i++];) {
+                this.checkResetModel(model);
+            }
+        },
+
+        checkResetModel: function(model) {
+            var trickleConfig = this.getModelTrickleConfig(model);
+            if (!trickleConfig) return;
+            if (trickleConfig._onChildren) return;
+
+            if (!trickleConfig._stepLocking || !trickleConfig._stepLocking._isEnabled == true) return;          
+
+            if (!trickleConfig._isInteractionComplete) {
                 
-                _.defer(_.bind(function() {
-                    Adapt.trigger('device:screenSize', Adapt.device.screenWidth);
-                    this.scrollToItem(currentTrickleItem);
-                }, this));
-            },
+                trickleConfig._isLocking = true;
 
-            showTrickle: function () {
-                var buttonView = new TrickleButtonView({
-                    model: this.pageElements[this.trickleCurrentIndex-1]
-                });
-                $('body').addClass('trickle-body-padding');
-                window.scrollTo(0,$('body')[0].scrollHeight);//could it be animated?
-                this.$el.html(buttonView.$el).show();
-                this.$('.trickle-button').addClass('trickle-button-show');
-            },
+            } else if (trickleConfig._stepLocking._isLockedOnRevisit && !trickleConfig._stepLocking._isCompletionRequired) {
 
-            hideTrickle: function() {
-                $('body').removeClass('trickle-body-padding');
-                this.$el.hide();
-            },
+                trickleConfig._isInteractionComplete = false;
+                trickleConfig._isLocking = true;
+                model.set(completionAttribute, false);
 
-            scrollToItem: function(item, duration) {
-                Adapt.trigger('device:resize');
-                $(window).resize();
-                $(window).scrollTo("." + item.get('_id'), {
-                    duration: duration || 300,
-                    offset: {
-                        top:-($('.navigation').height()+10)
+            } else if ( trickleConfig._stepLocking._isCompletionRequired && !model.get(completionAttribute) ) {
+                
+                trickleConfig._isInteractionComplete = false;
+                trickleConfig._isLocking = true;
+                model.set(completionAttribute, false);
+
+            } else if ( trickleConfig._stepLocking._isLockedOnRevisit && trickleConfig._stepLocking._isCompletionRequired && model.get(completionAttribute) ) {
+                
+                trickleConfig._isInteractionComplete = true;
+                trickleConfig._isLocking = true;
+
+            }
+        },
+
+        getModelTrickleConfig: function(model) {
+
+            function initializeModelTrickleConfig(model, parent) {
+                var trickleConfig = model.get("_trickle");
+
+                var courseConfig = Adapt.course.get("_trickle");
+                if (courseConfig && courseConfig._isEnabled === false) return false;
+
+                var trickleConfig = $.extend(true, 
+                    {}, 
+                    DefaultTrickleConfig, 
+                    trickleConfig,
+                    { 
+                        _id: model.get("_id"), 
+                        _areDefaultsSet: true,
+                        _index: parent.getModelPageIndex(model)
                     }
-                });
+                );
+
+                model.set("_trickle", trickleConfig);
+
+                return true;
             }
 
-        });
+            var trickleConfig = model.get("_trickle");
+            if (trickleConfig === undefined) return false;
 
-        var TrickleButtonView = Backbone.View.extend({
-            initialize: function(){
-                this.render();
-                this.listenTo(Adapt, 'remove', this.remove);
-            },
+            //if has been initialized already, return;
+            if (trickleConfig._areDefaultsSet) return trickleConfig;
 
-            render: function () {
-                var data = this.model.toJSON();
-                var template = Handlebars.templates["trickle-button"];
-                this.$el.html(template(data));
-                return this;
+            if (!initializeModelTrickleConfig(model, this)) return false;
+            
+            return model.get("_trickle");
+        },
+
+        getModelPageIndex: function(model) {
+            var descendants = this._descendantsChildrenFirst.toJSON();
+            var pageDescendantIds = _.pluck(descendants, "_id");
+
+            var id = model.get("_id");
+            var index = _.indexOf( pageDescendantIds, id );
+
+            return index;
+        },
+
+        initializeStepUnlockWait: function() {
+            this._waitForUnlockRequestsCount = 0;
+        },
+
+        checkApplyTrickleToChildren: function(model) {
+            if (model.get("_type") != "article") return;
+
+            var trickleConfig = this.getModelTrickleConfig(model);
+            if (!trickleConfig) return;
+            if (!trickleConfig._onChildren) return;
+
+            this.applyTrickleToChildren(model, trickleConfig);
+        },
+
+        applyTrickleToChildren: function(model, parentTrickleConfig) {
+            var children = model.getChildren().models;
+            for (var i = 0, l = children.length; i < l; i++) {
+
+                var child = children[i];
+                var childTrickleConfig = child.get("_trickle");
+
+                var isLastItem = (i == l - 1);
+
+                var isEnabled = true;
+                if (childTrickleConfig) {
+                    if (childTrickleConfig._isEnabled === false) {
+                        isEnabled = false;
+                    }
+                }
+                if (parentTrickleConfig) {
+                    if (parentTrickleConfig._isEnabled === false) {
+                        isEnabled = false;
+                    }
+                }
+
+                child.set("_trickle", $.extend(true, 
+                    {}, 
+                    parentTrickleConfig, 
+                    childTrickleConfig, 
+                    { 
+                        _id: child.get("_id"),
+                        _onChildren: false,
+                        _isEnabled: isEnabled,
+                        _isLastItem: isLastItem
+                    }
+                ));
+
+                this.checkResetModel(child);
+                
             }
-        });
+        },
 
-        new TrickleView({model: pageModel});
-    }
+        resizeBodyToCurrentIndex: function() {
+            if (this._isFinished) return this.showElements();
 
-    Adapt.on("pageView:preRender", function(view) {
-        var model = view.model;
-        var availableArticles;
-        var availableBlocks;
-        var trickleArticles;
-        var trickleBlocks;
-        availableArticles = model.getChildren();
-        availableBlocks = model.findDescendants('blocks');
+            this._listenToResizeEvent = false;
 
-        trickleArticles = _.filter(availableArticles.models, function(article) {
-            if (article.get('_trickle')) {
-                return article.get('_trickle')._isEnabled === true;
+            this.showElements();
+
+            var id = this.getCurrentStepModel().get("_id");
+            var $element = $("." + id);
+
+            if ($element.length === 0) {
+                return;
             }
-        });
 
-        trickleBlocks = _.filter(availableBlocks.models, function(block) {
-            if (block.get('_trickle')) {
-                return block.get('_trickle')._isEnabled === true;
+            var elementOffset = $element.offset();
+            var elementBottomOffset = elementOffset.top + $element.outerHeight();
+
+            $('body').css("height", elementBottomOffset + "px");
+        },
+
+        showElements: function() {
+            if (!this._descendantsParentFirst) return;
+
+            var model = this.getCurrentStepModel();
+            var ancestors = this._descendantsParentFirst.models;
+            var ancestorIds = _.pluck(this._descendantsParentFirst.toJSON(), "_id");
+
+            var showToId;
+            if (model !== undefined) {
+                //Not at end of trickle
+                showToId = model.get("_id");
+
+                var isLastType = Models.isLastStructureType(model);
+
+                if (!isLastType) {
+                    //If current step model is not a component type:
+                    //then show components for the selected parent
+                    var currentAncestorIndex = _.indexOf(ancestorIds, showToId);
+                    var ancestorChildComponents = ancestors[currentAncestorIndex].findDescendants("components");
+
+                    showToId = ancestorChildComponents.models[ancestorChildComponents.models.length-1].get("_id");
+                }
+
+            } else {
+                //At end, show all ids
+                showToId = ancestors[ancestors.length -1].get("_id");
             }
-        });
+            
+            
+            var showToIndex = _.indexOf(ancestorIds, showToId);
 
-        // If trickle exists on the page
-        if (trickleArticles.length > 0 || trickleBlocks.length > 0) {
-            setupTrickleView(model, trickleArticles);
+            for (var i = 0, l = ancestors.length; i < l; i++) {
+                var itemModel = ancestors[i];
+                if (i <= showToIndex) {
+                    itemModel.set("_isVisible", true);
+                } else {
+                    itemModel.set("_isVisible", false);
+                }
+            }
+            
+        },
+
+        getCurrentStepModel: function() {
+            if (!this._descendantsChildrenFirst) return;
+
+            return this._descendantsChildrenFirst.models[this._currentStepIndex];
+        },
+
+        setupStep: function(model) {
+            var trickleConfig = this.getModelTrickleConfig(model)
+            if (!trickleConfig) return;
+            if (!trickleConfig._isEnabled) return;
+            if (trickleConfig._onChildren) return;
+
+            var isStepLocking = this.isModelStepLocking(model);
+            trickleConfig._isStepLocking = isStepLocking;
+
+            Adapt.trigger("trickle:interactionInitialize", model);
+        },
+
+        initializeStep: function() {
+            if (this._isFinished) return;
+            this.initializeStepUnlockWait();
+
+            if (this.hasCurrentStepLock()) {
+                this.startTrickle();
+            } else {
+                this.endTrickle();
+            }
+        },
+
+        hasCurrentStepLock: function() {
+            var currentIndex = this._currentStepIndex;
+            var descendants = this._descendantsChildrenFirst.models;
+            for (var i = currentIndex, l = descendants.length; i < l; i++) {
+                var descendant = descendants[i];
+
+                if (!this.isModelStepLocking(descendant)) continue;
+
+                this._currentStepIndex = i;
+
+                return true;
+            }
+
+            return false;
+        },
+
+        isModelStepLocking: function(model) {
+            var trickleConfig = this.getModelTrickleConfig(model)
+            if (!trickleConfig) return false;
+            if (trickleConfig._onChildren) return false;
+
+            if (trickleConfig._isEnabled === false) return false;
+            
+            if (!trickleConfig._stepLocking || !trickleConfig._stepLocking._isEnabled) return false;
+            
+            if (trickleConfig._isLocking) return true;
+            if (trickleConfig._isInteractionComplete) return false;
+
+            var isComplete = model.get(completionAttribute);
+            if (isComplete !== undefined) return !isComplete;
+
+            return true;
+        },
+
+        startTrickle: function() {
+            $("html").addClass("trickle");
+            Adapt.trigger("steplocking:waitInitialize");
+            this.resizeBodyToCurrentIndex();
+            this._listenToResizeEvent = true;
+        },
+
+        endTrickle: function() {
+            this._currentStepIndex = -1;
+            this._isFinished = true;
+            $("body").css("height", "");
+            $("html").removeClass("trickle");
+            this._pageView = null;
+            this.resizeBodyToCurrentIndex();
+            this._listenToResizeEvent = true;
+        },
+
+        //completion reorder and processing
+        _completionQueue: [],
+        queueOrExecuteCompletion: function(model, value, isPerformCompletionQueue) {
+            if (value === false) return;    
+
+            if (isPerformCompletionQueue !== true) {
+                //article, block and component completion trigger in a,b,c order need in c,b,a order
+                //otherwise block completion events will occur before component completion events
+                
+                var isLastType = Models.isLastStructureType(model);
+
+                if (!isLastType) {
+                    //defer completion event handling if not at component level
+                    return this._completionQueue.push({
+                        model: model,
+                        value: value    
+                    });
+                } else {
+                    //if at component level, handle completion queue events after component completion is handled
+                    _.defer(_.bind(this.performCompletionQueue, this));
+                }
+            }
+
+            Adapt.trigger("steplocking:waitCheck", model);
+            this.checkStepComplete(model);
+        },
+
+        performCompletionQueue: function() {
+            while (this._completionQueue.length > 0) {
+                var item = this._completionQueue.pop();
+                this.queueOrExecuteCompletion(item.model, item.value, true);
+            }
+        },
+
+        checkStepComplete: function(model) {
+            if (this._isFinished) return;
+
+            var currentModel = this.getCurrentStepModel();
+
+            //if the model matches the current trickle item,
+            //or if the completion came from a trickle interactive component,
+            //check if the step is complete 
+            if (model.get("_id") != currentModel.get("_id") && !model.get("_isTrickleInteractiveComponent")) return;
+            
+            //if trickle interactive component, swap for currentModel
+            if (model.get("_isTrickleInteractiveComponent")) {
+                model = currentModel;
+            }
+
+            var trickleConfig = this.getModelTrickleConfig(model);
+            if (!trickleConfig) return;
+
+            //set interaction complete
+            trickleConfig._isLocking = false;
+            trickleConfig._isInteractionComplete = true;
+            
+            //if plugins need to present before the interaction then break
+            if (this.isStepUnlockWaiting()) return;
+            
+            //if completion is required and item is not yet complete then break
+            if (trickleConfig._stepLocking._isCompletionRequired && !model.get(completionAttribute)) return;
+
+            Adapt.trigger("trickle:interactionRequired", model);
+            
+            //if plugins need to present before the next step occurs then break
+            if (this.isStepUnlockWaiting()) return;
+
+            this.stepComplete(model);
+        },
+
+        stepComplete: function(model) {
+            this.initializeStep();
+
+            Adapt.trigger('device:resize');
+
+            this.scrollToStep(model);
+        },
+
+        scrollToStep: function(model) {
+            var trickleConfig = this.getModelTrickleConfig(model);
+            if (trickleConfig._autoScroll === false) return;
+
+            var scrollTo = trickleConfig._scrollTo;
+            this.relativeScrollTo( model, scrollTo );
+        },
+
+        isStepUnlockWaiting: function() {
+            return this._waitForUnlockRequestsCount > 0;
+        },
+        
+        relativeScrollTo: function(model, scrollTo) {
+            if (scrollTo === undefined) scrollTo = "@block +1";
+
+            var scrollToId = "";
+            switch (scrollTo.substr(0,1)) {
+            case "@":
+                //NAVIGATE BY RELATIVE TYPE
+                var relativeModel = Models.findRelative(model, scrollTo);
+                scrollToId = relativeModel.get("_id");
+
+                break;
+            case ".":
+                //NAVIGATE BY CLASS
+                scrollToId = scrollTo.substr(1, scrollTo.length-1);
+                break;
+            default: 
+                scrollToId = scrollTo;
+            }
+
+            if (scrollToId == "") return;
+            
+            var duration = model.get("_trickle")._scrollDuration || 500;
+            _.delay(function() {
+                Adapt.scrollTo("." + scrollToId, { duration: duration });
+            }, 250);
         }
-    });
+        
+    }, Backbone.Events);
 
-});
+    Trickle.initialize();
+
+    return Trickle;
+
+})
