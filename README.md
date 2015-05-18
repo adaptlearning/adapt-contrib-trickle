@@ -116,7 +116,7 @@ Default: ``"hidden"``
   
 ``_button._isFullWidth``  
 -------
-Will position the button fixed to the bottom of the window. This option will force ``_autoHide: true`` and ``_stepLocking._isEnabled: true``. The button fade-out when the users scrolls upwards, away from the bottom of the window.  
+Will position the button fixed to the bottom of the window. This option will force ``_stepLocking._isEnabled: true``. The button will fade-out when the users scrolls upwards, away from the bottom of the window when ``_autoHide: true``.  
 Default: ``true``  
   
 ``_button._autoHide``  
