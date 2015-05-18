@@ -10,7 +10,7 @@ define([
     './Utility/Models',
     './trickle-tutorPlugin',
     './trickle-buttonPlugin',
-    './lib/dom-resize-event'
+    './lib/dom-resize-event'r
 ], function(Adapt, DefaultTrickleConfig, Models) {
 
     var completionAttribute = "_isInteractionComplete";
@@ -514,6 +514,8 @@ define([
             if (trickleConfig._autoScroll === false) return;
 
             var scrollTo = trickleConfig._scrollTo;
+            
+            //Allows trickle to scroll to a sibling / cousin component relative to the current trickle item
             this.relativeScrollTo( model, scrollTo );
         },
 
@@ -528,7 +530,10 @@ define([
             switch (scrollTo.substr(0,1)) {
             case "@":
                 //NAVIGATE BY RELATIVE TYPE
+                
+                //Allows trickle to scroll to a sibling / cousin component relative to the current trickle item
                 var relativeModel = Models.findRelative(model, scrollTo);
+                
                 if (relativeModel === undefined) return;
                 scrollToId = relativeModel.get("_id");
 
