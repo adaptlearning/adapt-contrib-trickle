@@ -20,17 +20,19 @@ To setup locking, add the ``_trickle`` attribute to the article or block you wis
 }
 ```
 
-If an article is set to trickle with ``_onChildren: true``, all blocks underneath the article will be trickled unless explicitly overridden. Setting ``_trickle`` on an block will override any ``_trickle`` settings of the article (with ``_onChildren: true``) above it. 
+When the article/block is complete, a button will appear containing the text you specify in the ``text`` attribute.
+Clicking this button will show and scroll to the next block (configurable).  
+  
+If an article is set to trickle with ``_onChildren: true`` (default), all blocks underneath the article will be trickled unless explicitly overridden. Setting ``_trickle`` on an block will override any ``_trickle`` settings of the article (with ``_onChildren: true``) above it.  
+  
+To use trickle on the article only, without applying trickle to children blocks, use:  
 
 ```
 "_trickle": {
-	"_isEnabled": true,
-	"_onChildren": true
+    "_isEnabled": true,
+    "_onChildren": false
 }
 ```
-
-When the article/block is complete, a button will appear containing the text you specify in the ``text`` attribute.
-Clicking this button will show and scroll to the next block (configurable).  
   
   
 Additional Settings
@@ -40,10 +42,9 @@ Defaults:
 ```
 "_trickle": {
     "_isEnabled": true,
-    "_duration": 500,
+    "_scrollDuration": 500,
     "_autoScroll": true,
     "_scrollTo": "@block +1",
-    "_onChildren": false,
     "_button": {
         "_isEnabled": true,
         "_styleBeforeCompletion": "hidden",
@@ -67,9 +68,9 @@ Defaults:
 -------
 Can be set in course.json, page.json, article.json and block.json to disable trickle where not required.  
   
-``_duration``  
+``_scrollDuration``  
 -------
-Is the duration of the scroll animation.  
+Is the duration of the scroll animation in milliseconds.  
   
 ``_autoScroll``  
 -------
@@ -85,7 +86,7 @@ Signifies to where trickle should scroll when the relevant step is unlocked.
   
 ``_onChildren``  
 -------
-Used when an article should set trickle on all child blocks rather than trickle on the article.  
+Used when an article should set trickle on all child blocks rather than trickle on the article. Set to ``false`` to on the article to use trickle at article level.  
   
 ``_button``
 -------

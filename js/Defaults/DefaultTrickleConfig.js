@@ -8,9 +8,9 @@ define(function() {
 
 	var DefaultTrickleConfig = {
 		_isEnabled: true,
-		_duration: 500,
+		_scrollDuration: 500,
 		_autoScroll: true,
-		_onChildren: false,
+		_onChildren: true,
 		_button: {
 			_isEnabled: true,
 			_isFullWidth: true,

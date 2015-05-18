@@ -194,6 +194,15 @@ define([
                     }
                 );
 
+                if (model.get("_type") != "article") {
+                    trickleConfig._onChildren = false;
+                }
+
+                var isLastPageItem = ( trickleConfig._index == parent._descendantsChildrenFirst.length - 2 );
+                if (isLastPageItem && model.get("_type") != "article") {
+                    return false;
+                }
+
                 model.set("_trickle", trickleConfig);
 
                 return true;
@@ -255,7 +264,7 @@ define([
                     }
                 }
 
-                child.set("_trickle", $.extend(true, 
+                var trickleConfig = $.extend(true, 
                     {}, 
                     parentTrickleConfig, 
                     childTrickleConfig, 
@@ -263,9 +272,17 @@ define([
                         _id: child.get("_id"),
                         _onChildren: false,
                         _isEnabled: isEnabled,
-                        _isLastItem: isLastItem
+                        _isLastItem: isLastItem,
+                        _index: this.getModelPageIndex(child)
                     }
-                ));
+                );
+
+                var isLastPageItem = ( trickleConfig._index == this._descendantsChildrenFirst.length - 2 );
+                if (isLastPageItem) {
+                    continue;
+                }
+
+                child.set("_trickle", trickleConfig);
 
                 this.checkResetModel(child);
                 
@@ -512,6 +529,7 @@ define([
             case "@":
                 //NAVIGATE BY RELATIVE TYPE
                 var relativeModel = Models.findRelative(model, scrollTo);
+                if (relativeModel === undefined) return;
                 scrollToId = relativeModel.get("_id");
 
                 break;
