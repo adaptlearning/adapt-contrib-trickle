@@ -10,7 +10,21 @@ define([
 ], function(Adapt, StructureType) {
 
     var ModelUtilities = {
-
+        
+        /*
+        * Fetchs the sub structure of an id as a flattened array
+        *
+        *   Such that the tree:
+        *       { a1: { b1: [ c1, c2 ], b2: [ c3, c4 ] }, a2: { b3: [ c5, c6 ] } }
+        *
+        *   will become the array (parent first = false):
+        *       [ c1, c2, b1, c3, c4, b2, a1, c5, c6, b3, a2 ]
+        *
+        *   or (parent first = true):
+        *       [ a1, b1, c1, c2, b2, c3, c4, a2, b3, c5, c6 ]
+        *
+        * This is useful when sequential operations are performed on the page/article/block/component hierarchy.
+        */
         getDescendantsFlattened: function(id, parentFirst) {
             var model = Adapt.findById(id);
             if (model === undefined) return undefined;
@@ -52,6 +66,16 @@ define([
             return new Backbone.Collection(descendants);
         },
 
+        /*
+        * Returns a relative structural item from the Adapt hierarchy
+        *   
+        *   Such that in the tree:
+        *       { a1: { b1: [ c1, c2 ], b2: [ c3, c4 ] }, a2: { b3: [ c5, c6 ] } }
+        *
+        *       findRelative(modelC1, "@block +1") = modelB2;
+        *       findRelative(modelC1, "@component +4") = modelC5;
+        *
+        */
         findRelative: function(model, relativeString) {
             //return a model relative to the specified one
             var pageModel;
