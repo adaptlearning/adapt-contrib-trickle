@@ -3,8 +3,7 @@
 //TRICKLE STYLE BUTTON ON ALL ARTICLE BLOCKS
 //put in article.json
 "_trickle": {
-    "_isEnabled": true,
-    "_onChildren": true 
+    "_isEnabled": true
 }
 
 
@@ -14,7 +13,7 @@
     "_isEnabled": true, //(default=true)
     "_duration": 500, //(default=500)
     "_autoScroll": true, //(default=true)
-    "_onChildren": false, //(default=false)
+    "_onChildren": true, //(default=true)
     "_button": {
         "_isEnabled": true, //(default=true)
         "_styleBeforeCompletion": "hidden|visible", //(default=hidden)
