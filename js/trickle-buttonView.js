@@ -216,9 +216,11 @@ define([
             this.model.set("_isHidden", bool);
 
             if (animate === false) {
+                //show or hide without animations
                 if (!bool) this.$('.component-inner').css("visibility", "hidden");
                 else if (bool) this.$('.component-inner').css("visibility", "visible");
             } else {
+                //perform animation from visible<>hidden
                 if (bool) this.$('.component-inner').css("visibility", "visible");
                 this.$('.component-inner').velocity({opacity: bool ? 1 : 0 }, {
                     duration: 250,
@@ -234,10 +236,15 @@ define([
             var trickleConfig = this.model.get("_trickle");
 
             var _isVisible = true;
+            
+            //Check to see if autohide component should always be visible or if it has a precompletion hidden state
             if (trickleConfig._button._styleBeforeCompletion == "hidden") {
                 var parentModel = Adapt.findById(this.model.get("_parentId"));
 
                 var isVisibleBeforeCompletion = (trickleConfig._button._styleBeforeCompletion != "hidden");
+                
+                //if the button should be visible on step precompletion or if the step is complete, 
+                //then the button should be visible
                 _isVisible = isVisibleBeforeCompletion || parentModel.get(completionAttribute);
             }
             return _isVisible;
