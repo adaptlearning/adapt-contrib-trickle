@@ -33,13 +33,6 @@ define([
             if (!trickleConfig._button._isEnabled) return false;
             if (!trickleConfig._button._component == "trickle-button") return false;
 
-            switch (trickleConfig._button._styleAfterClick) {
-            case "disabled": case "scroll":
-                return true;
-            case "hidden":
-                return !model.get(completionAttribute);
-            }
-
             return true;
         },
 

@@ -27,7 +27,6 @@ define([
             this.setupButtonText(trickleConfig);
 
             this.set({
-                _isTrickleInteractiveComponent: true,
                 _id: "trickle-button-"+parentModel.get("_id"),
                 _type: "component",
                 _component: "trickle-button",

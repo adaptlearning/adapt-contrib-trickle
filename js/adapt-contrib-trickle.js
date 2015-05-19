@@ -10,7 +10,7 @@ define([
     './Utility/Models',
     './trickle-tutorPlugin',
     './trickle-buttonPlugin',
-    './lib/dom-resize-event'r
+    './lib/dom-resize-event'
 ], function(Adapt, DefaultTrickleConfig, Models) {
 
     var completionAttribute = "_isInteractionComplete";
@@ -108,7 +108,7 @@ define([
             this.listenTo(Adapt.blocks, "change:"+completionAttribute, this.onAnyComplete);
             this.listenTo(Adapt.components, "change:"+completionAttribute, this.onAnyComplete);           
 
-            this.listenTo(Adapt, "trickle:interactionComplete", this.onAnyComplete);
+            this.listenTo(Adapt, "trickle:interactionComplete", this.checkStepComplete);
 
             this.listenTo(Adapt, "steplocking:wait", this.onStepUnlockWait);
             this.listenTo(Adapt, "steplocking:unwait", this.onStepUnlockUnwait);
@@ -155,24 +155,18 @@ define([
                 
                 trickleConfig._isLocking = true;
 
-            } else if (trickleConfig._stepLocking._isLockedOnRevisit && !trickleConfig._stepLocking._isCompletionRequired) {
+            }
 
-                trickleConfig._isInteractionComplete = false;
-                trickleConfig._isLocking = true;
-                model.set(completionAttribute, false);
+            if (trickleConfig._stepLocking._isLockedOnRevisit || 
+                (trickleConfig._stepLocking._isCompletionRequired && !model.get(completionAttribute))) {
 
-            } else if ( trickleConfig._stepLocking._isCompletionRequired && !model.get(completionAttribute) ) {
-                
-                trickleConfig._isInteractionComplete = false;
-                trickleConfig._isLocking = true;
-                model.set(completionAttribute, false);
+                //var isCompleteAndRequired = trickleConfig._stepLocking._isCompletionRequired && model.get(completionAttribute);
 
-            } else if ( trickleConfig._stepLocking._isLockedOnRevisit && trickleConfig._stepLocking._isCompletionRequired && model.get(completionAttribute) ) {
-                
-                trickleConfig._isInteractionComplete = true;
+                trickleConfig._isInteractionComplete = false; //isCompleteAndRequired;
                 trickleConfig._isLocking = true;
 
             }
+
         },
 
         getModelTrickleConfig: function(model) {
@@ -470,22 +464,11 @@ define([
 
             var currentModel = this.getCurrentStepModel();
 
-            //if the model matches the current trickle item,
-            //or if the completion came from a trickle interactive component,
-            //check if the step is complete 
-            if (model.get("_id") != currentModel.get("_id") && !model.get("_isTrickleInteractiveComponent")) return;
-            
-            //if trickle interactive component, swap for currentModel
-            if (model.get("_isTrickleInteractiveComponent")) {
-                model = currentModel;
-            }
+            //if the model does not match the current trickle item then break
+            if (model.get("_id") != currentModel.get("_id")) return;
 
             var trickleConfig = this.getModelTrickleConfig(model);
             if (!trickleConfig) return;
-
-            //set interaction complete
-            trickleConfig._isLocking = false;
-            trickleConfig._isInteractionComplete = true;
             
             //if plugins need to present before the interaction then break
             if (this.isStepUnlockWaiting()) return;
@@ -493,10 +476,15 @@ define([
             //if completion is required and item is not yet complete then break
             if (trickleConfig._stepLocking._isCompletionRequired && !model.get(completionAttribute)) return;
 
+
             Adapt.trigger("trickle:interactionRequired", model);
             
             //if plugins need to present before the next step occurs then break
             if (this.isStepUnlockWaiting()) return;
+
+            //set interaction complete
+            trickleConfig._isLocking = false;
+            trickleConfig._isInteractionComplete = true;
 
             this.stepComplete(model);
         },

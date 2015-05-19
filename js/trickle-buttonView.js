@@ -61,14 +61,9 @@ define([
             this.addCustomClasses();
             ComponentView.prototype.initialize.apply(this);
 
-            var _isEnabled = this.canStartEnabled();
-            var _isVisible = this.canStartVisible();
+            this.model.set("_isEnabled", this.isInEnabledState());
 
-            this.model.set("_isEnabled", _isEnabled);
-            this.model.set("_isVisible", _isVisible);
-            this.model.set("_isHidden", !_isVisible);
-
-            this.checkAutoHide(false, false);
+            this.checkAutoHide(this.isInVisibleState(), false);
         },
 
         addCustomClasses: function() {
@@ -77,43 +72,8 @@ define([
             this.$el.addClass(this.model.get("_trickle")._button._className);
         },
 
-        canStartEnabled: function() {
-            var trickleConfig = this.model.get("_trickle");
-
-            var _isEnabled = true;
-            if (trickleConfig._stepLocking._isCompletionRequired && trickleConfig._stepLocking._isEnabled) {
-
-                var isEnabledAfterCompletion = (trickleConfig._button._styleAfterClick == "scroll");
-                _isEnabled = isEnabledAfterCompletion && this.model.get(completionAttribute);
-
-            } else if (trickleConfig._stepLocking._isEnabled) {
-
-                var isDisabledAfterCompletion = (trickleConfig._button._styleAfterClick == "disabled");
-                _isEnabled = !(isDisabledAfterCompletion && this.model.get(completionAttribute));
-
-            }
-            return _isEnabled;
-        },
-
-        canStartVisible: function() {
-            var trickleConfig = this.model.get("_trickle");
-
-            var _isVisible = true;
-            if (trickleConfig._button._styleBeforeCompletion == "hidden") {
-                var isVisibleBeforeCompletion = (trickleConfig._button._styleBeforeCompletion != "hidden");
-                _isVisible = isVisibleBeforeCompletion || this.model.get(completionAttribute);
-            }
-
-            if (trickleConfig._button._autoHide) {
-                _isVisible = false;
-            }
-            
-            return _isVisible;
-        },
-
         postRender: function() {
-            var _isEnabled = this.canStartEnabled();
-            this.setDisabledState(!_isEnabled);
+            this.setDisabledState( !this.isInEnabledState() );
 
             this.setReadyStatus();
             this.setupEventListeners();
@@ -125,6 +85,10 @@ define([
         },
 
         setupEventListeners: function() {
+
+            var trickleConfig = this.model.get("_trickle");
+            if (!trickleConfig._button._autoHide) this.$el.off("onscreen");
+
             this.listenTo(Adapt, "trickle:interactionRequired", this.onInteractionRequired);
             this.listenTo(Adapt, "steplocking:waitCheck", this.onSteplockingCheckWait);
             this.listenTo(this.model, "change:_isEnabled", this.onEnabledChange);
@@ -175,28 +139,23 @@ define([
 
         checkCurrentInteraction: function(parentModel) {
             if (parentModel.get("_id") != this.model.get("_parentId")) return;
-            if (this.model.get("_isComplete")) return;
 
             var trickleConfig = this.model.get("_trickle");
 
-            this.model.set("_isEnabled", true);
+            if (trickleConfig._isInteractionComplete) return;
+
+            this.model.set("_isEnabled", this.isInEnabledState() );
         },
 
         showButton: function(parentModel) {
             //check if the interaction required event is intended for this button
             if (parentModel.get("_id") != this.model.get("_parentId")) return;
-            if (this.model.get("_isComplete")) return;
 
             var trickleConfig = this.model.get("_trickle");
 
-            var _isVisible = true;
-            if (trickleConfig._button._styleBeforeCompletion == "hidden") {
-                var isVisibleBeforeCompletion = (trickleConfig._button._styleBeforeCompletion != "hidden");
-                _isVisible = isVisibleBeforeCompletion || parentModel.get(completionAttribute);;
-            }
+            if (trickleConfig._isInteractionComplete) return;
 
-            this.model.set("_isVisible", _isVisible);
-            this.model.set("_isEnabled", true);
+            this.model.set("_isEnabled",  this.isInEnabledState() );
 
             this.toggleLock(true);
 
@@ -204,12 +163,16 @@ define([
         },
 
         checkAutoHide: function(bool, animate) {
+            
+            if (!this.isInVisibleState()) {
+                //override visible state if button should not be visible
+                bool = false;
+            }
+
+            this.model.set("_isVisible", bool);
+
             var trickleConfig = this.model.get("_trickle");
             if (!trickleConfig._button._autoHide) return;
-
-            if (!this.isOnCompleteVisible()) return;
-
-            this.model.set("_isVisible", true);
 
             if (this.model.get("_isHidden") == bool) return;
 
@@ -232,21 +195,61 @@ define([
             
         },
 
-        isOnCompleteVisible: function() {
+        isInEnabledState: function() {
+            var trickleConfig = this.model.get("_trickle");
+
+            var _isEnabled = true;
+
+            var isEnabledBeforeCompletion = false;
+            //Check to see if autohide component should always be visible or if it has a precompletion hidden state
+            if (trickleConfig._button._styleBeforeCompletion == "visible") {
+                isEnabledBeforeCompletion = (!trickleConfig._stepLocking._isEnabled || !trickleConfig._stepLocking._isCompletionRequired);
+            }
+
+            var isEnabledAfterClick = (trickleConfig._button._styleAfterClick != "hidden" && trickleConfig._button._styleAfterClick != "disabled");
+
+            var parentModel = Adapt.findById(this.model.get("_parentId"));
+            var isComplete = parentModel.get(completionAttribute);
+            var isClicked = trickleConfig._isInteractionComplete;
+
+            var isBeforeCompletionEnabled = (!isComplete && !isClicked && isEnabledBeforeCompletion);
+            var isAfterCompletionEnabled = (isClicked && isEnabledAfterClick);
+            var isInInteractionEnabled = (isComplete && !isClicked);
+
+            _isEnabled = isBeforeCompletionEnabled || isAfterCompletionEnabled || isInInteractionEnabled;
+
+            return _isEnabled;
+        },
+
+        isInVisibleState: function() {
             var trickleConfig = this.model.get("_trickle");
 
             var _isVisible = true;
-            
+
+            var isVisibleBeforeCompletion = true;
             //Check to see if autohide component should always be visible or if it has a precompletion hidden state
             if (trickleConfig._button._styleBeforeCompletion == "hidden") {
-                var parentModel = Adapt.findById(this.model.get("_parentId"));
-
-                var isVisibleBeforeCompletion = (trickleConfig._button._styleBeforeCompletion != "hidden");
-                
-                //if the button should be visible on step precompletion or if the step is complete, 
-                //then the button should be visible
-                _isVisible = isVisibleBeforeCompletion || parentModel.get(completionAttribute);
+                isVisibleBeforeCompletion = (trickleConfig._button._styleBeforeCompletion != "hidden");
             }
+
+            var isVisibleAfterClick = (trickleConfig._button._styleAfterClick != "hidden");
+
+            var parentModel = Adapt.findById(this.model.get("_parentId"));
+            var isComplete = parentModel.get(completionAttribute);
+            var isClicked = trickleConfig._isInteractionComplete;
+
+            var isOnScreen = true;
+            if (trickleConfig._button._autoHide) {
+                isOnScreen = this.$el.onscreen().onscreen;
+            }
+
+            var isBeforeCompletionVisible = (!isComplete && !isClicked && isVisibleBeforeCompletion && isOnScreen);
+            var isInInteractionVisible = (isComplete && !isClicked && isOnScreen);
+            var isAfterCompletionVisible = (isClicked && isVisibleAfterClick && isOnScreen);
+
+            _isVisible = isBeforeCompletionVisible || isAfterCompletionVisible || isInInteractionVisible;
+
+
             return _isVisible;
 
         },
@@ -266,20 +269,17 @@ define([
             var trickleConfig = this.model.get("_trickle");
 
             switch (trickleConfig._button._styleAfterClick) {
-            case "disabled": 
-                this.model.set("_isEnabled", false);
-                this.setDisabledState(true);
-                this.stopListening();
-                break;
-            case "hidden":
-                this.model.set("_isEnabled", false);
-                this.model.set("_isVisible", false);
+            case "disabled": case "hidden":
+                this.model.set("_isEnabled", this.isInEnabledState() );
+                this.$el.off("onscreen");
                 this.stopListening();
                 break;
             case "scroll":
-                this.model.set("_isEnabled", true);
+                this.model.set("_isEnabled", this.isInEnabledState() );
                 break;
             }
+
+            this.checkAutoHide(true, true);
         },
 
         scrollTo: function() {
@@ -291,12 +291,15 @@ define([
 
         completeLock: function() {
 
-            this.setCompletionStatus();
+            var trickleConfig = this.model.get("_trickle");
+            trickleConfig._isInteractionComplete = true;
 
             this.toggleLock(false);
 
-            //as this is an 'out-of-course' component, we must manually ask trickle to consider its completion
-            Adapt.trigger("trickle:interactionComplete", this.model);
+            //as this is an 'out-of-course' component, 
+            //we must manually ask trickle to consider the completion of its parent (possibly for a second time)
+            var parentModel = Adapt.findById(this.model.get("_parentId"));
+            Adapt.trigger("trickle:interactionComplete", parentModel);
             
             this.updateState();
         }
