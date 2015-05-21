@@ -87,6 +87,7 @@ define([
         _descendantsChildrenFirst: null,
         _descendantsParentFirst: null,
         _pageView: null,
+        _isTrickleOn: false,
 
         initialize: function() {
             this.listenToOnce(Adapt, "app:dataReady", this.onDataReady);
@@ -160,9 +161,7 @@ define([
             if (trickleConfig._stepLocking._isLockedOnRevisit || 
                 (trickleConfig._stepLocking._isCompletionRequired && !model.get(completionAttribute))) {
 
-                //var isCompleteAndRequired = trickleConfig._stepLocking._isCompletionRequired && model.get(completionAttribute);
-
-                trickleConfig._isInteractionComplete = false; //isCompleteAndRequired;
+                trickleConfig._isInteractionComplete = false;
                 trickleConfig._isLocking = true;
 
             }
@@ -284,6 +283,8 @@ define([
         },
 
         resizeBodyToCurrentIndex: function() {
+            if (!this._isTrickleOn) return;
+            
             if (this._isFinished) return this.showElements();
 
             this._listenToResizeEvent = false;
@@ -409,6 +410,7 @@ define([
         },
 
         startTrickle: function() {
+            this._isTrickleOn = true;
             $("html").addClass("trickle");
             Adapt.trigger("steplocking:waitInitialize");
             this.resizeBodyToCurrentIndex();
@@ -423,6 +425,7 @@ define([
             this._pageView = null;
             this.resizeBodyToCurrentIndex();
             this._listenToResizeEvent = true;
+            this._isTrickleOn = false;
         },
 
         //completion reorder and processing

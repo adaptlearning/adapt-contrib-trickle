@@ -61,6 +61,7 @@
   };
   
   window.removeResizeListener = function(element, fn){
+    if (!element.__resizeListeners) return;
     element.__resizeListeners__.splice(element.__resizeListeners__.indexOf(fn), 1);
     if (!element.__resizeListeners__.length) {
       if (attachEvent) element.detachEvent('onresize', resizeListener);
