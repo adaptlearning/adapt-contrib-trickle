@@ -254,7 +254,6 @@ define([
             var onscreen = false;
             var measurements = this.$el.onscreen();
             if (measurements.bottom > -(this.$(".component-inner").outerHeight()*2)) {
-                console.log(this.model.get("_id"), measurements.bottom, -(this.$(".component-inner").outerHeight()*1.5));
                 onscreen = true;
             }
             return onscreen;
