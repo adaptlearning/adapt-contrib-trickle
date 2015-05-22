@@ -25,13 +25,9 @@ define([
             this.showButton(parentModel); 
         },
 
-        onOnScreen: function(event, measurements) {
+        onOnScreen: function() {
             //show or hide the button when button is inview/outview
-            var onscreen = measurements.onscreen;
-            if (measurements.bottom > -(this.$(".component-inner").outerHeight()*1.5))
-                onscreen = true;
-
-            this.checkAutoHide(onscreen);
+            this.checkAutoHide( this.isOnScreen() );
         },
 
         onClick: function() {
@@ -240,7 +236,7 @@ define([
 
             var isOnScreen = true;
             if (trickleConfig._button._autoHide) {
-                isOnScreen = this.$el.onscreen().onscreen;
+                isOnScreen = this.isOnScreen();
             }
 
             var isBeforeCompletionVisible = (!isComplete && !isClicked && isVisibleBeforeCompletion && isOnScreen);
@@ -252,6 +248,16 @@ define([
 
             return _isVisible;
 
+        },
+
+        isOnScreen: function() {
+            var onscreen = false;
+            var measurements = this.$el.onscreen();
+            if (measurements.bottom > -(this.$(".component-inner").outerHeight()*2)) {
+                console.log(this.model.get("_id"), measurements.bottom, -(this.$(".component-inner").outerHeight()*1.5));
+                onscreen = true;
+            }
+            return onscreen;
         },
 
         completeJump: function() {
