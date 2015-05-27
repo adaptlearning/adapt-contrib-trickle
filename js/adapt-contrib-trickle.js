@@ -137,9 +137,9 @@ define(function(require) {
                     return;
                 }
                 if  (this.pageElements[this.trickleCurrentIndex-1].get('_trickle')){
-                    this.showTrickle();
+                    this.showTrickle(this.pageElements[this.trickleCurrentIndex-1].get('_id'));
                 } else if (this.pageElements[this.trickleCurrentIndex].get('_trickle')){
-                    this.showTrickle();
+                    this.showTrickle(this.pageElements[this.trickleCurrentIndex].get('_id'));
                 } else if (!this.pageElements[this.trickleCurrentIndex].get('_trickle')) {
                     this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
                 }
@@ -176,6 +176,7 @@ define(function(require) {
                     this.setItemToVisible(this.pageElements[this.trickleCurrentIndex]);
                 }
                 this.hideTrickle();
+
                 
                 _.defer(_.bind(function() {
                     Adapt.trigger('device:screenSize', Adapt.device.screenWidth);
@@ -183,18 +184,18 @@ define(function(require) {
                 }, this));
             },
 
-            showTrickle: function () {
+            showTrickle: function (blockId) {
                 var buttonView = new TrickleButtonView({
                     model: this.pageElements[this.trickleCurrentIndex-1]
                 });
-                $('body').addClass('trickle-body-padding');
+                $("."+blockId).addClass('trickle-body-padding');
                 window.scrollTo(0,$('body')[0].scrollHeight);//could it be animated?
                 this.$el.html(buttonView.$el).show();
                 this.$('.trickle-button').addClass('trickle-button-show');
             },
 
             hideTrickle: function() {
-                $('body').removeClass('trickle-body-padding');
+                $(".block").removeClass('trickle-body-padding');
                 this.$el.hide();
             },
 
