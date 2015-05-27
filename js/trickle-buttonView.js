@@ -253,7 +253,9 @@ define([
         isOnScreen: function() {
             var onscreen = false;
             var measurements = this.$el.onscreen();
-            if (measurements.bottom > -(this.$(".component-inner").outerHeight()*2)) {
+            var parent = this.$el.offsetParent();
+            var isParentHtml = parent.is("html");
+            if (!isParentHtml && measurements.bottom > -(this.$(".component-inner").outerHeight()*2)) {
                 onscreen = true;
             }
             return onscreen;
