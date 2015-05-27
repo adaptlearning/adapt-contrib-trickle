@@ -59,7 +59,7 @@
 
     var resizeHandlers = getEventHandlers("resize");
 
-    if (resizeHandlers.length === 0 && inViewHandlers.length === 0) {
+    if (resizeHandlers.length === 0) {
       //nothing to resize
       stopLoop();
       resizeIntervalDuration = 500;
