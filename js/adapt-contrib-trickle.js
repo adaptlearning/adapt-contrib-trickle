@@ -10,7 +10,7 @@ define([
     './Utility/Models',
     './trickle-tutorPlugin',
     './trickle-buttonPlugin',
-    './lib/dom-resize-event'
+    './lib/jquery.resize'
 ], function(Adapt, DefaultTrickleConfig, Models) {
 
     var completionAttribute = "_isInteractionComplete";
