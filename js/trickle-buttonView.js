@@ -181,7 +181,7 @@ define([
             } else {
                 //perform animation from visible<>hidden
                 if (bool) this.$('.component-inner').css("visibility", "visible");
-                this.$('.component-inner').velocity({opacity: bool ? 1 : 0 }, {
+                this.$('.component-inner').velocity("stop", true).velocity({opacity: bool ? 1 : 0 }, {
                     duration: 250,
                     complete: _.bind(function() {
                         if (!bool) this.$('.component-inner').css("visibility", "hidden");
