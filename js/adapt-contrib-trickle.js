@@ -152,7 +152,7 @@ define([
 
             if (!trickleConfig._stepLocking || !trickleConfig._stepLocking._isEnabled == true) return;      
             
-            if (model.get(completionAttribute)) trickleConfig._isInteractionComplete = true;
+            if (model.get(completionAttribute) && !trickleConfig._isLocking) trickleConfig._isInteractionComplete = true;
 
             if (!trickleConfig._isInteractionComplete) {
                 
