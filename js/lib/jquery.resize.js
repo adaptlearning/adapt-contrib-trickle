@@ -1,4 +1,4 @@
-//https://github.com/cgkineo/jquery.resize 2015-05-27
+//https://github.com/cgkineo/jquery.resize 2015-05-29
 
 (function() {
 
@@ -137,7 +137,7 @@
     loopData.interval = null;
   }
 
-  $(window).on("mousedown mouseup keyup keydown", startLoop);
+  $('body').on("mousedown mouseup keyup keydown", startLoop);
   $(window).on("resize", startLoop);
 
 
