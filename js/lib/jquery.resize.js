@@ -1,4 +1,4 @@
-//https://github.com/cgkineo/jquery.resize 2015-05-29
+//https://github.com/cgkineo/jquery.resize 2015-06-01
 
 (function() {
 
@@ -9,20 +9,20 @@
   $.fn.on = function () {
     if (arguments[0] !== "resize") return $.fn.on.elementResizeOriginalOn.apply(this, _.toArray(arguments));
     if (this[0] === window) return $.fn.on.elementResizeOriginalOn.apply(this, _.toArray(arguments));
-    var args = arguments;
-    _.each(this, function(item, index) {
-      addResizeListener.call(item, (new Date()).getTime());
-    });
+
+    addResizeListener.call(this, (new Date()).getTime());
+
+    return $.fn.on.elementResizeOriginalOn.apply(this, _.toArray(arguments));
   };
   $.fn.on.elementResizeOriginalOn = orig;
   var orig = $.fn.off;
   $.fn.off = function () {
     if (arguments[0] !== "resize") return $.fn.off.elementResizeOriginalOff.apply(this, _.toArray(arguments));
     if (this[0] === window) return $.fn.off.elementResizeOriginalOff.apply(this, _.toArray(arguments));
-    var args = arguments;
-    _.each(this, function(item, index) {
-      removeResizeListener.call(item, (new Date()).getTime());
-    });
+
+    removeResizeListener.call(this, (new Date()).getTime());
+
+    return $.fn.off.elementResizeOriginalOff.apply(this, _.toArray(arguments));
   };
   $.fn.off.elementResizeOriginalOff = orig;
 
