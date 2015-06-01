@@ -4,11 +4,12 @@
   "framework": "^2.0.0",
   "homepage": "https://github.com/adaptlearning/adapt-contrib-trickle",
   "authors": [
-    "Kevin Corry <kevinc@learningpool.com>"
+    "Kevin Corry <kevinc@learningpool.com>",
+    "Oliver Foster <oliver.foster@kineo.com>"
   ],
   "displayName" : "Trickle",
   "extension" : "trickle",
-  "description": "An extension which provides vertical locking for articles, blocks and components",
+  "description": "A vertical locking extension",
   "main": "/js/adapt-contrib-trickle.js",
   "keywords": [
     "adapt-plugin",

@@ -1,31 +1,36 @@
-{
-    "_id":"a-30",
-    "_parentId":"co-20",
-    "_type":"article",
-    "_classes":"",
-    "title":"Article 1 title",
-    "body":"Body text for article",
-    "_trickle": {
-        "button": {
-            "continue" : "Move on"
-        }
-    }
-},
-{
-    "_id":"a-35",
-    "_parentId":"co-20",
-    "_type":"article",
-    "_classes":"",
-    "title":"Article 2 title",
-    "body":"Body text for article",
-    "_trickle": true
-},
-{
-    "_id":"a-40",
-    "_parentId":"co-20",
-    "_type":"article",
-    "_classes":"",
-    "title":"Article 3 title",
-    "body":"Body text for article",
-    "_trickle": true
+
+
+//TRICKLE STYLE BUTTON ON ALL ARTICLE BLOCKS
+//put in article.json
+"_trickle": {
+    "_isEnabled": true
 }
+
+
+
+//Manual Configuration Options
+"_trickle": {
+    "_isEnabled": true, //(default=true)
+    "_duration": 500, //(default=500)
+    "_autoScroll": true, //(default=true)
+    "_onChildren": true, //(default=true)
+    "_button": {
+        "_isEnabled": true, //(default=true)
+        "_styleBeforeCompletion": "hidden|visible", //(default=hidden)
+        "_styleAfterClick": "hidden|disabled|scroll", //(default=hidden)
+        "_isFullWidth": true, //(default=true)
+        "_autoHide": true, //(default=true)
+        "_className": "|trickle-round-arrow", //(default="")
+        "text": "Continue", //(default="Continue")
+        "finalText": "Finish", //(default="Finish")
+        "_component": "trickle-button" //(default="trickle-button")
+    },
+    "_stepLocking": {
+        "_isEnabled": true, //(default=true)
+        "_isCompletionRequired": true, //(default=true)
+        "_isLockedOnRevisit": false //(default=false)
+    },
+    "_scrollTo": "@block +1" //(default="@block +1")
+}
+
+
