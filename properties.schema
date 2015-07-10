@@ -23,16 +23,162 @@
             "_trickle": {
               "type":"object",
               "required":false,
+              "legend": "Trickle",
               "properties":{
                 "_isEnabled": {
                   "type":"boolean",
                   "required":false,
-                  "title": "Enabled"
+                  "title": "Enable Trickle",
+                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "validators": []
                 },
-                "button": {
-                  "type":"string",
+                "_autoScroll": {
+                  "type":"boolean",
                   "required":false,
-                  "title": "Button text"
+                  "title": "Scroll Automatically",
+                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "validators": []
+                },
+                "_scrollDuration": {
+                  "type":"number",
+                  "required":true,
+                  "default":"500",
+                  "title": "Scroll Duration",
+                  "inputType":"Number",
+                  "validators": ["required", "number"],
+                  "help": "Duration of the scroll animation in milliseconds"
+                },
+                "_onChildren": {
+                  "type":"boolean",
+                  "required":false,
+                  "title": "Enable on Child Blocks",
+                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "validators": [],
+                  "help": "Set to false on the article to use trickle at article level"
+                },
+                "_scrollTo": {
+                  "type": "string",
+                  "required": false,
+                  "default": "@block +1",
+                  "title": "Scroll To",
+                  "inputType": "Text",
+                  "validators": [],
+                  "help": "Set how trickle scrolls"
+                },
+                "_button": {
+                  "type":"object",
+                  "required":false,
+                  "title": "Button Attributes",
+                  "properties":{
+                    "_isEnabled": {
+                      "type":"boolean",
+                      "required":false,
+                      "title": "Enabled",
+                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "validators": []
+                    },
+                    "_styleBeforeCompletion": {
+                      "type":"string",
+                      "required":false,
+                      "enum": ["hidden", "visible"],
+                      "default": "hidden",
+                      "title": "Initial Visibility",
+                      "inputType": {"type": "Select", "options":["hidden", "visible"]},
+                      "validators": ["required"],
+                      "help": "Set button visibility before completion"
+                    },
+                    "_styleAfterClick": {
+                      "type":"string",
+                      "required":false,
+                      "enum": ["hidden", "disabled", "scroll"],
+                      "default": "hidden",
+                      "title": "Final Visibility",
+                      "inputType": {"type": "Select", "options":["hidden", "disabled", "scroll"]},
+                      "validators": ["required"],
+                      "help": "Set button visibility after completion"
+                    },
+                    "_isFullWidth": {
+                      "type":"boolean",
+                      "required":false,
+                      "default": "true",
+                      "title": "Full Width",
+                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "validators": []
+                    },
+                    "_autoHide": {
+                      "type":"boolean",
+                      "required":false,
+                      "default": "true",
+                      "title": "Hide on Scroll",
+                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "validators": [],
+                      "help": "Hides the button when it scrolls from view"
+                    },
+                    "_className": {
+                      "type":"string",
+                      "required": false,
+                      "default": "",
+                      "title": "Custom Classes",
+                      "inputType": "Text",
+                      "validators": []
+                    },
+                    "text": {
+                      "type":"string",
+                      "required": false,
+                      "default": "Continue",
+                      "title": "Button Text",
+                      "inputType": "Text",
+                      "validators": []
+                    },
+                    "finalText": {
+                      "type":"string",
+                      "required": false,
+                      "default": "Finish",
+                      "title": "Final Button Text",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": "Only on articles when 'Enable on Child Blocks' set to true"
+                    },
+                    "_component": {
+                      "type":"string",
+                      "required": false,
+                      "default": "trickle-button",
+                      "title": "Trickle Plugin",
+                      "inputType": "Text",
+                      "validators": []
+                    }
+                  }
+                },
+                "_stepLocking": {
+                  "type":"object",
+                  "required":false,
+                  "title": "Step Locking Attributes",
+                  "properties":{
+                    "_isEnabled": {
+                      "type":"boolean",
+                      "required":false,
+                      "default": true,
+                      "title": "Enabled",
+                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "validators": []
+                    },
+                    "_isCompletionRequired": {
+                      "type":"boolean",
+                      "required":false,
+                      "default": true,
+                      "title": "Completion Required",
+                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "validators": []
+                    },
+                    "_isLockedOnRevisit": {
+                      "type":"boolean",
+                      "required":false,
+                      "default": false,
+                      "title": "Locked On Revisit",
+                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "validators": []
+                    }
+                  }
                 }
               }
             }
@@ -44,16 +190,145 @@
             "_trickle": {
               "type":"object",
               "required":false,
+              "legend": "Trickle",
               "properties":{
                 "_isEnabled": {
                   "type":"boolean",
                   "required":false,
-                  "title": "Enabled"
+                  "title": "Enable Trickle",
+                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "validators": []
                 },
-                "button": {
-                  "type":"string",
+                "_autoScroll": {
+                  "type":"boolean",
                   "required":false,
-                  "title": "Button text"
+                  "title": "Scroll Automatically",
+                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "validators": []
+                },
+                "_scrollDuration": {
+                  "type":"number",
+                  "required":true,
+                  "default":"500",
+                  "title": "Scroll Duration",
+                  "inputType":"Number",
+                  "validators": ["required", "number"],
+                  "help": "Duration of the scroll animation in milliseconds"
+                },
+                "_scrollTo": {
+                  "type": "string",
+                  "required": false,
+                  "default": "@block +1",
+                  "title": "Scroll To",
+                  "inputType": "Text",
+                  "validators": [],
+                  "help": "Set how trickle scrolls"
+                },
+                "_button": {
+                  "type":"object",
+                  "required":false,
+                  "title": "Button Attributes",
+                  "properties":{
+                    "_isEnabled": {
+                      "type":"boolean",
+                      "required":false,
+                      "title": "Enabled",
+                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "validators": []
+                    },
+                    "_styleBeforeCompletion": {
+                      "type":"string",
+                      "required":false,
+                      "enum": ["hidden", "visible"],
+                      "default": "hidden",
+                      "title": "Initial Visibility",
+                      "inputType": {"type": "Select", "options":["hidden", "visible"]},
+                      "validators": ["required"],
+                      "help": "Set button visibility before completion"
+                    },
+                    "_styleAfterClick": {
+                      "type":"string",
+                      "required":false,
+                      "enum": ["hidden", "disabled", "scroll"],
+                      "default": "hidden",
+                      "title": "Final Visibility",
+                      "inputType": {"type": "Select", "options":["hidden", "disabled", "scroll"]},
+                      "validators": ["required"],
+                      "help": "Set button visibility after completion"
+                    },
+                    "_isFullWidth": {
+                      "type":"boolean",
+                      "required":false,
+                      "default": "true",
+                      "title": "Full Width",
+                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "validators": []
+                    },
+                    "_autoHide": {
+                      "type":"boolean",
+                      "required":false,
+                      "default": "true",
+                      "title": "Hide on Scroll",
+                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "validators": [],
+                      "help": "Hides the button when it scrolls from view"
+                    },
+                    "_className": {
+                      "type":"string",
+                      "required": false,
+                      "default": "",
+                      "title": "Custom Classes",
+                      "inputType": "Text",
+                      "validators": []
+                    },
+                    "text": {
+                      "type":"string",
+                      "required": false,
+                      "default": "Continue",
+                      "title": "Button Text",
+                      "inputType": "Text",
+                      "validators": []
+                    },
+                    "_component": {
+                      "type":"string",
+                      "required": false,
+                      "default": "trickle-button",
+                      "title": "Trickle Plugin",
+                      "inputType": "Text",
+                      "validators": []
+                    }
+                  }
+                },
+                "_stepLocking": {
+                  "type":"object",
+                  "required":false,
+                  "title": "Step Locking Attributes",
+                  "properties":{
+                    "_isEnabled": {
+                      "type":"boolean",
+                      "required":false,
+                      "default": true,
+                      "title": "Enabled",
+                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "validators": []
+                    },
+                    "_isCompletionRequired": {
+                      "type":"boolean",
+                      "required":false,
+                      "default": true,
+                      "title": "Completion Required",
+                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "validators": []
+                    },
+                    "_isLockedOnRevisit": {
+                      "type":"boolean",
+                      "required":false,
+                      "default": false,
+                      "title": "Locked On Revisit",
+                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "validators": []
+                    }
+                  }
                 }
               }
             }
