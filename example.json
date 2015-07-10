@@ -11,9 +11,10 @@
 //Manual Configuration Options
 "_trickle": {
     "_isEnabled": true, //(default=true)
-    "_duration": 500, //(default=500)
     "_autoScroll": true, //(default=true)
+    "_scrollDuration": 500, //(default=500)
     "_onChildren": true, //(default=true)
+    "_scrollTo": "@block +1", //(default="@block +1")
     "_button": {
         "_isEnabled": true, //(default=true)
         "_styleBeforeCompletion": "hidden|visible", //(default=hidden)
@@ -29,8 +30,5 @@
         "_isEnabled": true, //(default=true)
         "_isCompletionRequired": true, //(default=true)
         "_isLockedOnRevisit": false //(default=false)
-    },
-    "_scrollTo": "@block +1" //(default="@block +1")
+    }
 }
-
-
