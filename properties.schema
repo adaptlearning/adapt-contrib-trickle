@@ -215,14 +215,6 @@
                   "validators": ["required", "number"],
                   "help": "Duration of the scroll animation in milliseconds"
                 },
-                "_onChildren": {
-                  "type":"boolean",
-                  "required":false,
-                  "title": "Enable on Child Blocks",
-                  "inputType": { "type": "Boolean", "options": [false, true]},
-                  "validators": [],
-                  "help": "Set to false on the article to use trickle at article level"
-                },
                 "_scrollTo": {
                   "type": "string",
                   "required": false,
@@ -296,15 +288,6 @@
                       "title": "Button Text",
                       "inputType": "Text",
                       "validators": []
-                    },
-                    "finalText": {
-                      "type":"string",
-                      "required": false,
-                      "default": "Finish",
-                      "title": "Final Button Text",
-                      "inputType": "Text",
-                      "validators": [],
-                      "help": "Only on articles when 'Enable on Child Blocks' set to true"
                     },
                     "_component": {
                       "type":"string",
