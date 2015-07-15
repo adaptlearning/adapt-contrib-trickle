@@ -8,7 +8,7 @@ First, be sure to install the [Adapt Command Line Interface](https://github.com/
 
         adapt install adapt-contrib-trickle
 
-This extension can also be installed by adding the component to the adapt.json file before running `adapt install`:
+This extension can also be installed by adding the extension to the adapt.json file before running `adapt install`:
  
         "adapt-contrib-trickle": "*"
 
