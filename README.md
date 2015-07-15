@@ -48,7 +48,6 @@ To use trickle on the article only, without applying trickle to children blocks,
   
   
 ##Additional Settings
------  
 
 Defaults:
 ```
@@ -76,7 +75,7 @@ Defaults:
 }
 ```
 
-###Attributes
+##Attributes
 A description of the attributes are as follows:
 
 
@@ -104,11 +103,9 @@ Used when an article should set trickle on all child blocks rather than trickle 
 Default: ``true``   
   
 ###_button
--------
 Button attributes group.  
   
 ####_button._isEnabled
--------
 If set to ``false``, no button will be shown, steplocking will work on component completion only and trickle will scroll to the relevant section if ``_autoScroll`` is set to ``true``.  
 Default:  ``true``  
   
@@ -151,10 +148,9 @@ Default: ``"trickle-button"``
 ###_stepLocking
 Steplocking (section hiding) attributes group.  
   
-####_stepLocking._isEnabled  
--------
+####_stepLocking._isEnabled
 Will allow trickle to truncate the page at the step until the user is allowed to move forward.  
-Default: ``true``  
+Default: ``true``
   
 ####_stepLocking._isCompletionRequired 
 Forces the user to complete the block/article before the step is unlocked. If the block/article is reset on a page revisit, the lock will be reapplied.  
