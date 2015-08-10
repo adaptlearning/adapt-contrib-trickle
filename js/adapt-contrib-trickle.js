@@ -334,9 +334,9 @@ define([
             for (var i = 0, l = ancestors.length; i < l; i++) {
                 var itemModel = ancestors[i];
                 if (i <= showToIndex) {
-                    itemModel.set("_isVisible", true);
+                    itemModel.set("_isVisible", true, { pluginName: "trickle" });
                 } else {
-                    itemModel.set("_isVisible", false);
+                    itemModel.set("_isVisible", false, { pluginName: "trickle" });
                 }
             }
             
