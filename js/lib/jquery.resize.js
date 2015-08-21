@@ -1,4 +1,4 @@
-//https://github.com/cgkineo/jquery.resize 2015-06-01
+//https://github.com/cgkineo/jquery.resize 2015-08-13
 
 (function() {
 
@@ -63,12 +63,12 @@
       //nothing to resize
       stopLoop();
       resizeIntervalDuration = 500;
-      startLoop(undefined, true);
+      repeatLoop();
     } else {
       //something to resize
       stopLoop();
       resizeIntervalDuration = 250;
-      startLoop(undefined, true);
+      repeatLoop();
     }
 
     if  (resizeHandlers.length > 0) {
@@ -126,10 +126,19 @@
   };
 
   //checking loop start and end
-  function startLoop(event, reset) {
-    if (!reset) loopData.lastEvent = (new Date()).getTime();
-    if (loopData.interval !== null) return;
-    loopData.interval = setInterval(resizeLoop, resizeIntervalDuration);
+  function startLoop() {
+    loopData.lastEvent = (new Date()).getTime();
+    if (loopData.interval !== null) {
+      stopLoop();
+    }
+    loopData.interval = setTimeout(resizeLoop, resizeIntervalDuration);
+  }
+
+  function repeatLoop() {
+    if (loopData.interval !== null) {
+      stopLoop();
+    }
+    loopData.interval = setTimeout(resizeLoop, resizeIntervalDuration);
   }
 
   function stopLoop() {
