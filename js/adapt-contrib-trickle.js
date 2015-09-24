@@ -38,6 +38,8 @@ define([
             this.initializeStep();
             this.resizeBodyToCurrentIndex();
             this._listenToResizeEvent = true;
+            this._isPageReady = true;
+            Adapt.trigger("trickle:pageReady");
         },
 
         onAnyComplete: function(model, value, isPerformingCompletionQueue) {
@@ -76,6 +78,7 @@ define([
 
         _listenToResizeEvent: false,
         _isPageInitialized: false,
+        _isPageReady: false,
         _isFinished: false,
         _currentStepIndex: 0,
         _descendantsChildrenFirst: null,
@@ -380,6 +383,7 @@ define([
                 if (!this.isModelStepLocking(descendant)) continue;
 
                 this._currentStepIndex = i;
+                
 
                 return true;
             }
@@ -420,6 +424,7 @@ define([
             $("html").removeClass("trickle");
             this._pageView = null;
             this.resizeBodyToCurrentIndex();
+            this._isPageReady = false;
             this._listenToResizeEvent = true;
             this._isTrickleOn = false;
         },
@@ -443,12 +448,25 @@ define([
                     });
                 } else {
                     //if at component level, handle completion queue events after component completion is handled
-                    _.defer(_.bind(this.performCompletionQueue, this));
+                    if (this._isPageReady) {
+                        _.defer(_.bind(this.performCompletionQueue, this));
+                    } else {
+                        this.listenToOnce(Adapt, "trickle:pageReady", function(){                            
+                            this.performCompletionQueue();
+                        });
+                    }
                 }
             }
 
-            Adapt.trigger("steplocking:waitCheck", model);
-            this.checkStepComplete(model);
+            if (this._isPageReady) {
+                Adapt.trigger("steplocking:waitCheck", model);
+                this.checkStepComplete(model);
+            } else {                
+                this.listenToOnce(Adapt, "trickle:pageReady", function(){                    
+                    Adapt.trigger("steplocking:waitCheck", model);
+                    this.checkStepComplete(model);
+                });
+            }
         },
 
         performCompletionQueue: function() {
@@ -474,7 +492,6 @@ define([
             
             //if completion is required and item is not yet complete then break
             if (trickleConfig._stepLocking._isCompletionRequired && !model.get(completionAttribute)) return;
-
 
             Adapt.trigger("trickle:interactionRequired", model);
             
