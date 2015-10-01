@@ -168,7 +168,7 @@ define([
 
             this.model.set("_isHidden", bool);
 
-            if (animate === false) {
+            if (animate === false || Adapt.config.get('_disableAnimation')) {
                 //show or hide without animations
                 if (!bool) this.$('.component-inner').css("visibility", "hidden");
                 else if (bool) this.$('.component-inner').css("visibility", "visible");
