@@ -84,6 +84,7 @@ define([
             this.listenTo(this.model, "change:_isEnabled", this.onEnabledChange);
             this.listenTo(this.model, "change:_isVisible", this.onVisibilityChange);
             this.listenToOnce(Adapt, "remove", this.onRemove);
+            this.listenToOnce(Adapt, "trickle:kill", this.onRemove);
         },
 
         toggleLock: function(bool) {
