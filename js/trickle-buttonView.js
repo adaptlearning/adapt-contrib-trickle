@@ -84,6 +84,7 @@ define([
             this.listenTo(this.model, "change:_isEnabled", this.onEnabledChange);
             this.listenTo(this.model, "change:_isVisible", this.onVisibilityChange);
             this.listenToOnce(Adapt, "remove", this.onRemove);
+            this.listenToOnce(Adapt, "trickle:kill", this.onRemove);
         },
 
         toggleLock: function(bool) {
@@ -168,7 +169,7 @@ define([
 
             this.model.set("_isHidden", bool);
 
-            if (animate === false) {
+            if (animate === false || Adapt.config.get('_disableAnimation')) {
                 //show or hide without animations
                 if (!bool) this.$('.component-inner').css("visibility", "hidden");
                 else if (bool) this.$('.component-inner').css("visibility", "visible");

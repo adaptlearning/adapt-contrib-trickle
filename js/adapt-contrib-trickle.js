@@ -112,6 +112,8 @@ define([
             this.listenTo(Adapt, "steplocking:unwait", this.onStepUnlockUnwait);
 
             this.listenTo(Adapt, "trickle:relativeScrollTo", this.relativeScrollTo);
+
+            this.listenTo(Adapt, "trickle:kill", this.endTrickle);
         },
 
         initializePage: function(view) {
