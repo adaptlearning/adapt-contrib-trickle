@@ -107,8 +107,11 @@
   function triggerResize(item) {
     var measure = getDimensions(item.$element);
     //check if measure has the same values as last
+    var isFirstRun = false;
+    if (item._resizeData === undefined) isFirstRun = true;
     if (item._resizeData !== undefined && item._resizeData === measure.uniqueMeasurementId) return;
     item._resizeData = measure.uniqueMeasurementId;
+    if (isFirstRun) return;
     
     //make sure to keep listening until no more resize changes are found
     loopData.lastEvent = (new Date()).getTime();
