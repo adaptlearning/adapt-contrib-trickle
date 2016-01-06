@@ -77,6 +77,10 @@ With the [Adapt CLI](https://github.com/adaptlearning/adapt-cli) installed, run 
 >>**_isCompletionRequired** (boolean):  Forces the user to complete the block/article before the step is unlocked. If the block/article is reset on a page revisit, the lock will be reapplied. The default is `true`.  
   
 >>**_isLockedOnRevisit** (boolean):  On every page revisit the step will be relocked. The default is `false`.  
+  
+The following attribute can be added to config.json to overide which completion data attribute is used to test when the trickle button should be displayed.  
+  
+>**_completionAttribute** (string): Defines which completion attribute is used to test when the trickle button should be displayed. By default this is _isInteractionComplete but can be changed to the core data attribute _isComplete.  
 
 ## Limitations
 
