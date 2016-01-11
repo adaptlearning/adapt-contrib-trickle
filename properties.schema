@@ -9,7 +9,26 @@
       "required":true,
       "properties":{
         "config": {
-          "type":"object"
+          "type":"object",
+          "properties": {
+            "_trickle": {
+              "type":"object",
+              "required":false,
+              "legend": "Trickle",
+              "properties": {
+                "_completionAttribute": {
+                  "type":"string",
+                  "required":false,
+                  "enum": ["_isInteractionComplete", "_isComplete"],
+                  "default": "_isInteractionComplete",
+                  "title": "Completion Attribute",
+                  "inputType": {"type": "Select", "options":["_isInteractionComplete", "_isComplete"]},
+                  "validators": [],
+                  "help": "Set which attribute is used to mark completion"
+                }
+              }
+            }
+          }
         },
         "course": {
           "type":"object"
