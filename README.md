@@ -30,7 +30,11 @@ With the [Adapt CLI](https://github.com/adaptlearning/adapt-cli) installed, run 
 
 ## Settings Overview
 
-**Trickle** may be configured on two levels: article (*articles.json*) and block (*blocks.json*). The **_onChildren** attribute determines whether the configuration applies only to the article or to the article's blocks. Attributes set in a child block override those set by its parent article. The attributes listed below are properly formatted as JSON in [*example.json*](https://github.com/adaptlearning/adapt-contrib-trickle/blob/master/example.json). _(**Trickle** may also be added to_ course.json _as a simple switch to enable/disable **Trickle** during development. Its attributes will not be inherited by its child elements.)_ Visit the [**Trickle** wiki](https://github.com/adaptlearning/adapt-contrib-trickle/wiki) for more information about how they appear in the [authoring tool](https://github.com/adaptlearning/adapt_authoring/wiki).
+- **Trickle** may be configured on two levels: article (*articles.json*) and block (*blocks.json*). The **_onChildren** attribute determines whether the configuration applies only to the article or to the article's blocks. Attributes set in a child block override those set by its parent article.  
+- The default value of **_completionAttribute** may be overridden on _config.json_.  
+- _**Trickle** may also be added to_ course.json _as a simple switch to enable/disable **Trickle** during development. Its attributes will not be inherited by its child elements._
+
+The attributes listed below are properly formatted as JSON in [*example.json*](https://github.com/adaptlearning/adapt-contrib-trickle/blob/master/example.json).  Visit the [**Trickle** wiki](https://github.com/adaptlearning/adapt-contrib-trickle/wiki) for more information about how they appear in the [authoring tool](https://github.com/adaptlearning/adapt_authoring/wiki).
 
 ### Attributes
 
@@ -78,9 +82,9 @@ With the [Adapt CLI](https://github.com/adaptlearning/adapt-cli) installed, run 
   
 >>**_isLockedOnRevisit** (boolean):  On every page revisit the step will be relocked. The default is `false`.  
   
-The following attribute can be added to config.json to overide which completion data attribute is used to test when the trickle button should be displayed.  
+The following attribute can be added to *config.json* to overide which completion data attribute is used to test when the trickle button should be displayed.  
   
->**_completionAttribute** (string): Defines which completion attribute is used to test when the trickle button should be displayed. By default this is _isInteractionComplete but can be changed to the core data attribute _isComplete.  
+>**_completionAttribute** (string): Defines which completion attribute is used to test when the trickle button should be displayed. By default this is `_isInteractionComplete` but can be changed to the core data attribute `_isComplete`.  
 
 ## Limitations
 
