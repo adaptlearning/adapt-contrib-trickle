@@ -54,7 +54,7 @@ The attributes listed below are properly formatted as JSON in [*example.json*](h
  
 >**_onChildren** (boolean):  Determines whether the Trickle settings should be applied to the article alone or if it should apply to its blocks. When set to `true` on an article, the article's Trickle settings do not apply to the article; rather, the settings act as the default Trickle settings for all the blocks contained by the article. When set to `false`, the settings act on the article itself. The default is `true`. (N.B. this attribute is ignored if set on a block.)   
   
->**_button** (object): The button that releases the lock on hidden elements is commonly called the Trickle button. This `_button` attributes group stores the properties for the Trickle button. It contains values for **_isEnabled**, **_styleBeforeCompletion**, **_styleAfterClick**, **_isFullWidth**, **_autoHide**, **_className**, **text**, **finalText**, and **_component**.  
+>**_button** (object): The button that releases the lock on hidden elements is commonly called the Trickle button. This `_button` attributes group stores the properties for the Trickle button. It contains values for **_isEnabled**, **_styleBeforeCompletion**, **_styleAfterClick**, **_isFullWidth**, **_autoHide**, **_className**, **text**, **startText**, **finalText**, and **_component**.  
   
 >>**_isEnabled** (boolean):  If set to `false`, no button is displayed, so step-locking is triggered by component completion only. The page will scroll to the specified destination if **_autoScroll** is set to `true`. The default is `true`.  
   
@@ -69,6 +69,8 @@ The attributes listed below are properly formatted as JSON in [*example.json*](h
 >>**_className** (string):  Will add a class to the button container. Available option: `"trickle-round-arrow"`. `"trickle-round-arrow"` displays a round button with an arrow and no text instead of the classic square button with text. The default is `""`.  
   
 >>**text** (string):  Defines the default button text. The default is `"Continue"`.  
+
+>>**startText** (string):  Defines the first item button text when set on the article with **_onChildren** set to `true`. The default is `"Begin"`.  
   
 >>**finalText** (string):  Defines the last item button text when set on the article with **_onChildren** set to `true`. The default is `"Finish"`.  
 

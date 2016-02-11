@@ -23,6 +23,7 @@
         "_autoHide": true, //(default=true)
         "_className": "|trickle-round-arrow", //(default="")
         "text": "Continue", //(default="Continue")
+        "startText": "Begin",
         "finalText": "Finish", //(default="Finish")
         "_component": "trickle-button" //(default="trickle-button")
     },
