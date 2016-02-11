@@ -60,50 +60,86 @@ define([
         *       findRelative(modelC1, "@component +4") = modelC5;
         *
         */
-        findRelative: function(relativeString, limitParentId) {
-            //return a model relative to the specified one
-            var rootModel = Adapt.course;
-            if (limitParentId) {
-                rootModel = Adapt.findById(limitParentId);
-            }
+        findRelative: function(relativeString, options) {
+            var types = [ "menu", "page", "article", "block", "component" ];
 
-            var relativeOffset = parseRelativeString(relativeString);
-            var searchBackwards = (relativeOffset.offset < 0);
+            options = options || {};
 
             var modelId = this.get("_id");
+            var modelType = this.get("_type");
 
+            //return a model relative to the specified one if opinionated
+            var rootModel = Adapt.course;
+            if (options.limitParentId) {
+                rootModel = Adapt.findById(options.limitParentId);
+            }
+
+            var relativeDescriptor = parseRelativeString(relativeString);
+
+            var findAncestorType = (types.indexOf(modelType) > types.indexOf(relativeDescriptor.type));
+            var findSameType = (modelType === relativeDescriptor.type);
+
+            var searchBackwards = false;
             var movementCount = 0;
 
-            if (searchBackwards) {
-                var pageDescendants = rootModel.getDescendants(true).toJSON();
-                var modelIndex = _.findIndex(pageDescendants, function(pageDescendant) {
-                    if (pageDescendant._id === modelId) {
-                        return true;
-                    }
-                    return false;
-                });
+            // children first [c,c,b,a,c,c,b,a,p,c,c,b,a,c,c,b,a,p]
+            var pageDescendants = rootModel.getDescendants().toJSON();
 
+            //choose search style
+            if (findSameType || findAncestorType) {
+                //examples a<>a or c<>b,a,p
+                //assume next is 0 index
+                //assume last is -1 index
+                searchBackwards = (relativeDescriptor.offset <= 0);
+            } else {
+                //finding descendant
+                //examples a<>c or a<>b
+                if (relativeDescriptor.offset < 1) {
+                    //assume last descendant is 0 index
+                    searchBackwards = true;
+                } else {
+                    //assume next descendant is +1 index
+                    movementCount = 1;
+                    searchBackwards = false;
+                }
+            }
+
+            //exclude not available and not visible if opinionated
+            if (options.filterNotVisible) {
+                pageDescendants = _.filter(pageDescendants, function(descendant) {
+                    return descendant._isVisible;
+                });
+            } 
+            if (options.filterNotAvailable) {
+                pageDescendants = _.filter(pageDescendants, function(descendant) {
+                    return descendant._isAvailable;
+                });
+            } 
+
+            //find current index in array
+            var modelIndex = _.findIndex(pageDescendants, function(pageDescendant) {
+                if (pageDescendant._id === modelId) {
+                    return true;
+                }
+                return false;
+            });
+
+            //search in appropriate order
+            if (searchBackwards) {
                 for (var i = modelIndex, l = -1; i > l; i--) {
                     var descendant = pageDescendants[i];
-                    if (descendant._type === relativeOffset.type) {
-                        if (-movementCount === relativeOffset.offset) {
+                    if (descendant._type === relativeDescriptor.type) {
+                        if (-movementCount === relativeDescriptor.offset) {
                             return Adapt.findById(descendant._id);
                         }
                         movementCount++;
                     }
                 }
             } else {
-                var pageDescendants = rootModel.getDescendants().toJSON();
-                var modelIndex = _.findIndex(pageDescendants, function(pageDescendant) {
-                    if (pageDescendant._id === modelId) {
-                        return true;
-                    }
-                    return false;
-                });
                 for (var i = modelIndex, l = pageDescendants.length; i < l; i++) {
                     var descendant = pageDescendants[i];
-                    if (descendant._type === relativeOffset.type) {
-                        if (movementCount === relativeOffset.offset) {
+                    if (descendant._type === relativeDescriptor.type) {
+                        if (movementCount === relativeDescriptor.offset) {
                             return Adapt.findById(descendant._id);
                         }
                         movementCount++;

@@ -45,7 +45,9 @@ define([
 
         filterComponents: function(descendants) {
             return new Backbone.Collection(descendants.filter(function(descendant) {
-                return descendant.get("_type") !== "component";
+                if (descendant.get("_type") === "component") return false;
+                if (!descendant.get("_isAvailable")) return false;
+                return true;
             }));
         },
 

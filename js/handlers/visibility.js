@@ -31,9 +31,7 @@ define([
         onStepLock: function(view) {
             this.isStepLocking = true;
             this.trickleModel = view.model;
-            _.defer(function() {
-                Adapt.trigger("trickle:visibility");
-            });
+            Adapt.trigger("trickle:visibility");
         },
 
         onVisibility: function() {
@@ -44,6 +42,8 @@ define([
             var descendantsParentFirst = Adapt.trickle.pageView.descendantsParentFirst;
 
             var trickleModelId = this.trickleModel.get("_id");
+            var trickleType = this.trickleModel.get("_type");
+
             var atIndex = _.findIndex(descendantsParentFirst.models, function(descendant) {
                 if (descendant.get("_id") === trickleModelId) return true;
             });
@@ -52,6 +52,15 @@ define([
                 if (index <= atIndex) {
                     descendant.set("_isVisible", true, {pluginName:"trickle"});
                 } else {
+
+                    if (trickleType === "article" && descendant.get("_type") === "block") {
+                        //make sure article blocks are shown
+                        if (descendant.get("_parentId") === trickleModelId) {
+                            descendant.set("_isVisible", true, {pluginName:"trickle"});
+                            return;
+                        }
+                    }
+
                     descendant.set("_isVisible", false, {pluginName:"trickle"});
                 }
             });

@@ -132,9 +132,11 @@ define([
             if (!bool) {
                 this.$(".component-inner").addClass("display-none");
                 trickle._button._isVisible = false;
+                console.log("trickle hiding button", this.model.get("_id"));
             } else {
                 this.$(".component-inner").removeClass("display-none");
                 trickle._button._isVisible = true;
+                console.log("trickle showing button", this.model.get("_id"));
             }
         },
 

@@ -2,10 +2,10 @@ define([
     'coreJS/adapt', 
 ], function(Adapt) {
 
-    var TrickleTutorHandler = _.extend({
+    var TrickleNotifyHandler = _.extend({
 
         isStepLocking: false,
-        isTutorOpen: false,
+        isNotifyOpen: false,
 
         initialize: function() {
             this.listenToOnce(Adapt, "app:dataReady", this.onAppDataReady);
@@ -18,8 +18,8 @@ define([
         setupEventListeners: function() {
             this.listenTo(Adapt, {
                 "trickle:steplock": this.onStepLock,
-                "tutor:opened": this.onTutorOpened,
-                "tutor:closed": this.onTutorClosed,
+                "notify:opened": this.onNotifyOpened,
+                "notify:closed": this.onNotifyClosed,
                 "trickle:stepunlock": this.onStepUnlock,
                 "remove": this.onRemove
             });
@@ -29,18 +29,18 @@ define([
             this.isStepLocking = true;
         },
 
-        onTutorOpened: function() {
+        onNotifyOpened: function() {
             if (!this.isStepLocking) return;
 
-            this.isTutorOpen = true;
+            this.isNotifyOpen = true;
             Adapt.trigger("trickle:wait");
         },
 
-        onTutorClosed: function() {
+        onNotifyClosed: function() {
             if (!this.isStepLocking) return;
-            if (!this.isTutorOpen) return;
+            if (!this.isNotifyOpen) return;
 
-            this.isTutorOpen = false;
+            this.isNotifyOpen = false;
             Adapt.trigger("trickle:unwait");
         },
 
@@ -54,8 +54,8 @@ define([
 
     }, Backbone.Events);
 
-    TrickleTutorHandler.initialize();
+    TrickleNotifyHandler.initialize();
 
-    return TrickleTutorHandler;
+    return TrickleNotifyHandler;
 
 });

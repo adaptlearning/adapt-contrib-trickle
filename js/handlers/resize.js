@@ -37,6 +37,8 @@ define([
             this.stepView = view;
             $(window).on("resize", this.onResize);
             $("#wrapper").on("resize", this.onResize);
+
+            //wait for height / visibility to adjust
             _.defer(function() {
                 Adapt.trigger("trickle:resize");
             });
