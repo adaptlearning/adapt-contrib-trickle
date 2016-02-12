@@ -52,6 +52,13 @@ define([
                 return;
             }
 
+            if (trickle._stepLocking._isCompletionRequired
+                && isModelComplete) {
+                //skip any components that are complete and require completion
+                Adapt.trigger("trickle:continue", view);
+                return;
+            }
+
             Adapt.trigger("trickle:wait");
 
             if (isModelComplete) {

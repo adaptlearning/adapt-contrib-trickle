@@ -10,6 +10,7 @@ define([
         isStepLocking: false,
         isStepLocked: false,
         isStepLockFinished: false,
+        isWaitingForClick: false,
         allowVisible: false,
         allowEnabled: true,
 
@@ -91,6 +92,7 @@ define([
                 "trickle:stepunlock": this.onStepUnlock,
                 "trickle:skip": this.onSkip,
                 "trickle:kill": this.onKill,
+                "trickle:update": this.onUpdate,
                 "remove": this.onRemove 
             });
 
@@ -132,11 +134,11 @@ define([
             if (!bool) {
                 this.$(".component-inner").addClass("display-none");
                 trickle._button._isVisible = false;
-                console.log("trickle hiding button", this.model.get("_id"));
+                //console.log("trickle hiding button", this.model.get("_id"));
             } else {
                 this.$(".component-inner").removeClass("display-none");
                 trickle._button._isVisible = true;
-                console.log("trickle showing button", this.model.get("_id"));
+                //console.log("trickle showing button", this.model.get("_id"));
             }
         },
 
@@ -217,6 +219,7 @@ define([
                 if (this.isStepLocking) {
 
                     this.isStepLocked = true;
+                    this.isWaitingForClick = true;
                     Adapt.trigger("trickle:wait");
 
                 } else {
@@ -257,6 +260,24 @@ define([
             }
         },
 
+        onUpdate: function() {
+            var trickle = Adapt.trickle.getModelConfig(this.model);
+
+            if (trickle._button._autoHide && this.isStepLocking) {
+                this.$el.off("onscreen", this.checkButtonAutoHide);
+            }
+            
+            var $original = this.$el;
+            var $newEl = $(Handlebars.templates['trickle-button'](this.model.toJSON()));
+            $original.replaceWith($newEl);
+
+            this.setElement($newEl);
+
+            if (trickle._button._autoHide && this.isStepLocking) {
+                this.$el.on("onscreen", this.checkButtonAutoHide);
+            }
+        },
+
         onStepUnlock: function(view) {
             if (!this.isViewMatch(view)) return;
             this.$el.off("onscreen", this.checkButtonAutoHide);
@@ -271,6 +292,10 @@ define([
 
         onKill: function() {
             this.$el.off("onscreen", this.checkButtonAutoHide);
+            if (this.isWaitingForClick) {
+                this.model.set("_isTrickleAutoScrollComplete", true);
+            }
+            this.isWaitingForClick = false;
             this.isStepLocked = false;
             this.isStepLocking = false;
             this.allowVisible = false;
@@ -282,6 +307,10 @@ define([
         },
 
         onRemove: function() {
+            if (this.isWaitingForClick) {
+                this.model.set("_isTrickleAutoScrollComplete", true);
+            }
+            this.isWaitingForClick = false;
             this.$el.off("onscreen", this.checkButtonAutoHide);
             this.isStepLocking = true;
             this.remove();

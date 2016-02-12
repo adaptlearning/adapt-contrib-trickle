@@ -28,6 +28,8 @@ define([
         },
 
         setupDescendants: function() {
+            this.currentDescendant = null;
+            this.descendantViews = {};
             this.getDescendants();
             this.setDescendantsTrickleDefaults();
         },
@@ -37,8 +39,6 @@ define([
         descendantViews: null,
 
         getDescendants: function() {
-            this.currentDescendant = null;
-            this.descendantViews = {};
             this.descendantsChildFirst = this.filterComponents(this.model.getDescendants());
             this.descendantsParentFirst = this.filterComponents(this.model.getDescendants(true));
         },
@@ -184,6 +184,8 @@ define([
         },
 
         gotoNextDescendant: function() {
+            this.getDescendants();
+
             if (this.currentDescendant) {
                 this.currentDescendant.trigger("stepunlock");
                 this.currentDescendant = null;

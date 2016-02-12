@@ -57,7 +57,7 @@ define([
             }
 
             Adapt.trigger("trickle:steplock", this);
-            console.log("trickle steplock at", this.model.get("_id"))
+            //console.log("trickle steplock at", this.model.get("_id"))
 
             this.isSteplocked = true;
         },

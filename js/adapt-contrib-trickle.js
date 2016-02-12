@@ -85,7 +85,7 @@ define([
                     if (relativeModel === undefined) return;
                     scrollToId = relativeModel.get("_id");
 
-                    console.log("trickle scrolling to", scrollToId, "from", fromModel.get("_id"));
+                    //console.log("trickle scrolling to", scrollToId, "from", fromModel.get("_id"));
 
                     break;
                 case ".":
