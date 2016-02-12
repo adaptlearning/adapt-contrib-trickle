@@ -31,7 +31,6 @@ define([
             this.currentDescendant = null;
             this.descendantViews = {};
             this.getDescendants();
-            this.setDescendantsTrickleDefaults();
         },
 
         descendantsChildFirst: null,
@@ -39,8 +38,15 @@ define([
         descendantViews: null,
 
         getDescendants: function() {
-            this.descendantsChildFirst = this.filterComponents(this.model.getDescendants());
-            this.descendantsParentFirst = this.filterComponents(this.model.getDescendants(true));
+            this.descendantsChildFirst = this.model.getDescendants();
+            this.descendantsParentFirst = this.model.getDescendants(true);
+
+            //if some descendants flip between _isAvailable true/false they must have their defaults set before the filter is applied
+            this.setDescendantsTrickleDefaults();
+
+            this.descendantsChildFirst = this.filterComponents(this.descendantsChildFirst);
+            this.descendantsParentFirst = this.filterComponents(this.descendantsParentFirst);
+
         },
 
         filterComponents: function(descendants) {
