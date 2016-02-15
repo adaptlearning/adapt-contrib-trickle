@@ -107,7 +107,7 @@ define([
         },
 
         checkButtonAutoHide: function() {
-            if (!this.allowVisible || this.overlayShownCount > 0) {
+            if (!this.allowVisible) {
                 this.setButtonVisible(false);
                 return;
             }
@@ -115,6 +115,9 @@ define([
             var trickle = Adapt.trickle.getModelConfig(this.model);
             if (!trickle._button._autoHide) {
                 this.setButtonVisible(true);
+                return;
+            } else if (this.overlayShownCount > 0) {
+                this.setButtonVisible(false);
                 return;
             }
 
