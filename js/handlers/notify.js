@@ -33,6 +33,7 @@ define([
             if (!this.isStepLocking) return;
 
             this.isNotifyOpen = true;
+            Adapt.trigger("trickle:overlay");
             Adapt.trigger("trickle:wait");
         },
 
@@ -41,6 +42,7 @@ define([
             if (!this.isNotifyOpen) return;
 
             this.isNotifyOpen = false;
+            Adapt.trigger("trickle:unoverlay");
             Adapt.trigger("trickle:unwait");
         },
 

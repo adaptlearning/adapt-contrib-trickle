@@ -13,6 +13,7 @@ define([
         isWaitingForClick: false,
         allowVisible: false,
         allowEnabled: true,
+        overlayShownCount: 0,
 
         el: function() {
 
@@ -88,6 +89,8 @@ define([
 
         setupEventListeners: function() {
             this.listenTo(Adapt, {
+                "trickle:overlay": this.onOverlay,
+                "trickle:unoverlay": this.onUnoverlay,
                 "trickle:steplock": this.onStepLock,
                 "trickle:stepunlock": this.onStepUnlock,
                 "trickle:skip": this.onSkip,
@@ -104,7 +107,7 @@ define([
         },
 
         checkButtonAutoHide: function() {
-            if (!this.allowVisible) {
+            if (!this.allowVisible || this.overlayShownCount > 0) {
                 this.setButtonVisible(false);
                 return;
             }
@@ -165,6 +168,7 @@ define([
             if (!this.isViewMatch(view)) return;
 
             this.isStepLocking = true;
+            this.overlayShownCount = 0;
 
             var trickle = Adapt.trickle.getModelConfig(this.model);
 
@@ -178,6 +182,15 @@ define([
                 }
                 this.setupOnScreenListener();
             }
+        },
+
+        onOverlay: function() {
+            this.overlayShownCount++;
+        },
+
+        onUnoverlay: function() {
+            this.overlayShownCount--;
+            this.checkButtonAutoHide();
         },
 
         setupOnScreenListener: function() {
@@ -282,6 +295,7 @@ define([
             if (!this.isViewMatch(view)) return;
             this.$el.off("onscreen", this.checkButtonAutoHide);
             this.isStepLocking = false;
+            this.overlayShownCount = 0;
         },
 
         onSkip: function() {
