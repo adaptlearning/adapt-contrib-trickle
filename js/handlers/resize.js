@@ -36,7 +36,7 @@ define([
             this.isStepLocking = true;
             this.stepView = view;
             $(window).on("resize", this.onResize);
-            $("#wrapper").on("resize", this.onResize);
+            $(".page").on("resize", this.onResize);
 
             //wait for height / visibility to adjust
             _.defer(function() {
@@ -54,16 +54,18 @@ define([
             var offset = this.stepView.$el.offset();
             var height = this.stepView.$el.height();
 
-            var bottom = offset['top'] + height;
+            var topPadding = parseInt($("#wrapper").css("padding-top") || "0");
 
-            $("body").css("height", bottom );
+            var bottom = (offset['top'] - topPadding) + height;
+
+            $("#wrapper").css("height", bottom );
         },
 
         onStepUnlock: function(view) {
             this.isStepLocking = false;
             this.stepView = null;
             $(window).off("resize", this.onResize);
-            $("#wrapper").off("resize", this.onResize);
+            $(".page").off("resize", this.onResize);
         },
 
         onKill: function() {
@@ -72,7 +74,7 @@ define([
         },
 
         onFinished: function() {
-             $("body").css("height", "" );
+             $("#wrapper").css("height", "" );
         },
 
         onRemove: function() {
