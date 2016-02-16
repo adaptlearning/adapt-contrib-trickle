@@ -264,7 +264,7 @@ define([
                 this.model.set("_isTrickleAutoScrollComplete", false);
                 _.defer(_.bind(function() {
                     Adapt.trickle.scroll(this.model);
-                }));
+                }, this));
             }
 
             var trickle = this.model.get("_trickle");
