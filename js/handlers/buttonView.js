@@ -103,6 +103,7 @@ define([
         },
 
         debounceCheckAutoHide: function() {
+            this.checkButtonAutoHideSync = this.checkButtonAutoHide;
             this.checkButtonAutoHide = _.debounce(_.bind(this.checkButtonAutoHide, this), 100);
         },
 
@@ -261,18 +262,20 @@ define([
 
             } else {
                 this.model.set("_isTrickleAutoScrollComplete", false);
-                Adapt.trickle.scroll(this.model);
+                _.defer(_.bind(function() {
+                    Adapt.trickle.scroll(this.model);
+                }));
             }
 
             var trickle = this.model.get("_trickle");
             switch (trickle._button._styleAfterClick) {
             case "hidden":
                 this.allowVisible = false;
-                this.checkButtonAutoHide();
+                this.checkButtonAutoHideSync();
                 break;
             case "disabled":
                 this.allowEnabled = false;
-                this.checkButtonEnabled();
+                this.checkButtonAutoHideSync();
             }
         },
 
