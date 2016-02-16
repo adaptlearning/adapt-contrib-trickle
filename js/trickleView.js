@@ -15,12 +15,20 @@ define([
                 "trickle:kill": this.onKill,
                 "remove": this.onRemove
             };
+            
+            this.onPreRender(this);
+
             AdaptEvents[this.model.get("_type") + "View:postRender"] = this.onPostRender;
             this.listenTo(Adapt, AdaptEvents);
 
-
             this.on("steplock", this.onStepLock);
             this.on("stepunlock", this.onStepUnlock);
+        },
+
+        onPreRender: function(view) {
+            if (!this.isElementEnabled()) return;
+
+            Adapt.trigger("trickle:preRender", this);
         },
 
         onPostRender: function(view) {

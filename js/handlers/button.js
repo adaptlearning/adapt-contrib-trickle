@@ -5,28 +5,41 @@ define([
 
     var TrickleButtonHandler = _.extend({
 
+        buttonViews: null,
+
         initialize: function() {
-            this.listenToOnce(Adapt, "app:dataReady", this.onAppDataReady);
+            this.listenToOnce(Adapt, {
+                "app:dataReady": this.onAppDataReady,
+                "remove": this.onRemove
+            });
         },
 
         onAppDataReady: function() {
+            this.buttonViews = {};
             this.setupEventListeners();
         },
 
         setupEventListeners: function() {
             this.listenTo(Adapt, {
-                "trickle:postRender": this.onPostRender
+                "trickle:preRender": this.onPreRender,
+                "trickle:postRender": this.onPostRender,
+            });
+        },
+
+        onPreRender: function(view) {
+            if (!this.isTrickleEnabled(view.model)) return;
+
+            this.setupConfigDefaults(view.model);
+
+            this.buttonViews[view.model.get("_id")] = new ButtonView({
+                model: view.model
             });
         },
 
         onPostRender: function(view) {
             if (!this.isTrickleEnabled(view.model)) return;
 
-            this.setupConfigDefaults(view.model);
-
-            view.$el.append(new ButtonView({
-                model: view.model
-            }).$el);
+            view.$el.append(this.buttonViews[view.model.get("_id")].$el);
         },
 
         isTrickleEnabled: function(model) {
@@ -69,6 +82,10 @@ define([
             Adapt.trickle.setModelConfig(model, trickle);
             model.set("_isTrickleButtonConfigured", true);
 
+        },
+
+        onRemove: function() {
+            this.buttonViews = {};
         }
 
     }, Backbone.Events);

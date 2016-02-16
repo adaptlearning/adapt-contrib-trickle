@@ -30,6 +30,7 @@ define([
 
         setupEventListeners: function() {
             this.listenTo(Adapt, {
+                "trickle:descendants": this.onDescendants,
                 "trickle:steplock": this.onStepLock,
                 "trickle:stepunlock": this.onStepUnlock,
                 "trickle:kill": this.onKill,
@@ -37,8 +38,16 @@ define([
             });
         },
 
-        onStepLock: function(view) {
+        onDescendants: function(view) {
+            //save the original completion state of the component before steplocking
+            view.descendantsParentFirst.each(_.bind(function(descendant) {
+                var trickle = Adapt.trickle.getModelConfig(descendant);
+                if (!trickle) return;
+                trickle._wasCompletedPreRender = descendant.get(completionAttribute);
+            }, this));
+        },
 
+        onStepLock: function(view) {
             var isModelComplete = view.model.get(completionAttribute);
 
             var trickle = Adapt.trickle.getModelConfig(view.model);
@@ -53,8 +62,9 @@ define([
             }
 
             if (trickle._stepLocking._isCompletionRequired
-                && isModelComplete) {
-                //skip any components that are complete and require completion
+                && isModelComplete
+                && trickle._wasCompletedPreRender) {
+                //skip any components that are complete, have require completion and we completed before the page rendered
                 Adapt.trigger("trickle:continue", view);
                 return;
             }

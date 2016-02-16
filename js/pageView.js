@@ -31,6 +31,7 @@ define([
             this.currentDescendant = null;
             this.descendantViews = {};
             this.getDescendants();
+            Adapt.trigger("trickle:descendants", this);
         },
 
         descendantsChildFirst: null,

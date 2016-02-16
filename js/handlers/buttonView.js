@@ -8,8 +8,10 @@ define([
     var TrickleButtonView = Backbone.View.extend({
 
         isStepLocking: false,
+        hasStepLocked: false,
         isStepLocked: false,
         isStepLockFinished: false,
+        hasStepPreCompleted: false,
         isWaitingForClick: false,
         allowVisible: false,
         allowEnabled: true,
@@ -171,18 +173,27 @@ define([
         onStepLock: function(view) {
             if (!this.isViewMatch(view)) return;
 
+            this.hasStepLocked = true;
             this.isStepLocking = true;
             this.overlayShownCount = 0;
 
             var trickle = Adapt.trickle.getModelConfig(this.model);
 
             if (this.isButtonEnabled()) {
-                if (trickle._stepLocking._isLockedOnRevisit && this.model.get(completionAttribute)) {
+                var isCompleteAndShouldRelock = (trickle._stepLocking._isLockedOnRevisit && this.model.get(completionAttribute));
+
+                if (isCompleteAndShouldRelock) {
                     this.isStepLocked = true;
                     this.model.set("_isTrickleAutoScrollComplete", false);
                     Adapt.trigger("trickle:wait");
                     this.allowVisible = true;
                     this.checkButtonAutoHide();
+                } else if (this.hasStepPreCompleted) {
+                    //force the button to show if section completed before it was steplocked
+                    this.isStepLocked = true;
+                    this.model.set("_isTrickleAutoScrollComplete", false);
+                    this.allowVisible = true;
+                    this.stepCompleted();
                 }
                 this.setupOnScreenListener();
             }
@@ -218,6 +229,10 @@ define([
 
         onCompletion: function(model, value) {
             if (value === false) return;
+
+            this.hasStepPreCompleted = true;
+
+            if (!this.hasStepLocked) return;
 
             _.defer(_.bind(function() {
                 this.stepCompleted();
