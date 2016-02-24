@@ -258,7 +258,7 @@ define([
         //end of trickle lifecycle
 
         onRemove: function() {
-            this.detachFromPage();
+            this.finished();
         },
 
         detachFromPage: function() {
@@ -272,6 +272,7 @@ define([
             this.descendantViews = null;
             this.descendantsChildFirst = null;
             this.descendantsParentFirst = null;
+            Adapt.trickle.pageView = null;
         },
 
         removeClassFromHtml: function() {
