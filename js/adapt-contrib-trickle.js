@@ -121,7 +121,7 @@ define([
         },
 
         onRemove: function() {
-            this.pageView = null;
+            
         }
                 
     }, Backbone.Events);
