@@ -97,7 +97,7 @@ define([
                 descendant.set("_isVisible", true, {pluginName:"trickle"});
                 var components = descendant.findDescendants("components");
                 components.each(function(componentModel) {
-                    componenMode.set("_isVisible", true, {pluginName:"trickle"});
+                    componentModel.set("_isVisible", true, {pluginName:"trickle"});
                 });
             });
 
