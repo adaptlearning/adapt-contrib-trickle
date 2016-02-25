@@ -51,17 +51,29 @@ define([
             descendantsParentFirst.each(function(descendant, index) {
                 if (index <= atIndex) {
                     descendant.set("_isVisible", true, {pluginName:"trickle"});
+                    var components = descendant.findDescendants("components");
+                    components.each(function(componentModel) {
+                        componentModel.set("_isVisible", true, {pluginName:"trickle"});
+                    });
                 } else {
 
                     if (trickleType === "article" && descendant.get("_type") === "block") {
                         //make sure article blocks are shown
                         if (descendant.get("_parentId") === trickleModelId) {
                             descendant.set("_isVisible", true, {pluginName:"trickle"});
+                            var components = descendant.findDescendants("components");
+                            components.each(function(componentModel) {
+                                componentModel.set("_isVisible", true, {pluginName:"trickle"});
+                            });
                             return;
                         }
                     }
 
                     descendant.set("_isVisible", false, {pluginName:"trickle"});
+                    var components = descendant.findDescendants("components");
+                    components.each(function(componentModel) {
+                        componentModel.set("_isVisible", false, {pluginName:"trickle"});
+                    });
                 }
             });
 
@@ -83,6 +95,10 @@ define([
 
             descendantsParentFirst.each(function(descendant) {
                 descendant.set("_isVisible", true, {pluginName:"trickle"});
+                var components = descendant.findDescendants("components");
+                components.each(function(componentModel) {
+                    componenMode.set("_isVisible", true, {pluginName:"trickle"});
+                });
             });
 
         },
