@@ -1,7 +1,7 @@
 {
   "name": "adapt-contrib-trickle",
   "version": "2.1.0",
-  "framework": "^2.0.0",
+  "framework": "^2.0.6",
   "homepage": "https://github.com/adaptlearning/adapt-contrib-trickle",
   "issues": "https://adaptlearning.atlassian.net/secure/CreateIssueDetails!init.jspa?pid=10100&issuetype=1&priority=6&components=10513",
   "displayName" : "Trickle",
