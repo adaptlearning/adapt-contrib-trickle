@@ -1,4 +1,4 @@
-//https://github.com/cgkineo/jquery.resize 2015-08-13
+//https://github.com/cgkineo/jquery.resize 2016-02-02
 
 (function() {
 
@@ -27,12 +27,18 @@
   $.fn.off.elementResizeOriginalOff = orig;
 
   var expando = $.expando;
+  var expandoIndex = 0;
+
+  function checkExpando(element) {
+    if (!element[expando]) element[expando] = ++expandoIndex;
+    }
 
   //element + event handler storage
   var resizeObjs = {};
 
   //jQuery element + event handler attachment / removal
   var addResizeListener = function(data) {
+      checkExpando(this);
       resizeObjs[data.guid + "-" + this[expando]] = { 
         data: data, 
         $element: $(this) 
