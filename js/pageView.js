@@ -70,8 +70,9 @@ define([
                 if (noTrickleConfig) return;
 
                 //check if trickle is configures on descendant
-                var isTrickleConfigured = descendant.get("_isTrickleConfigured");
-                if (isTrickleConfigured) return;
+                //NOTE: Removed for banked assessments
+                //var isTrickleConfigured = descendant.get("_isTrickleConfigured");
+                //if (isTrickleConfigured) return;
 
                 //setup steplocking defaults
                 trickle._stepLocking = _.extend({
