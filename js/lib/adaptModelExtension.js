@@ -76,7 +76,7 @@ define([
 
             var relativeDescriptor = parseRelativeString(relativeString);
 
-            var findAncestorType = (types.indexOf(modelType) > types.indexOf(relativeDescriptor.type));
+            var findAncestorType = (_.indexOf(types, modelType) > _.indexOf(types, relativeDescriptor.type));
             var findSameType = (modelType === relativeDescriptor.type);
 
             var searchBackwards = false;
