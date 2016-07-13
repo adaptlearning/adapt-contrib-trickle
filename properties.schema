@@ -147,7 +147,8 @@
                       "default": "Continue",
                       "title": "Button Text",
                       "inputType": "Text",
-                      "validators": []
+                      "validators": [],
+                      "translatable": true
                     },
                     "finalText": {
                       "type":"string",
@@ -156,7 +157,8 @@
                       "title": "Final Button Text",
                       "inputType": "Text",
                       "validators": [],
-                      "help": "Only on articles when 'Enable on Child Blocks' set to true"
+                      "help": "Only on articles when 'Enable on Child Blocks' set to true",
+                      "translatable": true
                     },
                     "_component": {
                       "type":"string",
@@ -306,7 +308,8 @@
                       "default": "Continue",
                       "title": "Button Text",
                       "inputType": "Text",
-                      "validators": []
+                      "validators": [],
+                      "translatable": true
                     },
                     "_component": {
                       "type":"string",
