@@ -150,6 +150,16 @@
                       "validators": [],
                       "translatable": true
                     },
+                    "startText": {
+                      "type":"string",
+                      "required": false,
+                      "default": "Begin",
+                      "title": "First Button Text",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": "Only on articles when 'Enable on Child Blocks' set to true",
+                      "translatable": true
+                    },
                     "finalText": {
                       "type":"string",
                       "required": false,
@@ -309,6 +319,26 @@
                       "title": "Button Text",
                       "inputType": "Text",
                       "validators": [],
+                      "translatable": true
+                    },
+                    "startText": {
+                      "type":"string",
+                      "required": false,
+                      "default": "Begin",
+                      "title": "First Button Text",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": "Only on articles when 'Enable on Child Blocks' set to true",
+                      "translatable": true
+                    },
+                    "finalText": {
+                      "type":"string",
+                      "required": false,
+                      "default": "Finish",
+                      "title": "Final Button Text",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": "Only on articles when 'Enable on Child Blocks' set to true",
                       "translatable": true
                     },
                     "_component": {
