@@ -8,7 +8,8 @@ define([
     './handlers/notify',
     './handlers/resize',
     './handlers/tutor',
-    './handlers/visibility'
+    './handlers/visibility',
+    './handlers/done'
 ], function(Adapt, PageView) {
 
     Adapt.trickle = _.extend({
