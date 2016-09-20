@@ -78,7 +78,7 @@ The attributes listed below are properly formatted as JSON in [*example.json*](h
   
 >**_stepLocking** (object):  Step locking (section hiding) attributes group contains values for **_isEnabled**, **_isCompletionRequired**, and **_isLockedOnRevisit**.  
   
->>**_isEnabled** (boolean):  Will allow Trickle to truncate the page at the step until the user is allowed to move forward. The default is `true`.  
+>>**_isEnabled** (boolean):  Will allow Trickle to truncate the page at the step until the user is allowed to move forward. The default is `true`. Note that if **_isFullWidth** is set to `true` on the **_button** attribute group (see above), **_isEnabled** will be forced to `true` regardless of what you set here. 
   
 >>**_isCompletionRequired** (boolean):  Forces the user to complete the block/article before the step is unlocked. If the block/article is reset on a page revisit, the lock will be reapplied. The default is `true`.  
   
@@ -86,7 +86,7 @@ The attributes listed below are properly formatted as JSON in [*example.json*](h
   
 The following attribute can be added to *config.json* to overide which completion data attribute is used to test when the trickle button should be displayed.  
   
->**_completionAttribute** (string): Defines which completion attribute is used to test when the trickle button should be displayed. By default this is `_isInteractionComplete` but can be changed to the core data attribute `_isComplete`.  
+>**_completionAttribute** (string): Defines which completion attribute is used to test when the trickle button should be displayed. By default this is `_isInteractionComplete` but can be changed to the core data attribute `_isComplete` - this can be useful in situations where you want trickle to be unlocked for previously completed content on subsequent visits to the course, or where you are using trickle with versions of that Adapt framework that pre-dated support for `_isInteractionComplete`.   
 
 ## Limitations
 
