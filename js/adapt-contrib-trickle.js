@@ -1,7 +1,7 @@
 define([
     'coreJS/adapt',
     './pageView',
-    './lib/jquery.resize',
+    'libraries/jquery.resize',
     './lib/adaptModelExtension',
     './handlers/button',
     './handlers/completion',
