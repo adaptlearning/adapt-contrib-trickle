@@ -4,6 +4,7 @@ define([
 
     var TrickleTutorHandler = _.extend({
 
+        stepLockedId: null,
         isStepLocking: false,
         isTutorOpen: false,
 
@@ -26,20 +27,34 @@ define([
         },
 
         onStepLock: function(view) {
+            if (view) {
+                this.stepLockedId = view.model.get("_id");
+            }
             this.isStepLocking = true;
         },
 
-        onTutorOpened: function() {
+        onTutorOpened: function(view, alertObject) {
             if (!this.isStepLocking) return;
+            if (!this.isOriginStepLocked(view)) return;
 
             this.isTutorOpen = true;
             Adapt.trigger("trickle:overlay");
             Adapt.trigger("trickle:wait");
         },
 
-        onTutorClosed: function() {
+        isOriginStepLocked: function(view) {
+            if (!view || !this.stepLockedId) return true;
+
+            var parents = view.model.getParents();
+            var hasStepLockedParent = parents.findWhere({_id:this.stepLockedId});
+            if (!hasStepLockedParent) return false;
+            return true;
+        },
+
+        onTutorClosed: function(view, alertObject) {
             if (!this.isStepLocking) return;
             if (!this.isTutorOpen) return;
+            if (!this.isOriginStepLocked(view)) return;
 
             this.isTutorOpen = false;
             Adapt.trigger("trickle:unoverlay");
@@ -48,6 +63,7 @@ define([
 
         onStepUnlock: function() {
             this.isStepLocking = false;
+            this.stepLockedId = null;
         },
 
         onRemove: function() {
