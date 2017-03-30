@@ -1,5 +1,5 @@
 define([
-    'coreJS/adapt',
+    'core/js/adapt',
     './trickleView'
 ], function(Adapt, TrickleView) {
 
@@ -87,7 +87,7 @@ define([
                     "_autoScroll": true, //(default=true)
                     "_scrollDuration": 500, //(default=500)
                     "_onChildren": true, //(default=true)
-                    "_scrollTo": "@block +1", //(default="@block +1")
+                    "_scrollTo": "@block +1" //(default="@block +1")
                 }, trickle);
 
                 Adapt.trickle.setModelConfig(descendant, trickle);
@@ -166,7 +166,7 @@ define([
 
                 "trickle:kill": this.onKill
             });
-            this.listenToOnce(this.model, "change:_isReady", this.onPageReady)
+            this.listenToOnce(this.model, "change:_isReady", this.onPageReady);
         },
 
         onDescendantPreRender: function(view) {
@@ -284,4 +284,4 @@ define([
 
     return PageView;
 
-})
+});

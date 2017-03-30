@@ -1,5 +1,5 @@
 define([
-    'coreJS/adapt', 
+    'core/js/adapt'
 ], function(Adapt) {
 
     var completionAttribute = "_isComplete";
@@ -24,7 +24,7 @@ define([
             var trickle = Adapt.trickle.getModelConfig(Adapt.config);
             if (!trickle) return;
             if (trickle._completionAttribute) {
-                completionAttribute = trickle._completionAttribute
+                completionAttribute = trickle._completionAttribute;
             }
         },
 
@@ -73,7 +73,7 @@ define([
 
             if (isModelComplete) {
                 _.defer(function() {
-                    Adapt.trigger("trickle:unwait")
+                    Adapt.trigger("trickle:unwait");
                 });
                 return;
             }
