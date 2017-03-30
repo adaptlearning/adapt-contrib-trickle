@@ -2,7 +2,7 @@ define([
     'coreJS/adapt', 
 ], function(Adapt) {
 
-    var completionAttribute = "_isInteractionComplete";
+    var completionAttribute = "_isComplete";
 
     var TrickleCompletionHandler = _.extend({
 

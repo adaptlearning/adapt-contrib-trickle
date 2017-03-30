@@ -20,11 +20,11 @@
                   "type":"string",
                   "required":false,
                   "enum": ["_isInteractionComplete", "_isComplete"],
-                  "default": "_isInteractionComplete",
+                  "default": "_isComplete",
                   "title": "Completion Attribute",
                   "inputType": {"type": "Select", "options":["_isInteractionComplete", "_isComplete"]},
                   "validators": [],
-                  "help": "Set which attribute is used to mark completion"
+                  "help": "Set which attribute is used to determine completion"
                 }
               }
             }

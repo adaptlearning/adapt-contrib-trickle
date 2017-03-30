@@ -3,7 +3,7 @@ define([
     'coreViews/componentView'
 ], function(Adapt, ComponentView) {
 
-    var completionAttribute = "_isInteractionComplete";
+    var completionAttribute = "_isComplete";
 
     var TrickleButtonView = Backbone.View.extend({
 
