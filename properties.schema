@@ -48,14 +48,14 @@
                   "type":"boolean",
                   "required":false,
                   "title": "Enable Trickle",
-                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "inputType": "Checkbox",
                   "validators": []
                 },
                 "_autoScroll": {
                   "type":"boolean",
                   "required":false,
                   "title": "Scroll Automatically",
-                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "inputType": "Checkbox",
                   "validators": []
                 },
                 "_scrollDuration": {
@@ -71,7 +71,7 @@
                   "type":"boolean",
                   "required":false,
                   "title": "Enable on Child Blocks",
-                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "inputType": "Checkbox",
                   "validators": [],
                   "help": "Set to false on the article to use trickle at article level"
                 },
@@ -93,7 +93,7 @@
                       "type":"boolean",
                       "required":false,
                       "title": "Enabled",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": []
                     },
                     "_styleBeforeCompletion": {
@@ -121,7 +121,7 @@
                       "required":false,
                       "default": "true",
                       "title": "Full Width",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": []
                     },
                     "_autoHide": {
@@ -129,7 +129,7 @@
                       "required":false,
                       "default": "true",
                       "title": "Hide on Scroll",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": [],
                       "help": "Hides the button when it scrolls from view"
                     },
@@ -190,7 +190,7 @@
                       "required":false,
                       "default": true,
                       "title": "Enabled",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": []
                     },
                     "_isCompletionRequired": {
@@ -198,7 +198,7 @@
                       "required":false,
                       "default": true,
                       "title": "Completion Required",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": []
                     },
                     "_isLockedOnRevisit": {
@@ -206,7 +206,7 @@
                       "required":false,
                       "default": false,
                       "title": "Locked On Revisit",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": []
                     }
                   }
@@ -227,14 +227,14 @@
                   "type":"boolean",
                   "required":false,
                   "title": "Enable Trickle",
-                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "inputType": "Checkbox",
                   "validators": []
                 },
                 "_autoScroll": {
                   "type":"boolean",
                   "required":false,
                   "title": "Scroll Automatically",
-                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "inputType": "Checkbox",
                   "validators": []
                 },
                 "_scrollDuration": {
@@ -264,7 +264,7 @@
                       "type":"boolean",
                       "required":false,
                       "title": "Enabled",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": []
                     },
                     "_styleBeforeCompletion": {
@@ -292,7 +292,7 @@
                       "required":false,
                       "default": "true",
                       "title": "Full Width",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": []
                     },
                     "_autoHide": {
@@ -300,7 +300,7 @@
                       "required":false,
                       "default": "true",
                       "title": "Hide on Scroll",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": [],
                       "help": "Hides the button when it scrolls from view"
                     },
@@ -361,7 +361,7 @@
                       "required":false,
                       "default": true,
                       "title": "Enabled",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": []
                     },
                     "_isCompletionRequired": {
@@ -369,7 +369,7 @@
                       "required":false,
                       "default": true,
                       "title": "Completion Required",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": []
                     },
                     "_isLockedOnRevisit": {
@@ -377,7 +377,7 @@
                       "required":false,
                       "default": false,
                       "title": "Locked On Revisit",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": []
                     }
                   }
