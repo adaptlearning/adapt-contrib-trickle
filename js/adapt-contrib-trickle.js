@@ -1,5 +1,5 @@
 define([
-    'coreJS/adapt',
+    'core/js/adapt',
     './pageView',
     'libraries/jquery.resize',
     './lib/adaptModelExtension',
@@ -97,7 +97,7 @@ define([
                     scrollToId = scrollTo;
                 }
 
-                if (scrollToId == "") return;
+                if (scrollToId === "") return;
                 
                 var duration = fromModel.get("_trickle")._scrollDuration || 500;
                 Adapt.scrollTo("." + scrollToId, { duration: duration });

@@ -1,5 +1,5 @@
 define([
-    'coreJS/adapt', 
+    'core/js/adapt'
 ], function(Adapt) {
 
     var TrickleVisibilityHandler = _.extend({
@@ -48,10 +48,12 @@ define([
                 if (descendant.get("_id") === trickleModelId) return true;
             });
 
+            var components;
+
             descendantsParentFirst.each(function(descendant, index) {
                 if (index <= atIndex) {
                     descendant.set("_isVisible", true, {pluginName:"trickle"});
-                    var components = descendant.findDescendants("components");
+                    components = descendant.findDescendants("components");
                     components.each(function(componentModel) {
                         componentModel.set("_isVisible", true, {pluginName:"trickle"});
                     });
@@ -61,7 +63,7 @@ define([
                         //make sure article blocks are shown
                         if (descendant.get("_parentId") === trickleModelId) {
                             descendant.set("_isVisible", true, {pluginName:"trickle"});
-                            var components = descendant.findDescendants("components");
+                            components = descendant.findDescendants("components");
                             components.each(function(componentModel) {
                                 componentModel.set("_isVisible", true, {pluginName:"trickle"});
                             });
@@ -70,7 +72,7 @@ define([
                     }
 
                     descendant.set("_isVisible", false, {pluginName:"trickle"});
-                    var components = descendant.findDescendants("components");
+                    components = descendant.findDescendants("components");
                     components.each(function(componentModel) {
                         componentModel.set("_isVisible", false, {pluginName:"trickle"});
                     });

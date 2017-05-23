@@ -1,6 +1,6 @@
 define([
-    'coreJS/adapt',
-    'coreViews/componentView'
+    'core/js/adapt',
+    'core/js/views/componentView'
 ], function(Adapt, ComponentView) {
 
     var completionAttribute = "_isInteractionComplete";
@@ -76,7 +76,7 @@ define([
             var trickle = Adapt.trickle.getModelConfig(Adapt.config);
             if (!trickle) return;
             if (trickle._completionAttribute) {
-                completionAttribute = trickle._completionAttribute
+                completionAttribute = trickle._completionAttribute;
             }
         },
 
