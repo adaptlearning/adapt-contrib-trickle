@@ -1,5 +1,5 @@
 define([
-    'coreJS/adapt'
+    'core/js/adapt'
 ], function(Adapt) {
 
     var TrickleView = Backbone.View.extend({
@@ -84,7 +84,7 @@ define([
         },
 
         onKill: function() {
-            this.detachFromElement()
+            this.detachFromElement();
         },
 
         onRemove: function() {
@@ -104,4 +104,4 @@ define([
 
     return TrickleView;
 
-})
+});

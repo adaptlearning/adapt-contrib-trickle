@@ -1,6 +1,6 @@
 define([
-    'coreJS/adapt',
-    'coreModels/adaptModel'
+    'core/js/adapt',
+    'core/js/models/adaptModel'
 ], function(Adapt, AdaptModel) {
 
     _.extend(AdaptModel.prototype, {
@@ -39,9 +39,9 @@ define([
                 } else {
 
                     var subDescendants = child.getDescendants(parentFirst);
-                    if (parentFirst == true) descendants.push(child);
+                    if (parentFirst === true) descendants.push(child);
                     descendants = descendants.concat(subDescendants.models);
-                    if (parentFirst != true) descendants.push(child);
+                    if (parentFirst !== true) descendants.push(child);
 
                 }
 
@@ -125,9 +125,10 @@ define([
             });
 
             //search in appropriate order
+            var descendant, i, l;
             if (searchBackwards) {
-                for (var i = modelIndex, l = -1; i > l; i--) {
-                    var descendant = pageDescendants[i];
+                for (i = modelIndex, l = -1; i > l; i--) {
+                    descendant = pageDescendants[i];
                     if (descendant._type === relativeDescriptor.type) {
                         if (-movementCount === relativeDescriptor.offset) {
                             return Adapt.findById(descendant._id);
@@ -136,8 +137,8 @@ define([
                     }
                 }
             } else {
-                for (var i = modelIndex, l = pageDescendants.length; i < l; i++) {
-                    var descendant = pageDescendants[i];
+                for (i = modelIndex, l = pageDescendants.length; i < l; i++) {
+                    descendant = pageDescendants[i];
                     if (descendant._type === relativeDescriptor.type) {
                         if (movementCount === relativeDescriptor.offset) {
                             return Adapt.findById(descendant._id);

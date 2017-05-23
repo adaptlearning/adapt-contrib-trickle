@@ -1,5 +1,5 @@
 define([
-    'coreJS/adapt', 
+    'core/js/adapt' 
 ], function(Adapt) {
 
     var completionAttribute = "_isInteractionComplete";
@@ -24,7 +24,7 @@ define([
             var trickle = Adapt.trickle.getModelConfig(Adapt.config);
             if (!trickle) return;
             if (trickle._completionAttribute) {
-                completionAttribute = trickle._completionAttribute
+                completionAttribute = trickle._completionAttribute;
             }
         },
 
@@ -51,8 +51,8 @@ define([
             var isModelComplete = view.model.get(completionAttribute);
 
             var trickle = Adapt.trickle.getModelConfig(view.model);
-            if (!trickle._stepLocking._isCompletionRequired
-                && !trickle._stepLocking._isLockedOnRevisit) {
+            if (!trickle._stepLocking._isCompletionRequired && 
+                !trickle._stepLocking._isLockedOnRevisit) {
                 if (isModelComplete) {
                     //skip any components that do not require completion but that are already complete
                     //this is needed for a second visit to a page with 'inview' components that aren't reset and don't require completion and are not relocked on revisit
@@ -61,9 +61,9 @@ define([
                 return;
             }
 
-            if (trickle._stepLocking._isCompletionRequired
-                && isModelComplete
-                && trickle._wasCompletedPreRender) {
+            if (trickle._stepLocking._isCompletionRequired && 
+                isModelComplete && 
+                trickle._wasCompletedPreRender) {
                 //skip any components that are complete, have require completion and we completed before the page rendered
                 Adapt.trigger("trickle:continue", view);
                 return;
@@ -73,7 +73,7 @@ define([
 
             if (isModelComplete) {
                 _.defer(function() {
-                    Adapt.trigger("trickle:unwait")
+                    Adapt.trigger("trickle:unwait");
                 });
                 return;
             }

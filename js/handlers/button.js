@@ -1,5 +1,5 @@
 define([
-    'coreJS/adapt',
+    'core/js/adapt',
     './buttonView'
 ], function(Adapt, ButtonView) {
 
@@ -22,7 +22,7 @@ define([
         setupEventListeners: function() {
             this.listenTo(Adapt, {
                 "trickle:preRender": this.onPreRender,
-                "trickle:postRender": this.onPostRender,
+                "trickle:postRender": this.onPostRender
             });
         },
 
