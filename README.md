@@ -86,14 +86,14 @@ The attributes listed below are properly formatted as JSON in [*example.json*](h
   
 The following attribute can be added to *config.json* to overide which completion data attribute is used to test when the trickle button should be displayed.  
   
->**_completionAttribute** (string): Defines which completion attribute is used to test when the trickle button should be displayed. By default this is `_isInteractionComplete` but can be changed to the core data attribute `_isComplete` - this can be useful in situations where you want trickle to be unlocked for previously completed content on subsequent visits to the course, or where you are using trickle with versions of that Adapt framework that pre-dated support for `_isInteractionComplete`.   
+>**_completionAttribute** (string): Defines which completion attribute is used to test when the trickle button should be displayed. As of v2.1.4 of this plugin, the default is `"_isComplete"`; in previous versions it defaulted to `"_isInteractionComplete"`.  
 
 ## Limitations
 
 No known limitations.  
 
 ----------------------------
-**Version number:**  2.1.3   <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a> 
+**Version number:**  2.1.4   <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a> 
 **Framework versions:**  2.0.13     
 **Author / maintainer:** Adapt Core Team with [contributors](https://github.com/adaptlearning/adapt-contrib-trickle/graphs/contributors)    
 **Accessibility support:** WAI AA   

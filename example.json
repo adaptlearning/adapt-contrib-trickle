@@ -37,5 +37,5 @@
 //Overide which completion data attribute is used to test when the trickle button should be displayed
 //put in config.json
 "_trickle": {
-    "_completionAttribute": "_isInteractionComplete|_isComplete", //(default=_isInteractionComplete)
+    "_completionAttribute": "_isInteractionComplete|_isComplete", //(default=_isComplete)
 }
