@@ -212,7 +212,7 @@ define([
             var trickle = Adapt.trickle.getModelConfig(this.model);
 
             if (trickle._button._autoHide) {
-                this.$el.on("onscreen", this.checkButtonAutoHide);
+                this.$el.on("onscreen", this.checkButtonAutoHideSync);
             }
         },
 
@@ -298,7 +298,7 @@ define([
             var trickle = Adapt.trickle.getModelConfig(this.model);
 
             if (trickle._button._autoHide && this.isStepLocking) {
-                this.$el.off("onscreen", this.checkButtonAutoHide);
+                this.$el.off("onscreen", this.checkButtonAutoHideSync);
             }
             
             var $original = this.$el;
@@ -308,13 +308,13 @@ define([
             this.setElement($newEl);
 
             if (trickle._button._autoHide && this.isStepLocking) {
-                this.$el.on("onscreen", this.checkButtonAutoHide);
+                this.$el.on("onscreen", this.checkButtonAutoHideSync);
             }
         },
 
         onStepUnlock: function(view) {
             if (!this.isViewMatch(view)) return;
-            this.$el.off("onscreen", this.checkButtonAutoHide);
+            this.$el.off("onscreen", this.checkButtonAutoHideSync);
             this.isStepLocking = false;
             this.overlayShownCount = 0;
         },
@@ -326,7 +326,7 @@ define([
         },
 
         onKill: function() {
-            this.$el.off("onscreen", this.checkButtonAutoHide);
+            this.$el.off("onscreen", this.checkButtonAutoHideSync);
             if (this.isWaitingForClick) {
                 this.model.set("_isTrickleAutoScrollComplete", true);
             }
@@ -346,7 +346,7 @@ define([
                 this.model.set("_isTrickleAutoScrollComplete", true);
             }
             this.isWaitingForClick = false;
-            this.$el.off("onscreen", this.checkButtonAutoHide);
+            this.$el.off("onscreen", this.checkButtonAutoHideSync);
             this.isStepLocking = true;
             this.remove();
         }
