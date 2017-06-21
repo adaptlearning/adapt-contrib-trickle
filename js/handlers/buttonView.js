@@ -105,8 +105,8 @@ define([
         },
 
         debounceCheckAutoHide: function() {
-            this.checkButtonAutoHideSync = this.checkButtonAutoHide;
-            this.checkButtonAutoHide = _.debounce(_.bind(this.checkButtonAutoHide, this), 100);
+            this.checkButtonAutoHideSync = _.bind(this.checkButtonAutoHide, this);
+            this.checkButtonAutoHide = _.debounce(this.checkButtonAutoHideSync, 100);
         },
 
         checkButtonAutoHide: function() {
