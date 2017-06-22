@@ -51,23 +51,20 @@ define([
         },
 
         filterComponents: function(descendants) {
-            return new Backbone.Collection(descendants.filter(function(descendant) {
+            return _.filter(descendants, function(descendant) {
                 if (descendant.get("_type") === "component") return false;
                 if (!descendant.get("_isAvailable")) return false;
                 return true;
-            }));
+            });
         },
-
+        
         setDescendantsTrickleDefaults: function() {
-            //use parent first as likely to get to article 
-            //
-            this.descendantsParentFirst.each(_.bind(function(descendant) {
-
+            //use parent first as likely to get to article
+            _.each(this.descendantsParentFirst, _.bind(function(descendant) {
                 var trickle = Adapt.trickle.getModelConfig(descendant);
-                var noTrickleConfig = (!trickle);
-
-                //check if descendant has trickle settings
-                if (noTrickleConfig) return;
+                if (!trickle) {
+                    return;
+                }
 
                 //check if trickle is configures on descendant
                 //NOTE: Removed for banked assessments
@@ -138,7 +135,7 @@ define([
         },
 
         haveDescendantsGotTrickle: function() {
-            return this.descendantsChildFirst.some(function(descendant) {
+            return _.some(this.descendantsChildFirst, function(descendant) {
                 var trickle = Adapt.trickle.getModelConfig(descendant);
                 if (!trickle) return false;
                 if (trickle._isEnabled === true) {
@@ -199,8 +196,8 @@ define([
                 this.currentDescendant = null;
             }
 
-            for (var index = this.currentDescendantIndex || 0, l = this.descendantsChildFirst.models.length; index < l; index++) {
-                var descendant = this.descendantsChildFirst.models[index];
+            for (var index = this.currentDescendantIndex || 0, l = this.descendantsChildFirst.length; index < l; index++) {
+                var descendant = this.descendantsChildFirst[index];
                 switch ( descendant.get("_type") ) {
                 case "block": case "article":
                     this.currentLocksOnDescendant = 0;

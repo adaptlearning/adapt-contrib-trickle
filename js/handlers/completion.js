@@ -40,7 +40,7 @@ define([
 
         onDescendants: function(view) {
             //save the original completion state of the component before steplocking
-            view.descendantsParentFirst.each(_.bind(function(descendant) {
+            _.each(view.descendantsParentFirst, _.bind(function(descendant) {
                 var trickle = Adapt.trickle.getModelConfig(descendant);
                 if (!trickle) return;
                 trickle._wasCompletedPreRender = descendant.get(completionAttribute);

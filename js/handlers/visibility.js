@@ -44,16 +44,15 @@ define([
             var trickleModelId = this.trickleModel.get("_id");
             var trickleType = this.trickleModel.get("_type");
 
-            var atIndex = _.findIndex(descendantsParentFirst.models, function(descendant) {
+            var atIndex = _.findIndex(descendantsParentFirst, function(descendant) {
                 if (descendant.get("_id") === trickleModelId) return true;
             });
 
-            descendantsParentFirst.each(function(descendant, index) {
-                var components;
+            _.each(descendantsParentFirst, function(descendant, index) {
+                var components = descendant.findDescendants("components");
                 if (index <= atIndex) {
                     descendant.set("_isVisible", true, {pluginName:"trickle"});
-                    components = descendant.findDescendants("components");
-                    components.each(function(componentModel) {
+                    _.each(components, function(componentModel) {
                         componentModel.set("_isVisible", true, {pluginName:"trickle"});
                     });
                 } else {
@@ -62,8 +61,7 @@ define([
                         //make sure article blocks are shown
                         if (descendant.get("_parentId") === trickleModelId) {
                             descendant.set("_isVisible", true, {pluginName:"trickle"});
-                            components = descendant.findDescendants("components");
-                            components.each(function(componentModel) {
+                            _.each(components, function(componentModel) {
                                 componentModel.set("_isVisible", true, {pluginName:"trickle"});
                             });
                             return;
@@ -71,8 +69,7 @@ define([
                     }
 
                     descendant.set("_isVisible", false, {pluginName:"trickle"});
-                    components = descendant.findDescendants("components");
-                    components.each(function(componentModel) {
+                    _.each(components, function(componentModel) {
                         componentModel.set("_isVisible", false, {pluginName:"trickle"});
                     });
                 }
@@ -93,11 +90,10 @@ define([
         onFinished: function() {
 
             var descendantsParentFirst = Adapt.trickle.pageView.descendantsParentFirst;
-
-            descendantsParentFirst.each(function(descendant) {
+            _.each(descendantsParentFirst, function(descendant) {
                 descendant.set("_isVisible", true, {pluginName:"trickle"});
                 var components = descendant.findDescendants("components");
-                components.each(function(componentModel) {
+                _.each(components, function(componentModel) {
                     componentModel.set("_isVisible", true, {pluginName:"trickle"});
                 });
             });
