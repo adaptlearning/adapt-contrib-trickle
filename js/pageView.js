@@ -57,7 +57,7 @@ define([
                 return true;
             });
         },
-        
+
         setDescendantsTrickleDefaults: function() {
             //use parent first as likely to get to article
             _.each(this.descendantsParentFirst, _.bind(function(descendant) {

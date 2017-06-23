@@ -49,7 +49,7 @@ define([
             });
 
             _.each(descendantsParentFirst, function(descendant, index) {
-                var components = descendant.findDescendants("components");
+                var components = descendant.findDescendantModels("components");
                 if (index <= atIndex) {
                     descendant.set("_isVisible", true, {pluginName:"trickle"});
                     _.each(components, function(componentModel) {
@@ -92,7 +92,7 @@ define([
             var descendantsParentFirst = Adapt.trickle.pageView.descendantsParentFirst;
             _.each(descendantsParentFirst, function(descendant) {
                 descendant.set("_isVisible", true, {pluginName:"trickle"});
-                var components = descendant.findDescendants("components");
+                var components = descendant.findDescendantModels("components");
                 _.each(components, function(componentModel) {
                     componentModel.set("_isVisible", true, {pluginName:"trickle"});
                 });
