@@ -1,24 +1,24 @@
 {
-  "type":"object",
+  "type": "object",
   "$schema": "http://json-schema.org/draft-04/schema",
   "id": "http://jsonschema.net",
-  "required":false,
-  "properties":{
+  "required": false,
+  "properties": {
     "pluginLocations": {
-      "type":"object",
-      "required":true,
-      "properties":{
+      "type": "object",
+      "required": true,
+      "properties": {
         "config": {
-          "type":"object",
+          "type": "object",
           "properties": {
             "_trickle": {
-              "type":"object",
-              "required":false,
+              "type": "object",
+              "required": false,
               "legend": "Trickle",
               "properties": {
                 "_completionAttribute": {
-                  "type":"string",
-                  "required":false,
+                  "type": "string",
+                  "required": false,
                   "enum": ["_isInteractionComplete", "_isComplete"],
                   "default": "_isComplete",
                   "title": "Completion Attribute",
@@ -31,47 +31,47 @@
           }
         },
         "course": {
-          "type":"object"
+          "type": "object"
         },
         "contentobject": {
-          "type":"object"
+          "type": "object"
         },
         "article": {
-          "type":"object",
-          "properties":{
+          "type": "object",
+          "properties": {
             "_trickle": {
-              "type":"object",
-              "required":false,
+              "type": "object",
+              "required": false,
               "legend": "Trickle",
-              "properties":{
+              "properties": {
                 "_isEnabled": {
-                  "type":"boolean",
-                  "required":false,
+                  "type": "boolean",
+                  "required": false,
                   "title": "Enable Trickle",
-                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "inputType": "Checkbox",
                   "validators": []
                 },
                 "_autoScroll": {
-                  "type":"boolean",
-                  "required":false,
+                  "type": "boolean",
+                  "required": false,
                   "title": "Scroll Automatically",
-                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "inputType": "Checkbox",
                   "validators": []
                 },
                 "_scrollDuration": {
-                  "type":"number",
-                  "required":true,
-                  "default":"500",
+                  "type": "number",
+                  "required": true,
+                  "default": "500",
                   "title": "Scroll Duration",
-                  "inputType":"Number",
+                  "inputType": "Number",
                   "validators": ["required", "number"],
                   "help": "Duration of the scroll animation in milliseconds"
                 },
                 "_onChildren": {
-                  "type":"boolean",
-                  "required":false,
+                  "type": "boolean",
+                  "required": false,
                   "title": "Enable on Child Blocks",
-                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "inputType": "Checkbox",
                   "validators": [],
                   "help": "Set to false on the article to use trickle at article level"
                 },
@@ -85,20 +85,20 @@
                   "help": "Set how trickle scrolls"
                 },
                 "_button": {
-                  "type":"object",
-                  "required":false,
+                  "type": "object",
+                  "required": false,
                   "title": "Button Attributes",
-                  "properties":{
+                  "properties": {
                     "_isEnabled": {
-                      "type":"boolean",
-                      "required":false,
+                      "type": "boolean",
+                      "required": false,
                       "title": "Enabled",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": []
                     },
                     "_styleBeforeCompletion": {
-                      "type":"string",
-                      "required":false,
+                      "type": "string",
+                      "required": false,
                       "enum": ["hidden", "visible"],
                       "default": "hidden",
                       "title": "Initial Visibility",
@@ -107,8 +107,8 @@
                       "help": "Set button visibility before completion"
                     },
                     "_styleAfterClick": {
-                      "type":"string",
-                      "required":false,
+                      "type": "string",
+                      "required": false,
                       "enum": ["hidden", "disabled", "scroll"],
                       "default": "hidden",
                       "title": "Final Visibility",
@@ -117,24 +117,24 @@
                       "help": "Set button visibility after completion"
                     },
                     "_isFullWidth": {
-                      "type":"boolean",
-                      "required":false,
+                      "type": "boolean",
+                      "required": false,
                       "default": "true",
                       "title": "Full Width",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": []
                     },
                     "_autoHide": {
-                      "type":"boolean",
-                      "required":false,
+                      "type": "boolean",
+                      "required": false,
                       "default": "true",
                       "title": "Hide on Scroll",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": [],
                       "help": "Hides the button when it scrolls from view"
                     },
                     "_className": {
-                      "type":"string",
+                      "type": "string",
                       "required": false,
                       "default": "",
                       "title": "Custom Classes",
@@ -142,7 +142,7 @@
                       "validators": []
                     },
                     "text": {
-                      "type":"string",
+                      "type": "string",
                       "required": false,
                       "default": "Continue",
                       "title": "Button Text",
@@ -151,7 +151,7 @@
                       "translatable": true
                     },
                     "startText": {
-                      "type":"string",
+                      "type": "string",
                       "required": false,
                       "default": "Begin",
                       "title": "First Button Text",
@@ -161,7 +161,7 @@
                       "translatable": true
                     },
                     "finalText": {
-                      "type":"string",
+                      "type": "string",
                       "required": false,
                       "default": "Finish",
                       "title": "Final Button Text",
@@ -171,7 +171,7 @@
                       "translatable": true
                     },
                     "_component": {
-                      "type":"string",
+                      "type": "string",
                       "required": false,
                       "default": "trickle-button",
                       "title": "Trickle Plugin",
@@ -181,32 +181,32 @@
                   }
                 },
                 "_stepLocking": {
-                  "type":"object",
-                  "required":false,
+                  "type": "object",
+                  "required": false,
                   "title": "Step Locking Attributes",
-                  "properties":{
+                  "properties": {
                     "_isEnabled": {
-                      "type":"boolean",
-                      "required":false,
+                      "type": "boolean",
+                      "required": false,
                       "default": true,
                       "title": "Enabled",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": []
                     },
                     "_isCompletionRequired": {
-                      "type":"boolean",
-                      "required":false,
+                      "type": "boolean",
+                      "required": false,
                       "default": true,
                       "title": "Completion Required",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": []
                     },
                     "_isLockedOnRevisit": {
-                      "type":"boolean",
-                      "required":false,
+                      "type": "boolean",
+                      "required": false,
                       "default": false,
                       "title": "Locked On Revisit",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": []
                     }
                   }
@@ -216,33 +216,33 @@
           }
         },
         "block": {
-          "type":"object",
-          "properties":{
+          "type": "object",
+          "properties": {
             "_trickle": {
-              "type":"object",
-              "required":false,
+              "type": "object",
+              "required": false,
               "legend": "Trickle",
-              "properties":{
+              "properties": {
                 "_isEnabled": {
-                  "type":"boolean",
-                  "required":false,
+                  "type": "boolean",
+                  "required": false,
                   "title": "Enable Trickle",
-                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "inputType": "Checkbox",
                   "validators": []
                 },
                 "_autoScroll": {
-                  "type":"boolean",
-                  "required":false,
+                  "type": "boolean",
+                  "required": false,
                   "title": "Scroll Automatically",
-                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "inputType": "Checkbox",
                   "validators": []
                 },
                 "_scrollDuration": {
-                  "type":"number",
-                  "required":true,
-                  "default":"500",
+                  "type": "number",
+                  "required": true,
+                  "default": "500",
                   "title": "Scroll Duration",
-                  "inputType":"Number",
+                  "inputType": "Number",
                   "validators": ["required", "number"],
                   "help": "Duration of the scroll animation in milliseconds"
                 },
@@ -256,20 +256,20 @@
                   "help": "Set how trickle scrolls"
                 },
                 "_button": {
-                  "type":"object",
-                  "required":false,
+                  "type": "object",
+                  "required": false,
                   "title": "Button Attributes",
-                  "properties":{
+                  "properties": {
                     "_isEnabled": {
-                      "type":"boolean",
-                      "required":false,
+                      "type": "boolean",
+                      "required": false,
                       "title": "Enabled",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": []
                     },
                     "_styleBeforeCompletion": {
-                      "type":"string",
-                      "required":false,
+                      "type": "string",
+                      "required": false,
                       "enum": ["hidden", "visible"],
                       "default": "hidden",
                       "title": "Initial Visibility",
@@ -277,8 +277,8 @@
                       "help": "Set button visibility before completion"
                     },
                     "_styleAfterClick": {
-                      "type":"string",
-                      "required":false,
+                      "type": "string",
+                      "required": false,
                       "enum": ["hidden", "disabled", "scroll"],
                       "default": "hidden",
                       "title": "Final Visibility",
@@ -286,24 +286,24 @@
                       "help": "Set button visibility after completion"
                     },
                     "_isFullWidth": {
-                      "type":"boolean",
-                      "required":false,
+                      "type": "boolean",
+                      "required": false,
                       "default": "true",
                       "title": "Full Width",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": []
                     },
                     "_autoHide": {
-                      "type":"boolean",
-                      "required":false,
+                      "type": "boolean",
+                      "required": false,
                       "default": "true",
                       "title": "Hide on Scroll",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": [],
                       "help": "Hides the button when it scrolls from view"
                     },
                     "_className": {
-                      "type":"string",
+                      "type": "string",
                       "required": false,
                       "default": "",
                       "title": "Custom Classes",
@@ -311,7 +311,7 @@
                       "validators": []
                     },
                     "text": {
-                      "type":"string",
+                      "type": "string",
                       "required": false,
                       "default": "Continue",
                       "title": "Button Text",
@@ -320,7 +320,7 @@
                       "translatable": true
                     },
                     "startText": {
-                      "type":"string",
+                      "type": "string",
                       "required": false,
                       "default": "Begin",
                       "title": "First Button Text",
@@ -330,7 +330,7 @@
                       "translatable": true
                     },
                     "finalText": {
-                      "type":"string",
+                      "type": "string",
                       "required": false,
                       "default": "Finish",
                       "title": "Final Button Text",
@@ -340,7 +340,7 @@
                       "translatable": true
                     },
                     "_component": {
-                      "type":"string",
+                      "type": "string",
                       "required": false,
                       "default": "trickle-button",
                       "title": "Trickle Plugin",
@@ -350,32 +350,32 @@
                   }
                 },
                 "_stepLocking": {
-                  "type":"object",
-                  "required":false,
+                  "type": "object",
+                  "required": false,
                   "title": "Step Locking Attributes",
-                  "properties":{
+                  "properties": {
                     "_isEnabled": {
-                      "type":"boolean",
-                      "required":false,
+                      "type": "boolean",
+                      "required": false,
                       "default": true,
                       "title": "Enabled",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": []
                     },
                     "_isCompletionRequired": {
-                      "type":"boolean",
-                      "required":false,
+                      "type": "boolean",
+                      "required": false,
                       "default": true,
                       "title": "Completion Required",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": []
                     },
                     "_isLockedOnRevisit": {
-                      "type":"boolean",
-                      "required":false,
+                      "type": "boolean",
+                      "required": false,
                       "default": false,
                       "title": "Locked On Revisit",
-                      "inputType": { "type": "Boolean", "options": [false, true]},
+                      "inputType": "Checkbox",
                       "validators": []
                     }
                   }
@@ -385,7 +385,7 @@
           }
         },
         "component": {
-          "type":"object"
+          "type": "object"
         }
       }
     }
