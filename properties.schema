@@ -274,7 +274,6 @@
                       "default": "hidden",
                       "title": "Initial Visibility",
                       "inputType": {"type": "Select", "options":["hidden", "visible"]},
-                      "validators": ["required"],
                       "help": "Set button visibility before completion"
                     },
                     "_styleAfterClick": {
@@ -284,7 +283,6 @@
                       "default": "hidden",
                       "title": "Final Visibility",
                       "inputType": {"type": "Select", "options":["hidden", "disabled", "scroll"]},
-                      "validators": ["required"],
                       "help": "Set button visibility after completion"
                     },
                     "_isFullWidth": {
