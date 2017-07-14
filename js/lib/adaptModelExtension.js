@@ -24,14 +24,14 @@ define([
 
             if (this.get("_type") === "component") {
                 descendants.push(this);
-                return new Backbone.Collection(descendants);
+                return descendants;
             }
 
-            var children = this.getChildren();
+            var children = this.getChildren().models;
 
-            for (var i = 0, l = children.models.length; i < l; i++) {
+            for (var i = 0, l = children.length; i < l; i++) {
 
-                var child = children.models[i];
+                var child = children[i];
                 if (child.get("_type") === "component") {
 
                     descendants.push(child);
@@ -40,14 +40,14 @@ define([
 
                     var subDescendants = child.getDescendants(parentFirst);
                     if (parentFirst == true) descendants.push(child);
-                    descendants = descendants.concat(subDescendants.models);
+                    descendants = descendants.concat(subDescendants);
                     if (parentFirst != true) descendants.push(child);
 
                 }
 
             }
 
-            return new Backbone.Collection(descendants);
+            return descendants;
         },
 
         /*
@@ -83,7 +83,7 @@ define([
             var movementCount = 0;
 
             // children first [c,c,b,a,c,c,b,a,p,c,c,b,a,c,c,b,a,p]
-            var pageDescendants = rootModel.getDescendants().toJSON();
+            var pageDescendants = rootModel.getDescendants();
 
             //choose search style
             if (findSameType || findAncestorType) {
@@ -107,18 +107,18 @@ define([
             //exclude not available and not visible if opinionated
             if (options.filterNotVisible) {
                 pageDescendants = _.filter(pageDescendants, function(descendant) {
-                    return descendant._isVisible;
+                    return descendant.get("_isVisible");
                 });
             } 
             if (options.filterNotAvailable) {
                 pageDescendants = _.filter(pageDescendants, function(descendant) {
-                    return descendant._isAvailable;
+                    return descendant.get("_isAvailable");
                 });
             } 
 
             //find current index in array
             var modelIndex = _.findIndex(pageDescendants, function(pageDescendant) {
-                if (pageDescendant._id === modelId) {
+                if (pageDescendant.get("_id") === modelId) {
                     return true;
                 }
                 return false;
@@ -128,9 +128,9 @@ define([
             if (searchBackwards) {
                 for (var i = modelIndex, l = -1; i > l; i--) {
                     var descendant = pageDescendants[i];
-                    if (descendant._type === relativeDescriptor.type) {
+                    if (descendant.get("_type") === relativeDescriptor.type) {
                         if (-movementCount === relativeDescriptor.offset) {
-                            return Adapt.findById(descendant._id);
+                            return Adapt.findById(descendant.get("_id"));
                         }
                         movementCount++;
                     }
@@ -138,9 +138,9 @@ define([
             } else {
                 for (var i = modelIndex, l = pageDescendants.length; i < l; i++) {
                     var descendant = pageDescendants[i];
-                    if (descendant._type === relativeDescriptor.type) {
+                    if (descendant.get("_type") === relativeDescriptor.type) {
                         if (movementCount === relativeDescriptor.offset) {
-                            return Adapt.findById(descendant._id);
+                            return Adapt.findById(descendant.get("_id"));
                         }
                         movementCount++;
                     }

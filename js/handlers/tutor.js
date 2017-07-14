@@ -45,8 +45,10 @@ define([
         isOriginStepLocked: function(view) {
             if (!view || !this.stepLockedId) return true;
 
-            var parents = view.model.getParents();
-            var hasStepLockedParent = parents.findWhere({_id:this.stepLockedId});
+            var parents = view.model.getAncestorModels();
+            var hasStepLockedParent = _.find(parents, function(ancestor) {
+                return ancestor.get('_id') === this.stepLockedId;
+            }, this);
             if (!hasStepLockedParent) return false;
             return true;
         },
