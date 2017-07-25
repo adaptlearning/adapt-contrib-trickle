@@ -119,7 +119,7 @@
                     "_isFullWidth": {
                       "type": "boolean",
                       "required": false,
-                      "default": "true",
+                      "default": true,
                       "title": "Full Width",
                       "inputType": "Checkbox",
                       "validators": []
@@ -127,7 +127,7 @@
                     "_autoHide": {
                       "type": "boolean",
                       "required": false,
-                      "default": "true",
+                      "default": true,
                       "title": "Hide on Scroll",
                       "inputType": "Checkbox",
                       "validators": [],
@@ -226,6 +226,7 @@
                 "_isEnabled": {
                   "type": "boolean",
                   "required": false,
+                  "default": true,
                   "title": "Enable Trickle",
                   "inputType": "Checkbox",
                   "validators": []
@@ -263,6 +264,7 @@
                     "_isEnabled": {
                       "type": "boolean",
                       "required": false,
+                      "default": true,
                       "title": "Enabled",
                       "inputType": "Checkbox",
                       "validators": []
@@ -288,7 +290,7 @@
                     "_isFullWidth": {
                       "type": "boolean",
                       "required": false,
-                      "default": "true",
+                      "default": true,
                       "title": "Full Width",
                       "inputType": "Checkbox",
                       "validators": []
@@ -296,7 +298,7 @@
                     "_autoHide": {
                       "type": "boolean",
                       "required": false,
-                      "default": "true",
+                      "default": true,
                       "title": "Hide on Scroll",
                       "inputType": "Checkbox",
                       "validators": [],
