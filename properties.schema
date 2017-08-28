@@ -3,6 +3,16 @@
   "$schema": "http://json-schema.org/draft-04/schema",
   "id": "http://jsonschema.net",
   "required": false,
+  "globals": {
+    "incompleteContent": {
+      "type": "string",
+      "required": true,
+      "default": "",
+      "inputType": "Text",
+      "validators": [],
+      "translatable": true
+    }
+  },
   "properties": {
     "pluginLocations": {
       "type": "object",
