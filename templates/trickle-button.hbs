@@ -1,4 +1,5 @@
 <div class="component {{_trickle._button._component}}-component {{_trickle._button._component}}-component-{{_id}}{{#if _trickle._button._isFullWidth}} trickle-full-width{{/if}} {{_trickle._button._className}}">
+	{{{a11y_aria_label _globals._extensions._trickle.incompleteContent}}}
 	<div class="{{_trickle._button._component}}-inner component-inner{{#if _trickle._button._isLocking}} locking{{/if}} {{#unless _trickle._button._isVisible}}display-none{{/unless}}">
 	        <button role="button" class="button {{#if _trickle._button._isDisabled}}disabled" disabled="disabled"{{else}}"{{/if}}>
 	        	{{#if _trickle._isFinal}}
