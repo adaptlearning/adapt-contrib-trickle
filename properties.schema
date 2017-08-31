@@ -7,7 +7,7 @@
     "incompleteContent": {
       "type": "string",
       "required": true,
-      "default": "",
+      "default": "There is incomplete content above. You must complete this before you can proceed through the course.",
       "inputType": "Text",
       "validators": [],
       "translatable": true
