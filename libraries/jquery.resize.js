@@ -1,5 +1,5 @@
 'use strict';
-// jquery.resize 2017-06-19 https://github.com/adaptlearning/jquery.resize
+// jquery.resize 2017-10-05 https://github.com/adaptlearning/jquery.resize
 
 (function() {
 
@@ -166,6 +166,11 @@
             }
 
             loop.lastMain = (new Date()).getTime();
+            
+            if (this.hasExpired()) {
+                loop.stop();
+                return;
+            }
 
             if (handlers.registered.length == 0) {
                 // nothing to check
@@ -253,8 +258,9 @@
 
         get: function($element) {
 
-            var height = $element.outerHeight();
-            var width = $element.outerWidth();
+            var element = $element[0];
+            var height = element.clientHeight;
+            var width = element.clientWidth;
 
             return {
                 uniqueMeasurementId: height+","+width
