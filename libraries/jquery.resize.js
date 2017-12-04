@@ -1,5 +1,5 @@
 'use strict';
-// jquery.resize 2017-06-19 https://github.com/adaptlearning/jquery.resize
+// jquery.resize 2017-11-28 https://github.com/adaptlearning/jquery.resize
 
 (function() {
 
@@ -166,6 +166,11 @@
             }
 
             loop.lastMain = (new Date()).getTime();
+            
+            if (loop.hasExpired()) {
+                loop.stop();
+                return;
+            }
 
             if (handlers.registered.length == 0) {
                 // nothing to check
@@ -225,24 +230,6 @@
 
     });
 
-    // jQuery interfaces
-    // element functions
-    $.extend($.fn, {
-
-        resize: function resize(callback) {
-
-            if (callback) {
-                // standard event attachment jquery api behaviour
-                this.on("resize", callback);
-                return this;
-            }
-
-            return this;
-
-        }
-
-    });
-
     var measurements = {
 
         featureDetect: function() {
@@ -253,8 +240,9 @@
 
         get: function($element) {
 
-            var height = $element.outerHeight();
-            var width = $element.outerWidth();
+            var element = $element[0];
+            var height = element.clientHeight;
+            var width = element.clientWidth;
 
             return {
                 uniqueMeasurementId: height+","+width
