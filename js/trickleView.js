@@ -6,7 +6,7 @@ define([
 
         isSteplocked: false,
         
-        completionAttribute : "_isComplete",
+        completionAttribute : null,
 
         initialize: function(options) {
             this.setupEventListeners();
@@ -45,7 +45,7 @@ define([
             var trickle = Adapt.trickle.getModelConfig(this.model);
             if (!trickle) return false;
             
-            if(this.model.get(this.completionAttribute)) return false;
+            if (this.model.get(this.completionAttribute)) return false;
             
             var isArticleWithOnChildren = (this.model.get("_type") === "article" && trickle._onChildren);
             if (isArticleWithOnChildren) {
