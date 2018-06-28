@@ -42,7 +42,13 @@ define([
         getModelConfig: function(model) {
             return model.get("_trickle");
         },
-
+        
+        getCompletionAttribute: function() {
+            var trickle = this.getModelConfig(Adapt.config);
+            if (!trickle) return "_isComplete";
+            return trickle._completionAttribute || "_isComplete";
+        },
+        
         setModelConfig: function(model, config) {
             return model.set("_trickle", config);
         },
