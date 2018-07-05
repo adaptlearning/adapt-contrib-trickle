@@ -51,7 +51,7 @@ define([
 
         onTrickleResize: function() {
             if (!this.isStepLocking) return;
-            var offset = this.stepView.$el.offset();
+            var offset = Adapt.getOffset(this.stepView.$el);
             var height = this.stepView.$el.height();
 
             var topPadding = parseInt($("#wrapper").css("padding-top") || "0");
