@@ -1,9 +1,9 @@
 {
   "name": "adapt-contrib-trickle",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "framework": ">=2.2",
   "homepage": "https://github.com/adaptlearning/adapt-contrib-trickle",
-  "issues": "https://github.com/adaptlearning/adapt_framework/issues/new?title=contrib-trickle%3A%20please%20enter%20a%20brief%20summary%20of%20the%20issue%20here",
+  "issues": "https://github.com/adaptlearning/adapt_framework/issues/new",
   "displayName" : "Trickle",
   "extension" : "trickle",
   "description": "A vertical locking extension",
