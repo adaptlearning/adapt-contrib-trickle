@@ -38,7 +38,7 @@ define([
             $(window).on("resize", this.onResize);
             $(".page").on("resize", this.onResize);
 
-            //wait for height / visibility to adjust
+            // wait for height / visibility to adjust
             _.defer(function() {
                 Adapt.trigger("trickle:resize");
             });

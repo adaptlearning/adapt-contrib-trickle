@@ -121,11 +121,11 @@ define([
 
             var measurements = this.$el.onscreen();
 
-            //this is to fix ios7 iphone4 miscalculation
+            // this is to fix ios7 iphone4 miscalculation
             var isJustOffscreen = (measurements.bottom > -100);
 
 
-            //add show/hide animation here if needed
+            // add show/hide animation here if needed
             if (measurements.onscreen || isJustOffscreen) {
                 this.setButtonVisible(true);
             } else {
@@ -167,7 +167,8 @@ define([
             var trickle = Adapt.trickle.getModelConfig(this.model);
 
             if (!this.isButtonEnabled()) return;
-            var isCompleteAndShouldRelock = (trickle._stepLocking._isLockedOnRevisit && this.model.get(completionAttribute));
+            var isCompleteAndShouldRelock = (trickle._stepLocking._isLockedOnRevisit &&
+                this.model.get(completionAttribute));
 
             if (isCompleteAndShouldRelock) {
                 this.isStepLocked = true;
@@ -176,7 +177,7 @@ define([
                 this.allowVisible = true;
                 this.checkButtonAutoHide();
             } else if (this.hasStepPreCompleted) {
-                //force the button to show if section completed before it was steplocked
+                // force the button to show if section completed before it was steplocked
                 this.isStepLocked = true;
                 this.model.set("_isTrickleAutoScrollComplete", false);
                 this.allowVisible = true;

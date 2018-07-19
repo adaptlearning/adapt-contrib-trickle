@@ -59,7 +59,7 @@ define([
                 }
 
                 if (trickleType === "article" && descendant.get("_type") === "block") {
-                    //make sure article blocks are shown
+                    // make sure article blocks are shown
                     if (descendant.get("_parentId") === trickleModelId) {
                         descendant.set("_isVisible", true, {pluginName:"trickle"});
                         components.forEach(function(componentModel) {

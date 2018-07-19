@@ -38,7 +38,7 @@ define([
         },
 
         onDescendants: function(view) {
-            //save the original completion state of the component before steplocking
+            // save the original completion state of the component before steplocking
             view.descendantsParentFirst.forEach(function(descendant) {
                 var trickle = Adapt.trickle.getModelConfig(descendant);
                 if (!trickle) return;
@@ -53,8 +53,9 @@ define([
             if (!trickle._stepLocking._isCompletionRequired &&
                 !trickle._stepLocking._isLockedOnRevisit) {
                 if (!isModelComplete) return;
-                //skip any components that do not require completion but that are already complete
-                //this is needed for a second visit to a page with 'inview' components that aren't reset and don't require completion and are not relocked on revisit
+                // skip any components that do not require completion but that are already complete
+                // this is needed for a second visit to a page with 'inview'
+                // components that aren't reset and don't require completion and are not relocked on revisit
                 Adapt.trigger("trickle:continue", view);
                 return;
             }
@@ -62,7 +63,8 @@ define([
             if (trickle._stepLocking._isCompletionRequired
                 && isModelComplete
                 && trickle._wasCompletedPreRender) {
-                //skip any components that are complete, have require completion and we completed before the page rendered
+                // skip any components that are complete, have require completion
+                // and we completed before the page rendered
                 Adapt.trigger("trickle:continue", view);
                 return;
             }

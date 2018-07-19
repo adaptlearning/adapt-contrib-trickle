@@ -42,7 +42,8 @@ define([
             this.descendantsChildFirst = this.model.getAllDescendantModels();
             this.descendantsParentFirst = this.model.getAllDescendantModels(true);
 
-            //if some descendants flip between _isAvailable true/false they must have their defaults set before the filter is applied
+            // if some descendants flip between _isAvailable true/false they
+            // must have their defaults set before the filter is applied
             this.setDescendantsTrickleDefaults();
 
             this.descendantsChildFirst = this.filterComponents(this.descendantsChildFirst);
@@ -59,26 +60,26 @@ define([
         },
 
         setDescendantsTrickleDefaults: function() {
-            //use parent first as likely to get to article
+            // use parent first as likely to get to article
             this.descendantsParentFirst.forEach(function(descendant) {
                 var trickle = Adapt.trickle.getModelConfig(descendant);
                 if (!trickle) {
                     return;
                 }
 
-                //check if trickle is configures on descendant
-                //NOTE: Removed for banked assessments
-                //var isTrickleConfigured = descendant.get("_isTrickleConfigured");
-                //if (isTrickleConfigured) return;
+                // check if trickle is configures on descendant
+                // NOTE: Removed for banked assessments
+                // var isTrickleConfigured = descendant.get("_isTrickleConfigured");
+                // if (isTrickleConfigured) return;
 
-                //setup steplocking defaults
+                // setup steplocking defaults
                 trickle._stepLocking = _.extend({
                     "_isEnabled": true, //(default=true)
                     "_isCompletionRequired": true, //(default=true)
                     "_isLockedOnRevisit": false //(default=false)
                 }, trickle._stepLocking);
 
-                //setup main trickle defaults
+                // setup main trickle defaults
                 trickle = _.extend({
                     "_isEnabled": true, //(default=true)
                     "_autoScroll": true, //(default=true)
@@ -95,22 +96,22 @@ define([
                     this.setupArticleOnChildren(descendant, trickle);
                 }
 
-                //set descendant trickle as configured
+                // set descendant trickle as configured
                 descendant.set("_isTrickleConfigured", true);
 
             }.bind(this));
         },
 
         setupArticleOnChildren: function(articleModel, articleTrickleConfig) {
-            //set trickle on all blocks, using article config with block overrides
+            // set trickle on all blocks, using article config with block overrides
             var articleBlocks = articleModel.getChildren();
 
             articleBlocks.each(function(blockModel, index) {
                 var blockTrickleConfig = Adapt.trickle.getModelConfig(blockModel);
 
-                //overlay block trickle on article trickle
-                //this allows values to carry through from the article to the block
-                //retains any value overriden in the block
+                // overlay block trickle on article trickle
+                // this allows values to carry through from the article to the block
+                // retains any value overriden in the block
                 for (var k in blockTrickleConfig) {
                     //handle nested objects to one level
                     if (typeof blockTrickleConfig[k] === "object") {
@@ -121,7 +122,7 @@ define([
                 blockTrickleConfig = _.extend({}, articleTrickleConfig, blockTrickleConfig);
 
 
-                //setup start/final config
+                // setup start/final config
                 if (articleBlocks.length === index+1) {
                     blockTrickleConfig._isFinal = true;
                 }
@@ -167,7 +168,7 @@ define([
         },
 
         onDescendantPreRender: function(view) {
-            //ignore components
+            // ignore components
             if (view.model.get("_type") === "component") return;
 
             var descendantView = new TrickleView({
@@ -177,7 +178,7 @@ define([
             this.descendantViews[view.model.get("_id")] = descendantView;
         },
 
-        //trickle lifecycle
+        // trickle lifecycle
 
         onPageReady: function(model, value) {
             if (!value) return;
@@ -237,7 +238,7 @@ define([
         },
 
         onSkip: function() {
-            //wait for all handlers to accept skip
+            // wait for all handlers to accept skip
             _.defer(function() {
                 this.currentDescendantIndex++;
                 this.gotoNextDescendant();
@@ -254,7 +255,7 @@ define([
             this.detachFromPage();
         },
 
-        //end of trickle lifecycle
+        // end of trickle lifecycle
 
         onRemove: function() {
             this.finished();

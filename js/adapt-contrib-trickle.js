@@ -66,7 +66,7 @@ define([
         },
 
         scroll: function(fromModel) {
-            //wait for model visibility to handle
+            // Wait for model visibility to handle
             _.delay(function() {
 
                 if (!this.shouldScrollPage(fromModel)) return;
@@ -79,26 +79,24 @@ define([
 
                 var scrollToId = "";
                 switch (scrollTo.substr(0,1)) {
-                case "@":
-                    //NAVIGATE BY RELATIVE TYPE
+                    case "@":
+                        // NAVIGATE BY RELATIVE TYPE
 
-                    //Allows trickle to scroll to a sibling / cousin component relative to the current trickle item
-                    var relativeModel = fromModel.findRelativeModel(scrollTo, {
-                        filterNotAvailable: true
-                    });
+                        // Allows trickle to scroll to a sibling / cousin component
+                        // relative to the current trickle item
+                        var relativeModel = fromModel.findRelativeModel(scrollTo, {
+                            filterNotAvailable: true
+                        });
 
-                    if (relativeModel === undefined) return;
-                    scrollToId = relativeModel.get("_id");
-
-                    //console.log("trickle scrolling to", scrollToId, "from", fromModel.get("_id"));
-
-                    break;
-                case ".":
-                    //NAVIGATE BY CLASS
-                    scrollToId = scrollTo.substr(1, scrollTo.length-1);
-                    break;
-                default:
-                    scrollToId = scrollTo;
+                        if (relativeModel === undefined) return;
+                        scrollToId = relativeModel.get("_id");
+                        break;
+                    case ".":
+                        // NAVIGATE BY CLASS
+                        scrollToId = scrollTo.substr(1, scrollTo.length-1);
+                        break;
+                    default:
+                        scrollToId = scrollTo;
                 }
 
                 if (scrollToId == "") return;
@@ -123,10 +121,6 @@ define([
             if (isArticleWithOnChildren) return false;
 
             return true;
-        },
-
-        onRemove: function() {
-
         }
 
     });
