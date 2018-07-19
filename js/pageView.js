@@ -136,7 +136,7 @@ define([
         },
 
         haveDescendantsGotTrickle: function() {
-            return _.some(this.descendantsChildFirst, function(descendant) {
+            return this.descendantsChildFirst.some(function(descendant) {
                 var trickle = Adapt.trickle.getModelConfig(descendant);
                 if (!trickle) return false;
                 if (trickle._isEnabled === true) {
