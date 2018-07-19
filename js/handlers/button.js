@@ -3,7 +3,7 @@ define([
     './buttonView'
 ], function(Adapt, ButtonView) {
 
-    var TrickleButtonHandler = _.extend({
+    var TrickleButtonHandler = Backbone.Controller.extend({
 
         buttonViews: null,
 
@@ -90,9 +90,7 @@ define([
             this.buttonViews = {};
         }
 
-    }, Backbone.Events);
+    });
 
-    TrickleButtonHandler.initialize();
-
-    return TrickleButtonHandler;
+    return new TrickleButtonHandler();
 });

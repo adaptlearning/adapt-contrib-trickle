@@ -10,7 +10,7 @@ define([
     './handlers/done'
 ], function(Adapt, PageView) {
 
-    Adapt.trickle = _.extend({
+    var Trickle = Backbone.Controller.extend({
 
         model: null,
         pageView: null,
@@ -67,7 +67,7 @@ define([
 
         scroll: function(fromModel) {
             //wait for model visibility to handle
-            _.delay(_.bind(function() {
+            _.delay(function() {
 
                 if (!this.shouldScrollPage(fromModel)) return;
 
@@ -106,7 +106,7 @@ define([
                 var duration = fromModel.get("_trickle")._scrollDuration || 500;
                 Adapt.scrollTo("." + scrollToId, { duration: duration });
 
-            }, this), 250);
+            }.bind(this), 250);
         },
 
         shouldScrollPage: function(fromModel) {
@@ -129,10 +129,8 @@ define([
 
         }
 
-    }, Backbone.Events);
+    });
 
-    Adapt.trickle.initialize();
-
-    return Adapt.trickle;
+    return Adapt.trickle = new Trickle();
 
 });

@@ -51,7 +51,7 @@ define([
         },
 
         filterComponents: function(descendants) {
-            return _.filter(descendants, function(descendant) {
+            return descendants.filter(function(descendant) {
                 if (descendant.get("_type") === "component") return false;
                 if (!descendant.get("_isAvailable")) return false;
                 return true;
@@ -60,7 +60,7 @@ define([
 
         setDescendantsTrickleDefaults: function() {
             //use parent first as likely to get to article
-            _.each(this.descendantsParentFirst, _.bind(function(descendant) {
+            this.descendantsParentFirst.forEach(function(descendant) {
                 var trickle = Adapt.trickle.getModelConfig(descendant);
                 if (!trickle) {
                     return;
@@ -90,15 +90,15 @@ define([
                 Adapt.trickle.setModelConfig(descendant, trickle);
 
                 //check article "onChildren" rule
-                if (trickle._onChildren
-                    && descendant.get("_type") === "article") {
+                if (trickle._onChildren &&
+                    descendant.get("_type") === "article") {
                     this.setupArticleOnChildren(descendant, trickle);
                 }
 
                 //set descendant trickle as configured
                 descendant.set("_isTrickleConfigured", true);
 
-            }, this));
+            }.bind(this));
         },
 
         setupArticleOnChildren: function(articleModel, articleTrickleConfig) {
@@ -199,13 +199,14 @@ define([
             for (var index = this.currentDescendantIndex || 0, l = this.descendantsChildFirst.length; index < l; index++) {
                 var descendant = this.descendantsChildFirst[index];
                 switch ( descendant.get("_type") ) {
-                case "block": case "article":
-                    this.currentLocksOnDescendant = 0;
-                    this.currentDescendantIndex = index;
-                    var currentId = descendant.get("_id");
-                    this.currentDescendant = this.descendantViews[currentId];
-                    this.currentDescendant.trigger("steplock");
-                    return;
+                    case "block":
+                    case "article":
+                        this.currentLocksOnDescendant = 0;
+                        this.currentDescendantIndex = index;
+                        var currentId = descendant.get("_id");
+                        this.currentDescendant = this.descendantViews[currentId];
+                        this.currentDescendant.trigger("steplock");
+                        return;
                 }
             }
             this.finished();
@@ -237,10 +238,10 @@ define([
 
         onSkip: function() {
             //wait for all handlers to accept skip
-            _.defer(_.bind(function() {
+            _.defer(function() {
                 this.currentDescendantIndex++;
                 this.gotoNextDescendant();
-            }, this));
+            }.bind(this));
         },
 
         onKill: function() {
@@ -260,7 +261,7 @@ define([
         },
 
         detachFromPage: function() {
-            this.removeClassFromHtml();
+            $("html").removeClass("trickle");
             this.undelegateEvents();
             this.stopListening();
             this.model = null;
@@ -271,10 +272,6 @@ define([
             this.descendantsChildFirst = null;
             this.descendantsParentFirst = null;
             Adapt.trickle.pageView = null;
-        },
-
-        removeClassFromHtml: function() {
-            $("html").removeClass("trickle");
         }
 
     });

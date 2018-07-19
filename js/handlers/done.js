@@ -2,7 +2,7 @@ define([
     'core/js/adapt'
 ], function(Adapt) {
 
-    var TrickleDone = _.extend({
+    var TrickleDone = Backbone.Controller.extend({
 
         initialize: function() {
             this.listenToOnce(Adapt, "app:dataReady", this.onAppDataReady);
@@ -13,7 +13,7 @@ define([
         },
 
         setupEventListeners: function() {
-            this.onDone = _.debounce(_.bind(this.onDone), 50);
+            this.onDone = _.debounce(this.onDone.bind(this), 50);
             this.listenTo(Adapt, {
                 "trickle:steplock": this.onDone,
                 "trickle:stepunlock": this.onDone,
@@ -26,10 +26,8 @@ define([
             Adapt.trigger("trickle:done");
         }
 
-    }, Backbone.Events);
+    });
 
-    TrickleDone.initialize();
-
-    return TrickleDone;
+    return new TrickleDone();
 
 });

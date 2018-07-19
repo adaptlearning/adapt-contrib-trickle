@@ -2,7 +2,7 @@ define([
     'core/js/adapt'
 ], function(Adapt) {
 
-    var TrickleNotifyHandler = _.extend({
+    var TrickleNotifyHandler = Backbone.Controller.extend({
 
         isStepLocking: false,
         isNotifyOpen: false,
@@ -54,10 +54,8 @@ define([
             this.onStepUnlock();
         }
 
-    }, Backbone.Events);
+    });
 
-    TrickleNotifyHandler.initialize();
-
-    return TrickleNotifyHandler;
+    return new TrickleNotifyHandler();
 
 });

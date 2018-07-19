@@ -5,7 +5,7 @@ define([
     var TrickleView = Backbone.View.extend({
 
         isSteplocked: false,
-        
+
         completionAttribute : null,
 
         initialize: function(options) {
@@ -17,7 +17,7 @@ define([
                 "trickle:kill": this.onKill,
                 "remove": this.onRemove
             };
-            
+
             this.onPreRender(this);
 
             AdaptEvents[this.model.get("_type") + "View:postRender"] = this.onPostRender;
@@ -28,7 +28,7 @@ define([
         },
 
         onPreRender: function(view) {
-            this.completionAttribute = Adapt.trickle.getCompletionAttribute(); 
+            this.completionAttribute = Adapt.trickle.getCompletionAttribute();
             if (!this.isElementEnabled()) return;
 
             Adapt.trigger("trickle:preRender", this);
@@ -44,9 +44,9 @@ define([
         isElementEnabled: function() {
             var trickle = Adapt.trickle.getModelConfig(this.model);
             if (!trickle) return false;
-            
+
             if (this.model.get(this.completionAttribute)) return false;
-            
+
             var isArticleWithOnChildren = (this.model.get("_type") === "article" && trickle._onChildren);
             if (isArticleWithOnChildren) {
                 return false;
@@ -76,9 +76,9 @@ define([
         },
 
         continueToNext: function() {
-            _.defer(_.bind(function() {
+            _.defer(function() {
                 Adapt.trigger("trickle:continue", this);
-            }, this));
+            }.bind(this));
         },
 
 
@@ -104,7 +104,7 @@ define([
             this.$el = null;
             this.el = null;
         }
-                
+
     });
 
     return TrickleView;
