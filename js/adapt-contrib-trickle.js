@@ -1,8 +1,6 @@
 define([
     'coreJS/adapt',
     './pageView',
-    'libraries/jquery.resize',
-    './lib/adaptModelExtension',
     './handlers/button',
     './handlers/completion',
     './handlers/notify',
@@ -42,13 +40,13 @@ define([
         getModelConfig: function(model) {
             return model.get("_trickle");
         },
-        
+
         getCompletionAttribute: function() {
             var trickle = this.getModelConfig(Adapt.config);
             if (!trickle) return "_isComplete";
             return trickle._completionAttribute || "_isComplete";
         },
-        
+
         setModelConfig: function(model, config) {
             return model.set("_trickle", config);
         },
@@ -62,7 +60,7 @@ define([
 
         onPagePreRender: function(view) {
             this.pageView = new PageView({
-                model: view.model, 
+                model: view.model,
                 el: view.el
             });
         },
@@ -83,12 +81,12 @@ define([
                 switch (scrollTo.substr(0,1)) {
                 case "@":
                     //NAVIGATE BY RELATIVE TYPE
-                    
+
                     //Allows trickle to scroll to a sibling / cousin component relative to the current trickle item
-                    var relativeModel = fromModel.findRelative(scrollTo, {
+                    var relativeModel = fromModel.findRelativeModel(scrollTo, {
                         filterNotAvailable: true
                     });
-                    
+
                     if (relativeModel === undefined) return;
                     scrollToId = relativeModel.get("_id");
 
@@ -99,12 +97,12 @@ define([
                     //NAVIGATE BY CLASS
                     scrollToId = scrollTo.substr(1, scrollTo.length-1);
                     break;
-                default: 
+                default:
                     scrollToId = scrollTo;
                 }
 
                 if (scrollToId == "") return;
-                
+
                 var duration = fromModel.get("_trickle")._scrollDuration || 500;
                 Adapt.scrollTo("." + scrollToId, { duration: duration });
 
@@ -128,9 +126,9 @@ define([
         },
 
         onRemove: function() {
-            
+
         }
-                
+
     }, Backbone.Events);
 
     Adapt.trickle.initialize();

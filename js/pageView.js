@@ -15,7 +15,7 @@ define([
             }
             this.setupDescendants();
             if (!this.haveDescendantsGotTrickle()) {
-                return this.detachFromPage();   
+                return this.detachFromPage();
             }
             this.addClassToHtml();
             this.setupEventListeners();
@@ -39,8 +39,8 @@ define([
         descendantViews: null,
 
         getDescendants: function() {
-            this.descendantsChildFirst = this.model.getDescendants();
-            this.descendantsParentFirst = this.model.getDescendants(true);
+            this.descendantsChildFirst = this.model.getAllDescendantModels();
+            this.descendantsParentFirst = this.model.getAllDescendantModels(true);
 
             //if some descendants flip between _isAvailable true/false they must have their defaults set before the filter is applied
             this.setDescendantsTrickleDefaults();
@@ -90,7 +90,7 @@ define([
                 Adapt.trickle.setModelConfig(descendant, trickle);
 
                 //check article "onChildren" rule
-                if (trickle._onChildren 
+                if (trickle._onChildren
                     && descendant.get("_type") === "article") {
                     this.setupArticleOnChildren(descendant, trickle);
                 }
@@ -109,7 +109,7 @@ define([
                 var blockTrickleConfig = Adapt.trickle.getModelConfig(blockModel);
 
                 //overlay block trickle on article trickle
-                //this allows values to carry through from the article to the block 
+                //this allows values to carry through from the article to the block
                 //retains any value overriden in the block
                 for (var k in blockTrickleConfig) {
                     //handle nested objects to one level
@@ -152,7 +152,7 @@ define([
         setupEventListeners: function() {
             this.listenTo(Adapt, {
                 "remove": this.onRemove,
-                
+
                 "articleView:preRender": this.onDescendantPreRender,
                 "blockView:preRender": this.onDescendantPreRender,
 
@@ -225,14 +225,14 @@ define([
         onUnwait: function() {
             this.currentLocksOnDescendant--;
             if (this.currentLocksOnDescendant > 0) return;
-            
+
             var lastDescendant = this.currentDescendant.model;
-            
+
             this.currentDescendantIndex++;
             this.gotoNextDescendant();
 
             Adapt.trickle.scroll(lastDescendant);
-            
+
         },
 
         onSkip: function() {
@@ -276,7 +276,7 @@ define([
         removeClassFromHtml: function() {
             $("html").removeClass("trickle");
         }
-                
+
     });
 
     return PageView;
