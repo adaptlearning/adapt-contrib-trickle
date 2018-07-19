@@ -304,6 +304,8 @@ define([
             this.$el.off("onscreen", this.checkButtonAutoHideSync);
             this.isStepLocking = false;
             this.overlayShownCount = 0;
+            // make label unfocusable as it is no longer needed
+            this.$('.aria-label').a11y_cntrl(false);
         },
 
         onSkip: function() {
