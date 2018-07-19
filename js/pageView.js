@@ -138,11 +138,7 @@ define([
         haveDescendantsGotTrickle: function() {
             return this.descendantsChildFirst.some(function(descendant) {
                 var trickle = Adapt.trickle.getModelConfig(descendant);
-                if (!trickle) return false;
-                if (trickle._isEnabled === true) {
-                    return true;
-                }
-                return false;
+                return trickle && trickle._isEnabled === true;
             });
         },
 
