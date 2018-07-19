@@ -1,5 +1,5 @@
 define([
-    'coreJS/adapt',
+    'core/js/adapt',
     './pageView',
     './handlers/button',
     './handlers/completion',
