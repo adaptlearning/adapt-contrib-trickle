@@ -147,12 +147,12 @@ define([
             var trickle = Adapt.trickle.getModelConfig(this.model);
             var $button = this.$("button");
             if (bool) {
-                this.$("button").removeClass("disabled").removeAttr("disabled");
+                $button.removeClass("disabled").removeAttr("disabled");
                 trickle._button._isDisabled = true;
                 // make label unfocusable as it is no longer needed
                 this.$('.aria-label').a11y_cntrl(false);
             } else {
-                this.$("button").addClass("disabled").attr("disabled", "disabled");
+                $button.addClass("disabled").attr("disabled", "disabled");
                 trickle._button._isDisabled = false;
             }
         },
