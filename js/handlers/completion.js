@@ -43,7 +43,7 @@ define([
                 var trickle = Adapt.trickle.getModelConfig(descendant);
                 if (!trickle) return;
                 trickle._wasCompletedPreRender = descendant.get(completionAttribute);
-            }.bind(this));
+            });
         },
 
         onStepLock: function(view) {
