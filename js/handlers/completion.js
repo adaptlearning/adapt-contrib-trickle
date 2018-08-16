@@ -48,6 +48,7 @@ define([
         },
 
         onStepLock: function(view) {
+            Adapt.trigger('media:stop');
             var isModelComplete = view.model.get(completionAttribute);
 
             var trickle = Adapt.trickle.getModelConfig(view.model);
