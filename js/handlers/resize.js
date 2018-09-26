@@ -9,16 +9,16 @@ define([
         stepView: null,
 
         initialize: function() {
-            this.listenToOnce(Adapt, "app:dataReady", this.onAppDataReady);
+            this.listenToOnce(Adapt, {
+                "app:dataReady": this.onAppDataReady,
+                "adapt:initialize": this.onAdaptInitialized
+            });
         },
 
         onAppDataReady: function() {
-            this.debounceOnResize();
-            this.setupEventListeners();
-        },
-
-        debounceOnResize: function() {
             this.onResize = _.debounce(_.bind(this.onResize, this), 10);
+            this.preventWrapperScroll = this.preventWrapperScroll.bind(this);
+            this.setupEventListeners();
         },
 
         setupEventListeners: function() {
@@ -32,6 +32,11 @@ define([
             });
         },
 
+        onAdaptInitialized: function() {
+            this.$wrapper = $("#wrapper");
+            this.$wrapper[0].addEventListener("scroll", this.preventWrapperScroll);
+        },
+
         onStepLock: function(view) {
             this.isStepLocking = true;
             this.stepView = view;
@@ -42,6 +47,16 @@ define([
             _.defer(function() {
                 Adapt.trigger("trickle:resize");
             });
+        },
+
+        preventWrapperScroll: function(event) {
+            if (!this.isStepLocking) return;
+            // Screen reader can scroll the #wrapper instead of the window.
+            // This code overcomes that behaviour.
+            var top = this.$wrapper[0].scrollTop;
+            if (top === 0) return;
+            this.$wrapper[0].scrollTop = 0;
+            window.scrollTo(0, window.pageYOffset + top);
         },
 
         onResize: function() {
@@ -74,6 +89,7 @@ define([
         },
 
         onFinished: function() {
+            this.$wrapper[0].removeEventListener("scroll", this.preventWrapperScroll);
              $("#wrapper").css("height", "" );
         },
 
