@@ -71,7 +71,7 @@
                 "_scrollDuration": {
                   "type": "number",
                   "required": true,
-                  "default": "500",
+                  "default": 500,
                   "title": "Scroll Duration",
                   "inputType": "Number",
                   "validators": ["required", "number"],
@@ -251,7 +251,7 @@
                 "_scrollDuration": {
                   "type": "number",
                   "required": true,
-                  "default": "500",
+                  "default": 500,
                   "title": "Scroll Duration",
                   "inputType": "Number",
                   "validators": ["required", "number"],
