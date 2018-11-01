@@ -16,7 +16,7 @@ define([
         },
 
         onAppDataReady: function() {
-            this.onResize = _.debounce(_.bind(this.onResize, this), 10);
+            this.onResize = _.debounce(this.onResize.bind(this), 10);
             this.preventWrapperScroll = this.preventWrapperScroll.bind(this);
             this.setupEventListeners();
         },
