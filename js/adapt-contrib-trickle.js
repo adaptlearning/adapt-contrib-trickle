@@ -85,7 +85,9 @@ define([
                         // Allows trickle to scroll to a sibling / cousin component
                         // relative to the current trickle item
                         var relativeModel = fromModel.findRelativeModel(scrollTo, {
-                            filterNotAvailable: true
+                            filter: function(model) {
+                                return model.get("_isAvailable");
+                            }
                         });
 
                         if (relativeModel === undefined) return;
