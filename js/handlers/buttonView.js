@@ -121,9 +121,8 @@ define([
 
             var measurements = this.$el.onscreen();
 
-            // this is to fix ios7 iphone4 miscalculation
+            // This is to fix common miscalculation issues
             var isJustOffscreen = (measurements.bottom > -100);
-
 
             // add show/hide animation here if needed
             if (measurements.onscreen || isJustOffscreen) {
@@ -221,9 +220,7 @@ define([
 
             if (!this.hasStepLocked) return;
 
-            _.defer(function() {
-                this.stepCompleted();
-            }.bind(this));
+            _.defer(this.stepCompleted.bind(this));
         },
 
         stepCompleted: function() {
