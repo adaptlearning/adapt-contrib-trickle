@@ -88,11 +88,7 @@ define([
 
         onCompletion: function(model, value) {
             if (value === false) return;
-
-            _.defer(function() {
-                this.stepCompleted();
-            }.bind(this));
-
+            _.defer(this.stepCompleted.bind(this));
         },
 
         stepCompleted: function() {
