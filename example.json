@@ -20,7 +20,7 @@
         "_styleBeforeCompletion": "hidden|visible", //(default=hidden)
         "_styleAfterClick": "hidden|disabled|scroll", //(default=hidden)
         "_isFullWidth": true, //(default=true)
-        "_autoHide": true, //(default=true)
+        "_autoHide": false, //(default=false) not accessible when set to true
         "_className": "|trickle-round-arrow", //(default="")
         "text": "Continue", //(default="Continue")
         "startText": "Begin",
