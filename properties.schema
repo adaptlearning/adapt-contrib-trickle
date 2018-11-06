@@ -312,7 +312,7 @@
                       "title": "Hide on Scroll",
                       "inputType": "Checkbox",
                       "validators": [],
-                      "help": "Hides the button when it scrolls from view; not recommended for use in courses that need to be screenreader compatible"
+                      "help": "Hides the button when it scrolls from view; not recommended for use in courses that need to be screenreader compatible."
                     },
                     "_className": {
                       "type": "string",
