@@ -64,7 +64,7 @@ The attributes listed below are properly formatted as JSON in [*example.json*](h
   
 >>**\_isFullWidth** (boolean):  Will position the button fixed to the bottom of the window. This option will force to `true`  **\_isEnabled** in the **\_stepLocking** attribute group (**\_stepLocking.\_isEnabled: true**). When **\_autoHide** is set to `true`, the button will fade-out when the learner scrolls up, away from the button. The default is `true`.  
   
->>**\_autoHide** (boolean):  Will hide the button when it scrolls from view.  Will show the button when it scrolls into view. The default is `true`. If you require your course to be accessible, you should set this to `false` to ensure compatibility with screen readers. 
+>>**\_autoHide** (boolean):  Will hide the button when it scrolls from view.  Will show the button when it scrolls into view. The default is `false`. If you require your course to be accessible, you should set this to `false` to ensure compatibility with screen readers. 
   
 >>**\_className** (string):  Will add a class to the button container. Available option: `"trickle-round-arrow"`. `"trickle-round-arrow"` displays a round button with an arrow and no text instead of the classic square button with text. The default is `""`.  
   
