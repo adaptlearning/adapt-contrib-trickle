@@ -33,8 +33,8 @@ define([
         },
 
         onAdaptInitialized: function() {
-            this.$wrapper = $("#wrapper");
-            this.$wrapper[0].addEventListener("scroll", this.preventWrapperScroll);
+            this.wrapper = $("#wrapper")[0];
+            this.wrapper.addEventListener("scroll", this.preventWrapperScroll);
         },
 
         onStepLock: function(view) {
@@ -53,9 +53,9 @@ define([
             if (!this.isStepLocking) return;
             // Screen reader can scroll the #wrapper instead of the window.
             // This code overcomes that behaviour.
-            var top = this.$wrapper[0].scrollTop;
+            var top = this.wrapper.scrollTop;
             if (top === 0) return;
-            this.$wrapper[0].scrollTop = 0;
+            this.wrapper.scrollTop = 0;
             window.scrollTo(0, window.pageYOffset + top);
         },
 
@@ -69,11 +69,13 @@ define([
             var offset = this.stepView.$el.offset();
             var height = this.stepView.$el.height();
 
-            var topPadding = parseInt($("#wrapper").css("padding-top") || "0");
+            var $wrapper = $(this.wrapper);
+
+            var topPadding = parseInt($wrapper.css("padding-top") || "0");
 
             var bottom = (offset['top'] - topPadding) + height;
 
-            $("#wrapper").css("height", bottom );
+            $wrapper.css("height", bottom );
         },
 
         onStepUnlock: function(view) {
@@ -89,8 +91,8 @@ define([
         },
 
         onFinished: function() {
-            this.$wrapper[0].removeEventListener("scroll", this.preventWrapperScroll);
-             $("#wrapper").css("height", "" );
+            this.wrapper.removeEventListener("scroll", this.preventWrapperScroll);
+            $(this.wrapper).css("height", "");
         },
 
         onRemove: function() {
