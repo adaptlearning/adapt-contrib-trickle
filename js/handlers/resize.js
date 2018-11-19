@@ -9,16 +9,16 @@ define([
         stepView: null,
 
         initialize: function() {
-            this.listenToOnce(Adapt, "app:dataReady", this.onAppDataReady);
+            this.listenToOnce(Adapt, {
+                "app:dataReady": this.onAppDataReady,
+                "adapt:initialize": this.onAdaptInitialized
+            });
         },
 
         onAppDataReady: function() {
-            this.debounceOnResize();
+            this.onResize = _.debounce(this.onResize.bind(this), 10);
+            this.preventWrapperScroll = this.preventWrapperScroll.bind(this);
             this.setupEventListeners();
-        },
-
-        debounceOnResize: function() {
-            this.onResize = _.debounce(_.bind(this.onResize, this), 10);
         },
 
         setupEventListeners: function() {
@@ -30,6 +30,11 @@ define([
                 "trickle:finished": this.onFinished,
                 "remove": this.onRemove
             });
+        },
+
+        onAdaptInitialized: function() {
+            this.wrapper = document.getElementById('wrapper');
+            this.wrapper.addEventListener("scroll", this.preventWrapperScroll);
         },
 
         onStepLock: function(view) {
@@ -44,6 +49,16 @@ define([
             });
         },
 
+        preventWrapperScroll: function(event) {
+            if (!this.isStepLocking) return;
+            // Screen reader can scroll the #wrapper instead of the window.
+            // This code overcomes that behaviour.
+            var top = this.wrapper.scrollTop;
+            if (top === 0) return;
+            this.wrapper.scrollTop = 0;
+            window.scrollTo(0, window.pageYOffset + top);
+        },
+
         onResize: function() {
             if (!this.isStepLocking) return;
             Adapt.trigger("trickle:resize");
@@ -54,11 +69,13 @@ define([
             var offset = this.stepView.$el.offset();
             var height = this.stepView.$el.height();
 
-            var topPadding = parseInt($("#wrapper").css("padding-top") || "0");
+            var $wrapper = $(this.wrapper);
+
+            var topPadding = parseInt($wrapper.css("padding-top") || "0");
 
             var bottom = (offset['top'] - topPadding) + height;
 
-            $("#wrapper").css("height", bottom );
+            $wrapper.css("height", bottom );
         },
 
         onStepUnlock: function(view) {
@@ -74,7 +91,8 @@ define([
         },
 
         onFinished: function() {
-             $("#wrapper").css("height", "" );
+            this.wrapper.removeEventListener("scroll", this.preventWrapperScroll);
+            $(this.wrapper).css("height", "");
         },
 
         onRemove: function() {
