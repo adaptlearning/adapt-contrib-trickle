@@ -33,7 +33,7 @@ define([
         },
 
         onAdaptInitialized: function() {
-            this.wrapper = $("#wrapper")[0];
+            this.wrapper = document.getElementById('wrapper');
             this.wrapper.addEventListener("scroll", this.preventWrapperScroll);
         },
 
