@@ -132,9 +132,9 @@ define([
             }
         },
 
-        setButtonVisible: function(bool) {
+        setButtonVisible: function(isVisible) {
             var trickle = Adapt.trickle.getModelConfig(this.model);
-            trickle._button._isVisible = Boolean(bool);
+            trickle._button._isVisible = Boolean(isVisible);
             this.$(".component-inner").toggleClass("display-none", !trickle._button._isVisible);
         },
 
@@ -142,10 +142,10 @@ define([
             this.setButtonEnabled(this.allowEnabled);
         },
 
-        setButtonEnabled: function(bool) {
+        setButtonEnabled: function(isEnabled) {
             var trickle = Adapt.trickle.getModelConfig(this.model);
             var $button = this.$("button");
-            if (bool) {
+            if (isEnabled) {
                 $button.removeClass("disabled").removeAttr("disabled");
                 trickle._button._isDisabled = true;
                 // make label unfocusable as it is no longer needed
