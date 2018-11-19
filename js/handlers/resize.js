@@ -2,7 +2,7 @@ define([
     'core/js/adapt'
 ], function(Adapt) {
 
-    var TrickleBodyResizeHandler = _.extend({
+    var TrickleBodyResizeHandler = Backbone.Controller.extend({
 
         isStepLocking: false,
 
@@ -43,7 +43,7 @@ define([
             $(window).on("resize", this.onResize);
             $(".page").on("resize", this.onResize);
 
-            //wait for height / visibility to adjust
+            // wait for height / visibility to adjust
             _.defer(function() {
                 Adapt.trigger("trickle:resize");
             });
@@ -100,10 +100,8 @@ define([
             this.stepView = null;
         }
 
-    }, Backbone.Events);
+    });
 
-    TrickleBodyResizeHandler.initialize();
-
-    return TrickleBodyResizeHandler;
+    return new TrickleBodyResizeHandler();
 
 });

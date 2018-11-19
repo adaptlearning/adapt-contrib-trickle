@@ -2,7 +2,7 @@ define([
     'core/js/adapt'
 ], function(Adapt) {
 
-    var TrickleVisibilityHandler = _.extend({
+    var TrickleVisibilityHandler = Backbone.Controller.extend({
 
         isStepLocking: false,
 
@@ -48,31 +48,32 @@ define([
                 if (descendant.get("_id") === trickleModelId) return true;
             });
 
-            _.each(descendantsParentFirst, function(descendant, index) {
+            descendantsParentFirst.forEach(function(descendant, index) {
                 var components = descendant.findDescendantModels("components");
                 if (index <= atIndex) {
                     descendant.set("_isVisible", true, {pluginName:"trickle"});
-                    _.each(components, function(componentModel) {
+                    components.forEach(function(componentModel) {
                         componentModel.set("_isVisible", true, {pluginName:"trickle"});
                     });
-                } else {
-
-                    if (trickleType === "article" && descendant.get("_type") === "block") {
-                        //make sure article blocks are shown
-                        if (descendant.get("_parentId") === trickleModelId) {
-                            descendant.set("_isVisible", true, {pluginName:"trickle"});
-                            _.each(components, function(componentModel) {
-                                componentModel.set("_isVisible", true, {pluginName:"trickle"});
-                            });
-                            return;
-                        }
-                    }
-
-                    descendant.set("_isVisible", false, {pluginName:"trickle"});
-                    _.each(components, function(componentModel) {
-                        componentModel.set("_isVisible", false, {pluginName:"trickle"});
-                    });
+                    return;
                 }
+
+                if (trickleType === "article" && descendant.get("_type") === "block") {
+                    // make sure article blocks are shown
+                    if (descendant.get("_parentId") === trickleModelId) {
+                        descendant.set("_isVisible", true, {pluginName:"trickle"});
+                        components.forEach(function(componentModel) {
+                            componentModel.set("_isVisible", true, {pluginName:"trickle"});
+                        });
+                        return;
+                    }
+                }
+
+                descendant.set("_isVisible", false, {pluginName:"trickle"});
+                components.forEach(function(componentModel) {
+                    componentModel.set("_isVisible", false, {pluginName:"trickle"});
+                });
+
             });
 
         },
@@ -90,10 +91,10 @@ define([
         onFinished: function() {
 
             var descendantsParentFirst = Adapt.trickle.pageView.descendantsParentFirst;
-            _.each(descendantsParentFirst, function(descendant) {
+            descendantsParentFirst.forEach(function(descendant) {
                 descendant.set("_isVisible", true, {pluginName:"trickle"});
                 var components = descendant.findDescendantModels("components");
-                _.each(components, function(componentModel) {
+                components.forEach(function(componentModel) {
                     componentModel.set("_isVisible", true, {pluginName:"trickle"});
                 });
             });
@@ -104,10 +105,8 @@ define([
             this.onStepUnlock();
         }
 
-    }, Backbone.Events);
+    });
 
-    TrickleVisibilityHandler.initialize();
-
-    return TrickleVisibilityHandler;
+    return new TrickleVisibilityHandler();
 
 });

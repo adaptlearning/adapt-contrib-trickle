@@ -1,8 +1,6 @@
 define([
-    'coreJS/adapt',
+    'core/js/adapt',
     './pageView',
-    'libraries/jquery.resize',
-    './lib/adaptModelExtension',
     './handlers/button',
     './handlers/completion',
     './handlers/notify',
@@ -12,7 +10,7 @@ define([
     './handlers/done'
 ], function(Adapt, PageView) {
 
-    Adapt.trickle = _.extend({
+    var Trickle = Backbone.Controller.extend({
 
         model: null,
         pageView: null,
@@ -68,8 +66,8 @@ define([
         },
 
         scroll: function(fromModel) {
-            //wait for model visibility to handle
-            _.delay(_.bind(function() {
+            // Wait for model visibility to handle
+            _.delay(function() {
 
                 if (!this.shouldScrollPage(fromModel)) return;
 
@@ -81,26 +79,26 @@ define([
 
                 var scrollToId = "";
                 switch (scrollTo.substr(0,1)) {
-                case "@":
-                    //NAVIGATE BY RELATIVE TYPE
+                    case "@":
+                        // NAVIGATE BY RELATIVE TYPE
 
-                    //Allows trickle to scroll to a sibling / cousin component relative to the current trickle item
-                    var relativeModel = fromModel.findRelative(scrollTo, {
-                        filterNotAvailable: true
-                    });
+                        // Allows trickle to scroll to a sibling / cousin component
+                        // relative to the current trickle item
+                        var relativeModel = fromModel.findRelativeModel(scrollTo, {
+                            filter: function(model) {
+                                return model.get("_isAvailable");
+                            }
+                        });
 
-                    if (relativeModel === undefined) return;
-                    scrollToId = relativeModel.get("_id");
-
-                    //console.log("trickle scrolling to", scrollToId, "from", fromModel.get("_id"));
-
-                    break;
-                case ".":
-                    //NAVIGATE BY CLASS
-                    scrollToId = scrollTo.substr(1, scrollTo.length-1);
-                    break;
-                default:
-                    scrollToId = scrollTo;
+                        if (relativeModel === undefined) return;
+                        scrollToId = relativeModel.get("_id");
+                        break;
+                    case ".":
+                        // NAVIGATE BY CLASS
+                        scrollToId = scrollTo.substr(1, scrollTo.length-1);
+                        break;
+                    default:
+                        scrollToId = scrollTo;
                 }
 
                 if (scrollToId == "") return;
@@ -114,7 +112,7 @@ define([
                 var duration = fromModel.get("_trickle")._scrollDuration || 500;
                 Adapt.scrollTo("." + scrollToId, { duration: duration });
 
-            }, this), 250);
+            }.bind(this), 250);
         },
 
         shouldScrollPage: function(fromModel) {
@@ -128,16 +126,10 @@ define([
             if (isArticleWithOnChildren) return false;
 
             return true;
-        },
-
-        onRemove: function() {
-
         }
 
-    }, Backbone.Events);
+    });
 
-    Adapt.trickle.initialize();
-
-    return Adapt.trickle;
+    return Adapt.trickle = new Trickle();
 
 });

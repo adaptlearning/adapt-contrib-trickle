@@ -3,7 +3,7 @@ define([
     './buttonView'
 ], function(Adapt, ButtonView) {
 
-    var TrickleButtonHandler = _.extend({
+    var TrickleButtonHandler = Backbone.Controller.extend({
 
         buttonViews: null,
 
@@ -27,7 +27,7 @@ define([
         },
 
         onPreRender: function(view) {
-            //setup button on prerender to allow it to control the steplocking process
+            // setup button on prerender to allow it to control the steplocking process
             if (!this.isTrickleEnabled(view.model)) return;
 
             this.setupConfigDefaults(view.model);
@@ -38,7 +38,7 @@ define([
         },
 
         onPostRender: function(view) {
-            //inject the button at post render
+            // inject the button at post render
             if (!this.isTrickleEnabled(view.model)) return;
 
             view.$el.append(this.buttonViews[view.model.get("_id")].$el);
@@ -90,9 +90,7 @@ define([
             this.buttonViews = {};
         }
 
-    }, Backbone.Events);
+    });
 
-    TrickleButtonHandler.initialize();
-
-    return TrickleButtonHandler;
+    return new TrickleButtonHandler();
 });

@@ -2,7 +2,7 @@ define([
     'core/js/adapt'
 ], function(Adapt) {
 
-    var TrickleTutorHandler = _.extend({
+    var TrickleTutorHandler = Backbone.Controller.extend({
 
         stepLockedId: null,
         isStepLocking: false,
@@ -72,10 +72,8 @@ define([
             this.onStepUnlock();
         }
 
-    }, Backbone.Events);
+    });
 
-    TrickleTutorHandler.initialize();
-
-    return TrickleTutorHandler;
+    return new TrickleTutorHandler();
 
 });
