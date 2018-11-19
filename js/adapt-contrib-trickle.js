@@ -103,6 +103,12 @@ define([
 
                 if (scrollToId == "") return;
 
+                var isAutoScrollOff = (!trickle._autoScroll);
+                if (isAutoScrollOff) {
+                    $("." + scrollToId).focusOrNext();
+                    return false;
+                }
+
                 var duration = fromModel.get("_trickle")._scrollDuration || 500;
                 Adapt.scrollTo("." + scrollToId, { duration: duration });
 
@@ -115,9 +121,6 @@ define([
 
             var hasScrolled = fromModel.get("_isTrickleAutoScrollComplete");
             if (hasScrolled) return false;
-
-            var isAutoScrollOff = (!trickle._autoScroll);
-            if (isAutoScrollOff) return false;
 
             var isArticleWithOnChildren = (fromModel.get("_type") === "article" && trickle._onChildren);
             if (isArticleWithOnChildren) return false;
