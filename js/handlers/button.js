@@ -56,23 +56,24 @@ define([
         setupConfigDefaults: function(model) {
             if (model.get("_isTrickleButtonConfigured")) return;
 
-            var trickle = Adapt.trickle.getModelConfig(model);
-            trickle._button = _.extend({
-                "_isEnabled": true, //(default=true)
-                "_styleBeforeCompletion": "hidden", //(default=hidden)
-                "_styleAfterClick": "hidden", //(default=hidden)
-                "_isFullWidth": true, //(default=true)
-                "_autoHide": false, //(default=false)
-                "_className": "", //(default="")
-                "text": "Continue", //(default="Continue")
-                "startText": "Begin", //(default="Begin")
-                "finalText": "Finish", //(default="Finish")
-                "_component": "trickle-button", //(default="trickle-button")
+            var defaults = {
+                "_isEnabled": true,
+                "_styleBeforeCompletion": "hidden",
+                "_styleAfterClick": "hidden",
+                "_isFullWidth": true,
+                "_autoHide": false,
+                "_className": "",
+                "text": "Continue",
+                "startText": "Begin",
+                "finalText": "Finish",
+                "_component": "trickle-button",
                 "_isLocking": true,
                 "_isVisible": false,
                 "_isDisabled": false
-            }, trickle._button);
+            };
 
+            var trickle = Adapt.trickle.getModelConfig(model);
+            trickle._button = _.extend(defaults, trickle._button);
 
             if (trickle._button._isFullWidth) {
                 trickle._stepLocking._isEnabled = true;
