@@ -78,8 +78,6 @@ define([
             if (trickle._button._isFullWidth) {
                 trickle._stepLocking._isEnabled = true;
                 trickle._button._styleAfterClick = "hidden";
-            } else {
-                trickle._button._autoHide = false;
             }
 
             Adapt.trickle.setModelConfig(model, trickle);
