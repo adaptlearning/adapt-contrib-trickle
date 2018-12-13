@@ -62,7 +62,7 @@ define([
                 "_styleBeforeCompletion": "hidden", //(default=hidden)
                 "_styleAfterClick": "hidden", //(default=hidden)
                 "_isFullWidth": true, //(default=true)
-                "_autoHide": true, //(default=true)
+                "_autoHide": false, //(default=false)
                 "_className": "", //(default="")
                 "text": "Continue", //(default="Continue")
                 "startText": "Begin", //(default="Begin")
