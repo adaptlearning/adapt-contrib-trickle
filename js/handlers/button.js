@@ -9,8 +9,8 @@ define([
 
         initialize: function() {
             this.listenToOnce(Adapt, {
-                "app:dataReady": this.onAppDataReady,
-                "remove": this.onRemove
+                'app:dataReady': this.onAppDataReady,
+                remove: this.onRemove
             });
         },
 
@@ -21,8 +21,8 @@ define([
 
         setupEventListeners: function() {
             this.listenTo(Adapt, {
-                "trickle:preRender": this.onPreRender,
-                "trickle:postRender": this.onPostRender
+                'trickle:preRender': this.onPreRender,
+                'trickle:postRender': this.onPostRender
             });
         },
 
@@ -32,7 +32,7 @@ define([
 
             this.setupConfigDefaults(view.model);
 
-            this.buttonViews[view.model.get("_id")] = new ButtonView({
+            this.buttonViews[view.model.get('_id')] = new ButtonView({
                 model: view.model
             });
         },
@@ -41,48 +41,49 @@ define([
             // inject the button at post render
             if (!this.isTrickleEnabled(view.model)) return;
 
-            view.$el.append(this.buttonViews[view.model.get("_id")].$el);
+            view.$el.append(this.buttonViews[view.model.get('_id')].$el);
         },
 
         isTrickleEnabled: function(model) {
             var trickle = Adapt.trickle.getModelConfig(model);
             if (!trickle || !trickle._isEnabled) return false;
 
-            if (trickle._onChildren && model.get("_type") === "article") return false;
+            if (trickle._onChildren && model.get('_type') === 'article') return false;
 
             return true;
         },
 
         setupConfigDefaults: function(model) {
-            if (model.get("_isTrickleButtonConfigured")) return;
+            if (model.get('_isTrickleButtonConfigured')) return;
+
+            var defaults = {
+                _isEnabled: true,
+                _styleBeforeCompletion: 'hidden',
+                _styleAfterClick: 'hidden',
+                _isFullWidth: true,
+                _autoHide: false,
+                _className: '',
+                text: 'Continue',
+                startText: 'Begin',
+                finalText: 'Finish',
+                _component: 'trickle-button',
+                _isLocking: true,
+                _isVisible: false,
+                _isDisabled: false
+            };
 
             var trickle = Adapt.trickle.getModelConfig(model);
-            trickle._button = _.extend({
-                "_isEnabled": true, //(default=true)
-                "_styleBeforeCompletion": "hidden", //(default=hidden)
-                "_styleAfterClick": "hidden", //(default=hidden)
-                "_isFullWidth": true, //(default=true)
-                "_autoHide": true, //(default=true)
-                "_className": "", //(default="")
-                "text": "Continue", //(default="Continue")
-                "startText": "Begin", //(default="Begin")
-                "finalText": "Finish", //(default="Finish")
-                "_component": "trickle-button", //(default="trickle-button")
-                "_isLocking": true,
-                "_isVisible": false,
-                "_isDisabled": false
-            }, trickle._button);
-
+            trickle._button = _.extend(defaults, trickle._button);
 
             if (trickle._button._isFullWidth) {
                 trickle._stepLocking._isEnabled = true;
-                trickle._button._styleAfterClick = "hidden";
+                trickle._button._styleAfterClick = 'hidden';
             } else {
                 trickle._button._autoHide = false;
             }
 
             Adapt.trickle.setModelConfig(model, trickle);
-            model.set("_isTrickleButtonConfigured", true);
+            model.set('_isTrickleButtonConfigured', true);
 
         },
 
