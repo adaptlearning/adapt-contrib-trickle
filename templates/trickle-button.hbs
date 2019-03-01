@@ -1,22 +1,22 @@
 <div class="component {{_trickle._button._component}}-component {{_trickle._button._component}}-component-{{_id}}{{#if _trickle._button._isFullWidth}} trickle-full-width{{/if}} {{_trickle._button._className}}">
-    {{{a11y_aria_label _globals._extensions._trickle.incompleteContent}}}
-    <div class="{{_trickle._button._component}}-inner component-inner{{#if _trickle._button._isLocking}} locking{{/if}} {{#unless _trickle._button._isVisible}}display-none{{/unless}}">
-        <button class="button {{#if _trickle._button._isDisabled}}disabled{{/if}}"{{#if _trickle._button._isDisabled}} disabled="disabled"{{/if}}>
-            {{#if _trickle._isFinal}}
-                {{#if _trickle._button.finalText}}
-                    {{{_trickle._button.finalText}}}
-                {{else}}
-                    {{{_trickle._button.text}}}
-                {{/if}}
-            {{else}}
-                {{#if _trickle._isStart}}
-                    {{#if _trickle._button.startText}}
-                        {{{_trickle._button.startText}}}
-                    {{/if}}
-                {{else}}
-                    {{{_trickle._button.text}}}
-                {{/if}}
-            {{/if}}
-        </button>
-    </div>
+  {{{a11y_aria_label _globals._extensions._trickle.incompleteContent}}}
+  <div class="{{_trickle._button._component}}-inner component-inner{{#if _trickle._button._isLocking}} locking{{/if}} {{#unless _trickle._button._isVisible}}display-none{{/unless}}">
+    <button class="button {{#if _trickle._button._isDisabled}}disabled{{/if}}"{{#if _trickle._button._isDisabled}} disabled="disabled"{{/if}}>
+      {{#if _trickle._isFinal}}
+        {{#if _trickle._button.finalText}}
+          {{{_trickle._button.finalText}}}
+        {{else}}
+          {{{_trickle._button.text}}}
+        {{/if}}
+      {{else}}
+        {{#if _trickle._isStart}}
+          {{#if _trickle._button.startText}}
+            {{{_trickle._button.startText}}}
+          {{/if}}
+        {{else}}
+          {{{_trickle._button.text}}}
+        {{/if}}
+      {{/if}}
+    </button>
+  </div>
 </div>

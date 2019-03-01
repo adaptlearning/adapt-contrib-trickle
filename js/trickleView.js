@@ -1,110 +1,110 @@
 define([
-    'core/js/adapt'
+  'core/js/adapt'
 ], function(Adapt) {
 
-    var TrickleView = Backbone.View.extend({
+  var TrickleView = Backbone.View.extend({
 
-        isSteplocked: false,
+    isSteplocked: false,
 
-        completionAttribute : null,
+    completionAttribute : null,
 
-        initialize: function(options) {
-            this.setupEventListeners();
-        },
+    initialize: function(options) {
+      this.setupEventListeners();
+    },
 
-        setupEventListeners: function() {
-            var AdaptEvents = {
-                "trickle:kill": this.onKill,
-                "remove": this.onRemove
-            };
+    setupEventListeners: function() {
+      var AdaptEvents = {
+        "trickle:kill": this.onKill,
+        "remove": this.onRemove
+      };
 
-            this.onPreRender(this);
+      this.onPreRender(this);
 
-            AdaptEvents[this.model.get("_type") + "View:postRender"] = this.onPostRender;
-            this.listenTo(Adapt, AdaptEvents);
+      AdaptEvents[this.model.get("_type") + "View:postRender"] = this.onPostRender;
+      this.listenTo(Adapt, AdaptEvents);
 
-            this.on("steplock", this.onStepLock);
-            this.on("stepunlock", this.onStepUnlock);
-        },
+      this.on("steplock", this.onStepLock);
+      this.on("stepunlock", this.onStepUnlock);
+    },
 
-        onPreRender: function(view) {
-            this.completionAttribute = Adapt.trickle.getCompletionAttribute();
-            if (!this.isElementEnabled()) return;
+    onPreRender: function(view) {
+      this.completionAttribute = Adapt.trickle.getCompletionAttribute();
+      if (!this.isElementEnabled()) return;
 
-            Adapt.trigger("trickle:preRender", this);
-        },
+      Adapt.trigger("trickle:preRender", this);
+    },
 
-        onPostRender: function(view) {
-            if (view.model.get("_id") !== this.model.get("_id")) return;
-            if (!this.isElementEnabled()) return;
+    onPostRender: function(view) {
+      if (view.model.get("_id") !== this.model.get("_id")) return;
+      if (!this.isElementEnabled()) return;
 
-            Adapt.trigger("trickle:postRender", this);
-        },
+      Adapt.trigger("trickle:postRender", this);
+    },
 
-        isElementEnabled: function() {
-            var trickle = Adapt.trickle.getModelConfig(this.model);
-            if (!trickle) return false;
+    isElementEnabled: function() {
+      var trickle = Adapt.trickle.getModelConfig(this.model);
+      if (!trickle) return false;
 
-            if (this.model.get(this.completionAttribute)) return false;
+      if (this.model.get(this.completionAttribute)) return false;
 
-            var isArticleWithOnChildren = (this.model.get("_type") === "article" && trickle._onChildren);
-            if (isArticleWithOnChildren) {
-                return false;
-            }
+      var isArticleWithOnChildren = (this.model.get("_type") === "article" && trickle._onChildren);
+      if (isArticleWithOnChildren) {
+        return false;
+      }
 
-            if (trickle._isEnabled === true) return true;
-            return false;
-        },
+      if (trickle._isEnabled === true) return true;
+      return false;
+    },
 
-        onStepLock: function() {
-            if (!this.isElementEnabled()) {
-                this.continueToNext();
-                return;
-            }
+    onStepLock: function() {
+      if (!this.isElementEnabled()) {
+        this.continueToNext();
+        return;
+      }
 
-            var trickle = Adapt.trickle.getModelConfig(this.model);
-            var isSteplocking = (trickle._stepLocking && trickle._stepLocking._isEnabled);
-            if (!isSteplocking) {
-                this.continueToNext();
-                return;
-            }
+      var trickle = Adapt.trickle.getModelConfig(this.model);
+      var isSteplocking = (trickle._stepLocking && trickle._stepLocking._isEnabled);
+      if (!isSteplocking) {
+        this.continueToNext();
+        return;
+      }
 
-            Adapt.trigger("trickle:steplock", this);
-            this.isSteplocked = true;
-        },
+      Adapt.trigger("trickle:steplock", this);
+      this.isSteplocked = true;
+    },
 
-        continueToNext: function() {
-            _.defer(function() {
-                Adapt.trigger("trickle:continue", this);
-            }.bind(this));
-        },
+    continueToNext: function() {
+      _.defer(function() {
+        Adapt.trigger("trickle:continue", this);
+      }.bind(this));
+    },
 
 
-        onStepUnlock: function() {
-            if (!this.isSteplocked) return;
-            this.isSteplocked = false;
-            Adapt.trigger("trickle:stepunlock", this);
-        },
+    onStepUnlock: function() {
+      if (!this.isSteplocked) return;
+      this.isSteplocked = false;
+      Adapt.trigger("trickle:stepunlock", this);
+    },
 
-        onKill: function() {
-            this.detachFromElement();
-        },
+    onKill: function() {
+      this.detachFromElement();
+    },
 
-        onRemove: function() {
-            this.detachFromElement();
-        },
+    onRemove: function() {
+      this.detachFromElement();
+    },
 
-        detachFromElement: function() {
-            this.undelegateEvents();
-            this.stopListening();
-            this.model = null;
-            this.articleModel = null;
-            this.$el = null;
-            this.el = null;
-        }
+    detachFromElement: function() {
+      this.undelegateEvents();
+      this.stopListening();
+      this.model = null;
+      this.articleModel = null;
+      this.$el = null;
+      this.el = null;
+    }
 
-    });
+  });
 
-    return TrickleView;
+  return TrickleView;
 
 });
