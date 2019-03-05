@@ -63,6 +63,7 @@ define([
         _isFullWidth: true,
         _autoHide: false,
         _className: '',
+        _hasIcon: false,
         text: 'Continue',
         startText: 'Begin',
         finalText: 'Finish',
