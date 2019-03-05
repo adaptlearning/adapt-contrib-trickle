@@ -71,9 +71,7 @@ define([
 
       var $wrapper = $(this.wrapper);
 
-      var topPadding = parseInt($wrapper.css("padding-top") || "0");
-
-      var bottom = (offset['top'] - topPadding) + height;
+      var bottom = offset['top'] + height;
 
       $wrapper.css("height", bottom );
     },
