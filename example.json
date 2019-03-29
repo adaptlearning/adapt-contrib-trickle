@@ -3,39 +3,39 @@
 //TRICKLE STYLE BUTTON ON ALL ARTICLE BLOCKS
 //put in article.json
 "_trickle": {
-    "_isEnabled": true
+  "_isEnabled": true
 }
 
 
 
 //Manual Configuration Options
 "_trickle": {
+  "_isEnabled": true, //(default=true)
+  "_autoScroll": true, //(default=true)
+  "_scrollDuration": 500, //(default=500)
+  "_onChildren": true, //(default=true)
+  "_scrollTo": "@block +1", //(default="@block +1")
+  "_button": {
     "_isEnabled": true, //(default=true)
-    "_autoScroll": true, //(default=true)
-    "_scrollDuration": 500, //(default=500)
-    "_onChildren": true, //(default=true)
-    "_scrollTo": "@block +1", //(default="@block +1")
-    "_button": {
-        "_isEnabled": true, //(default=true)
-        "_styleBeforeCompletion": "hidden|visible", //(default=hidden)
-        "_styleAfterClick": "hidden|disabled|scroll", //(default=hidden)
-        "_isFullWidth": true, //(default=true)
-        "_autoHide": false, //(default=false) It is recommended this be left set to false in courses that need to be screenreader-compatible.
-        "_className": "|trickle-round-arrow", //(default="")
-        "text": "Continue", //(default="Continue")
-        "startText": "Begin",
-        "finalText": "Finish", //(default="Finish")
-        "_component": "trickle-button" //(default="trickle-button")
-    },
-    "_stepLocking": {
-        "_isEnabled": true, //(default=true)
-        "_isCompletionRequired": true, //(default=true)
-        "_isLockedOnRevisit": false //(default=false)
-    }
+    "_styleBeforeCompletion": "hidden|visible", //(default=hidden)
+    "_styleAfterClick": "hidden|disabled|scroll", //(default=hidden)
+    "_isFullWidth": true, //(default=true)
+    "_autoHide": false, //(default=false) It is recommended this be left set to false in courses that need to be screenreader-compatible.
+    "_className": "|trickle-round-arrow", //(default="")
+    "text": "Continue", //(default="Continue")
+    "startText": "Begin",
+    "finalText": "Finish", //(default="Finish")
+    "_component": "trickle-button" //(default="trickle-button")
+  },
+  "_stepLocking": {
+    "_isEnabled": true, //(default=true)
+    "_isCompletionRequired": true, //(default=true)
+    "_isLockedOnRevisit": false //(default=false)
+  }
 }
 
 //Overide which completion data attribute is used to test when the trickle button should be displayed
 //put in config.json
 "_trickle": {
-    "_completionAttribute": "_isInteractionComplete|_isComplete", //(default=_isComplete)
+  "_completionAttribute": "_isInteractionComplete|_isComplete", //(default=_isComplete)
 }
