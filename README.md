@@ -86,7 +86,7 @@ The attributes listed below are properly formatted as JSON in [*example.json*](h
   
 The following attribute can be added to *config.json* to overide which completion data attribute is used to test when the trickle button should be displayed.  
   
->**\_completionAttribute** (string): Defines which completion attribute is used to test when the trickle button should be displayed. As of v2.1.4 of this plugin, the default is `"_isComplete"`; in previous versions it defaulted to `"_isInteractionComplete"`.  
+>**\_completionAttribute** (string): Defines which completion attribute is used to test when the trickle button should be displayed. As of v2.1.4 of this plugin, the default is `"_isComplete"`; in previous versions it defaulted to `"_isInteractionComplete"`. Unless you want to do something like 'soft reset' the assessment and still have it be trickled, it's unlikely you'll need to change this setting from the new default.
 
 ## Limitations
 
