@@ -148,6 +148,10 @@ define([
             if (isEnabled) {
                 $button.removeClass("disabled").removeAttr("disabled");
                 trickle._button._isDisabled = true;
+                // move focus forward if it's on the aria-label
+                if (document.activeElement.isSameNode(this.$('.aria-label')[0])) {
+                    this.$('.aria-label').focusNext();
+                }
                 // make label unfocusable as it is no longer needed
                 this.$('.aria-label').a11y_cntrl(false);
             } else {
@@ -220,7 +224,7 @@ define([
 
             if (!this.hasStepLocked) return;
 
-            _.defer(this.stepCompleted.bind(this));
+            this.stepCompleted();
         },
 
         stepCompleted: function() {
@@ -248,7 +252,7 @@ define([
             }
 
             this.model.set("_isTrickleAutoScrollComplete", false);
-            this.checkButtonAutoHide();
+            this.checkButtonAutoHideSync();
             this.checkButtonEnabled();
 
         },
@@ -258,12 +262,9 @@ define([
                 Adapt.trigger("trickle:unwait");
                 this.isStepLocked = false;
                 this.isStepLockFinished = true;
-
             } else {
                 this.model.set("_isTrickleAutoScrollComplete", false);
-                _.defer(function() {
-                    Adapt.trickle.scroll(this.model);
-                }.bind(this));
+                Adapt.trickle.scroll(this.model);
             }
 
             var trickle = this.model.get("_trickle");
@@ -301,6 +302,10 @@ define([
             this.$el.off("onscreen", this.checkButtonAutoHideSync);
             this.isStepLocking = false;
             this.overlayShownCount = 0;
+            // move focus forward if it's on the aria-label
+            if (document.activeElement.isSameNode(this.$('.aria-label')[0])) {
+                this.$('.aria-label').focusNext();
+            }
             // make label unfocusable as it is no longer needed
             this.$('.aria-label').a11y_cntrl(false);
         },

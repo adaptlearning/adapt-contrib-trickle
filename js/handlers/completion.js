@@ -72,9 +72,7 @@ define([
             Adapt.trigger("trickle:wait");
 
             if (isModelComplete) {
-                _.defer(function() {
-                    Adapt.trigger("trickle:unwait");
-                });
+                Adapt.trigger("trickle:unwait");
                 return;
             }
 
@@ -88,7 +86,7 @@ define([
 
         onCompletion: function(model, value) {
             if (value === false) return;
-            _.defer(this.stepCompleted.bind(this));
+            this.stepCompleted();
         },
 
         stepCompleted: function() {
@@ -100,9 +98,7 @@ define([
 
             this.stopListening(this.stepModel, "change:"+completionAttribute, this.onCompletion);
 
-            _.defer(function(){
-                Adapt.trigger("trickle:unwait");
-            });
+            Adapt.trigger("trickle:unwait");
         },
 
         onKill: function() {
