@@ -10,8 +10,6 @@ Properties that can be configured include: requiring completion of components be
 
 [Visit the **Trickle** wiki](https://github.com/adaptlearning/adapt-contrib-trickle/wiki) for more information about its functionality and for explanations of key properties.
 
-
-
 ## Installation
 
 As one of Adapt's *[core extensions](https://github.com/adaptlearning/adapt_framework/wiki/Core-Plug-ins-in-the-Adapt-Learning-Framework#extensions),* **Trickle** is included with the [installation of the Adapt framework](https://github.com/adaptlearning/adapt_framework/wiki/Manual-installation-of-the-Adapt-framework#installation) and the [installation of the Adapt authoring tool](https://github.com/adaptlearning/adapt_authoring/wiki/Installing-Adapt-Origin).
@@ -30,21 +28,23 @@ With the [Adapt CLI](https://github.com/adaptlearning/adapt-cli) installed, run 
 
 ## Settings Overview
 
-- **Trickle** may be configured on two levels: article (*articles.json*) and block (*blocks.json*). The **_onChildren** attribute determines whether the configuration applies only to the article or to the article's blocks. Attributes set in a child block override those set by its parent article.
-- The default value of **_completionAttribute** may be overridden on _config.json_.
+- **Trickle** may be configured on two levels: article (*articles.json*) and block (*blocks.json*). The **\_onChildren** attribute determines whether the configuration applies only to the article or to the article's blocks. Attributes set in a child block override those set by its parent article.
+- The default value of **\_completionAttribute** may be overridden on _config.json_.
 - _**Trickle** may also be added to_ course.json _as a simple switch to enable/disable **Trickle** during development. Its attributes will not be inherited by its child elements._
 
 The attributes listed below are properly formatted as JSON in [*example.json*](https://github.com/adaptlearning/adapt-contrib-trickle/blob/master/example.json).  Visit the [**Trickle** wiki](https://github.com/adaptlearning/adapt-contrib-trickle/wiki) for more information about how they appear in the [authoring tool](https://github.com/adaptlearning/adapt_authoring/wiki).
 
 ### Attributes
 
-**\_trickle** (object): The Trickle attributes group contains values for **\_isEnabled**, **\_scrollDuration**, **\_autoScroll**, **\_scrollTo**, **\_onChildren**, **\_button**, and **\_stepLocking**.
+**\_trickle** (object): The Trickle attributes group contains values for **\_isEnabled**, **\_autoScroll**, **\_scrollDuration**, **\_onChildren**, **\_scrollTo**, **\_button**, and **\_stepLocking**.
 
 >**\_isEnabled** (boolean):  Turns on and off the **Trickle** extension. Can be set in *course.json*, *articles.json* and *blocks.json* to disable **Trickle** where not required. Also useful during course development.
 
+>**\_autoScroll** (boolean):  If set to `true`, the page will scroll automatically to the destination specified in **\_scrollTo** when the button is clicked. The learner must manually scroll if this is set to `false`. The default is `true`.
+
 >**\_scrollDuration** (number):  This number specifies the duration of the scroll animation in milliseconds. The default is `500`.
 
->**\_autoScroll** (boolean):  If set to `true`, the page will scroll automatically to the destination specified in **\_scrollTo** when the button is clicked. The learner must manually scroll if this is set to `false`. The default is `true`.
+>**\_onChildren** (boolean):  Determines whether the Trickle settings should be applied to the article alone or if it should apply to its blocks. When set to `true` on an article, the article's Trickle settings do not apply to the article; rather, the settings act as the default Trickle settings for all the blocks contained by the article. When set to `false`, the settings act on the article itself. The default is `true`. (N.B. this attribute is ignored if set on a block.)
 
 >**\_scrollTo** (string):  This value determines the destination to which **Trickle** should scroll when the relevant step is unlocked. Acceptable values must be formulated according to one of the models listed below. The default is `"@block +1"`.
 - `"@block +1"` - Scroll forward to the next block.
@@ -52,9 +52,7 @@ The attributes listed below are properly formatted as JSON in [*example.json*](h
 - `".className"` - Scroll to the specified classname.
 - `"id"` - Scroll to the given ID.
 
->**\_onChildren** (boolean):  Determines whether the Trickle settings should be applied to the article alone or if it should apply to its blocks. When set to `true` on an article, the article's Trickle settings do not apply to the article; rather, the settings act as the default Trickle settings for all the blocks contained by the article. When set to `false`, the settings act on the article itself. The default is `true`. (N.B. this attribute is ignored if set on a block.)
-
->**\_button** (object): The button that releases the lock on hidden elements is commonly called the Trickle button. This `_button` attributes group stores the properties for the Trickle button. It contains values for **\_isEnabled**, **\_styleBeforeCompletion**, **\_styleAfterClick**, **\_isFullWidth**, **\_autoHide**, **\_className**, **text**, **startText**, **finalText**, and **\_component**.
+>**\_button** (object): The button that releases the lock on hidden elements is commonly called the Trickle button. This `_button` attributes group stores the properties for the Trickle button. It contains values for **\_isEnabled**, **\_styleBeforeCompletion**, **\_styleAfterClick**, **\_isFullWidth**, **\_autoHide**, **\_className**, **\_hasIcon**, **text**, **startText**, **finalText**, and **\_component**.
 
 >>**\_isEnabled** (boolean):  If set to `false`, no button is displayed, so step-locking is triggered by component completion only. The page will scroll to the specified destination if **\_autoScroll** is set to `true`. The default is `true`.
 
@@ -95,9 +93,9 @@ The following attribute can be added to *config.json* to overide which completio
 No known limitations.
 
 ----------------------------
-**Version number:**  3   <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a>
-**Framework versions:**  3+
-**Author / maintainer:** Adapt Core Team with [contributors](https://github.com/adaptlearning/adapt-contrib-trickle/graphs/contributors)
-**Accessibility support:** WAI AA
-**RTL support:** yes
-**Cross-platform coverage:** Chrome, Chrome for Android, Firefox (ESR + latest version), Edge, IE 11, IE Mobile 11, Safari 11+12 for macOS+iOS, Opera
+**Version number:**  4.0.0  <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a>  
+**Framework versions:**  5+
+**Author / maintainer:** Adapt Core Team with [contributors](https://github.com/adaptlearning/adapt-contrib-trickle/graphs/contributors)  
+**Accessibility support:** WAI AA  
+**RTL support:** Yes  
+**Cross-platform coverage:** Chrome, Chrome for Android, Firefox (ESR + latest version), Edge, IE11, IE Mobile 11, Safari 11+12 for macOS+iOS, Opera  
