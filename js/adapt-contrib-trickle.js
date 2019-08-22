@@ -67,52 +67,50 @@ define([
 
     scroll: function(fromModel) {
       // Wait for model visibility to handle
-      _.delay(function() {
 
-        if (!this.shouldScrollPage(fromModel)) return;
+      if (!this.shouldScrollPage(fromModel)) return;
 
-        var trickle = Adapt.trickle.getModelConfig(fromModel);
-        var scrollTo = trickle._scrollTo;
-        if (scrollTo === undefined) scrollTo = "@block +1";
+      var trickle = Adapt.trickle.getModelConfig(fromModel);
+      var scrollTo = trickle._scrollTo;
+      if (scrollTo === undefined) scrollTo = "@block +1";
 
-        fromModel.set("_isTrickleAutoScrollComplete", true);
+      fromModel.set("_isTrickleAutoScrollComplete", true);
 
-        var scrollToId = "";
-        switch (scrollTo.substr(0,1)) {
-          case "@":
-            // NAVIGATE BY RELATIVE TYPE
+      var scrollToId = "";
+      switch (scrollTo.substr(0,1)) {
+        case "@":
+          // NAVIGATE BY RELATIVE TYPE
 
-            // Allows trickle to scroll to a sibling / cousin component
-            // relative to the current trickle item
-            var relativeModel = fromModel.findRelativeModel(scrollTo, {
-              filter: function(model) {
-                return model.get("_isAvailable");
-              }
-            });
+          // Allows trickle to scroll to a sibling / cousin component
+          // relative to the current trickle item
+          var relativeModel = fromModel.findRelativeModel(scrollTo, {
+            filter: function(model) {
+              return model.get("_isAvailable");
+            }
+          });
 
-            if (relativeModel === undefined) return;
-            scrollToId = relativeModel.get("_id");
-            break;
-          case ".":
-            // NAVIGATE BY CLASS
-            scrollToId = scrollTo.substr(1, scrollTo.length-1);
-            break;
-          default:
-            scrollToId = scrollTo;
-        }
+          if (relativeModel === undefined) return;
+          scrollToId = relativeModel.get("_id");
+          break;
+        case ".":
+          // NAVIGATE BY CLASS
+          scrollToId = scrollTo.substr(1, scrollTo.length-1);
+          break;
+        default:
+          scrollToId = scrollTo;
+      }
 
-        if (scrollToId == "") return;
+      if (scrollToId == "") return;
 
-        var isAutoScrollOff = (!trickle._autoScroll);
-        if (isAutoScrollOff) {
-          $("." + scrollToId).focusOrNext();
-          return false;
-        }
+      var isAutoScrollOff = (!trickle._autoScroll);
+      if (isAutoScrollOff) {
+        $("." + scrollToId).focusOrNext();
+        return false;
+      }
 
-        var duration = fromModel.get("_trickle")._scrollDuration || 500;
-        Adapt.scrollTo("." + scrollToId, { duration: duration });
+      var duration = fromModel.get("_trickle")._scrollDuration || 500;
+      Adapt.scrollTo("." + scrollToId, { duration: duration });
 
-      }.bind(this), 250);
     },
 
     shouldScrollPage: function(fromModel) {

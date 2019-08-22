@@ -44,9 +44,7 @@ define([
       $(".page").on("resize", this.onResize);
 
       // wait for height / visibility to adjust
-      _.defer(function() {
-        Adapt.trigger("trickle:resize");
-      });
+      Adapt.trigger("trickle:resize");
     },
 
     preventWrapperScroll: function(event) {

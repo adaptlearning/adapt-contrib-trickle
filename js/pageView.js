@@ -235,10 +235,8 @@ define([
 
     onSkip: function() {
       // wait for all handlers to accept skip
-      _.defer(function() {
-        this.currentDescendantIndex++;
-        this.gotoNextDescendant();
-      }.bind(this));
+      this.currentDescendantIndex++;
+      this.gotoNextDescendant();
     },
 
     onKill: function() {

@@ -74,9 +74,7 @@ define([
     },
 
     continueToNext: function() {
-      _.defer(function() {
-        Adapt.trigger("trickle:continue", this);
-      }.bind(this));
+      Adapt.trigger("trickle:continue", this);
     },
 
 
