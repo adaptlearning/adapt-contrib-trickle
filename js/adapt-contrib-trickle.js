@@ -102,9 +102,10 @@ define([
 
             if (scrollToId == "") return;
 
+            $("." + scrollToId).focusOrNext();
+            
             var isAutoScrollOff = (!trickle._autoScroll);
             if (isAutoScrollOff) {
-                $("." + scrollToId).focusOrNext();
                 return false;
             }
 
