@@ -12,6 +12,7 @@
       </div>
       {{/if}}
 
+      {{#any _trickle._button.finalText _trickle._button.text _trickle._button.startText}}
       <div class="trickle__btn-text">
         <div class="trickle__btn-text-inner">
           {{#if _trickle._isFinal}}
@@ -31,6 +32,7 @@
           {{/if}}
         </div>
       </div>
+      {{/any}}
 
     </button>
 
