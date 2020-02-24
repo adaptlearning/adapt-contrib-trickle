@@ -4,7 +4,7 @@
 
   <div class="trickle__inner js-trickle-btn-container {{_trickle._button._component}}__inner {{#if _trickle._button._isLocking}} is-locked{{/if}}{{#unless _trickle._button._isVisible}} u-display-none{{/unless}}">
 
-    <button class="btn-text trickle__btn js-trickle-btn {{#if _trickle._button._isDisabled}} is-disabled{{/if}}{{#if _trickle._button._hasIcon}} btn-icon{{/if}}"{{#if _trickle._button._isDisabled}} disabled="disabled"{{/if}}>
+    <button class="trickle__btn js-trickle-btn {{#if _trickle._button._isDisabled}} is-disabled{{/if}}{{#if _trickle._button._hasIcon}} btn-icon{{/if}}{{#any _trickle._button.finalText _trickle._button.text _trickle._button.startText}} btn-text{{/any}}"{{#if _trickle._button._isDisabled}} disabled="disabled"{{/if}}>
 
       {{#if _trickle._button._hasIcon}}
       <div class="trickle__btn-icon">
