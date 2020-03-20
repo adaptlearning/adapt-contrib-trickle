@@ -54,7 +54,7 @@ define([
         filterComponents: function(descendants) {
             return descendants.filter(function(descendant) {
                 if (descendant.get("_type") === "component") return false;
-                if (!descendant.get("_isAvailable")) return false;
+                if (!descendant.getIsAvailableInPage()) return false;
                 return true;
             });
         },
