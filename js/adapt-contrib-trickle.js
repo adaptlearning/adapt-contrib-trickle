@@ -85,7 +85,7 @@ define([
                     // relative to the current trickle item
                     var relativeModel = fromModel.findRelativeModel(scrollTo, {
                         filter: function(model) {
-                            return model.get("_isAvailable");
+                            return model.getIsAvailableInPage();
                         }
                     });
 
