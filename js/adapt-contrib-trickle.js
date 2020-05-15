@@ -52,10 +52,7 @@ define([
     },
 
     setupListeners: function() {
-      this.listenTo(Adapt, {
-        "pageView:preRender": this.onPagePreRender,
-        "remove": this.onRemove
-      });
+      this.listenTo(Adapt, "pageView:preRender", this.onPagePreRender);
     },
 
     onPagePreRender: function(view) {
