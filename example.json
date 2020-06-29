@@ -34,7 +34,7 @@
         }
     }
 
-    // Overide which completion data attribute is used to test when the
+    // Override which completion data attribute is used to test when the
     // trickle button should be displayed
     // Put in config.json
     "_trickle": {
