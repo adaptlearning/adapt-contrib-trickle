@@ -17,7 +17,7 @@
             "_styleBeforeCompletion": "hidden",
             "_comment": "_styleAfterClick = hidden | disabled | scroll",
             "_styleAfterClick": "hidden",
-            "_isFullWidth": true, 
+            "_isFullWidth": true,
             "_comment": "_autoHide = it is recommended this be left set to false in courses that need to be screenreader-compatible.",
             "_autoHide": false,
             "_className": "",
@@ -34,7 +34,7 @@
         }
     }
 
-    // Overide which completion data attribute is used to test when the 
+    // Override which completion data attribute is used to test when the
     // trickle button should be displayed
     // Put in config.json
     "_trickle": {
