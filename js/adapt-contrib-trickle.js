@@ -107,9 +107,6 @@ define([
             }
 
             if (scrollToId == "") return;
-            
-            
-            if (scrollToId === '') return;
 
             if (hasTrickleButton) { // only set focus if there's a trickle button - see https://github.com/adaptlearning/adapt_framework/issues/2856
                 $("." + scrollToId).focusOrNext();
