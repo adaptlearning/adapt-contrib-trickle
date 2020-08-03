@@ -69,12 +69,18 @@ define([
             // Wait for model visibility to handle
 
             if (!this.shouldScrollPage(fromModel)) return;
-
+            
+            fromModel.set("_isTrickleAutoScrollComplete", true);
+            
             var trickle = Adapt.trickle.getModelConfig(fromModel);
+            var isAutoScrollOff = !trickle._autoScroll;
+            var hasTrickleButton = trickle._button._isEnabled;
+            if (isAutoScrollOff && !hasTrickleButton) {
+                return;
+            }
+            
             var scrollTo = trickle._scrollTo;
             if (scrollTo === undefined) scrollTo = "@block +1";
-
-            fromModel.set("_isTrickleAutoScrollComplete", true);
 
             var scrollToId = "";
             switch (scrollTo.substr(0,1)) {
@@ -102,12 +108,11 @@ define([
 
             if (scrollToId == "") return;
 
-            $("." + scrollToId).focusOrNext();
-            
-            var isAutoScrollOff = (!trickle._autoScroll);
-            if (isAutoScrollOff) {
-                return false;
+            if (hasTrickleButton) { // only set focus if there's a trickle button - see https://github.com/adaptlearning/adapt_framework/issues/2856
+                $("." + scrollToId).focusOrNext();
             }
+
+            if (isAutoScrollOff) return;
 
             var duration = fromModel.get("_trickle")._scrollDuration || 500;
             Adapt.scrollTo("." + scrollToId, { duration: duration });
