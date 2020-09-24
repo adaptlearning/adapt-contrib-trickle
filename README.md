@@ -58,7 +58,7 @@ The attributes listed below are properly formatted as JSON in [*example.json*](h
 
 >>**\_styleBeforeCompletion** (string):  Determines whether the Trickle button is visible even while subsequent sections of the page remain inaccessible. Acceptable values are `"hidden"` and `"visible"`. The default is `"hidden"`.
 
->>**\_styleAfterClick** (string): Determines the properties of the Trickle button after it has been clicked. Acceptable values are `"hidden"`, `"disabled"`, and `"scroll"`. `"hidden"` hides the button. `"disabled"` applies the "disabled" CSS class. The value `"scroll"` will cause the button to maintain its visibility allowing the user an alternative method for scrolling down the page by using the button (even after all sections have been revealed). The default is `"hidden"`.
+>>**\_styleAfterClick** (string): Determines the properties of the Trickle button after it has been clicked. Acceptable values are `"hidden"`, and `"disabled"`. `"hidden"` hides the button. The value `"disabled"` will cause the button to remain visible after the click. The default is `"hidden"`.
 
 >>**\_isFullWidth** (boolean):  Will position the button fixed to the bottom of the window. This option will force to `true`  **\_isEnabled** in the **\_stepLocking** attribute group (**\_stepLocking.\_isEnabled: true**). When **\_autoHide** is set to `true`, the button will fade-out when the learner scrolls up, away from the button. The default is `true`.
 
