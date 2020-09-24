@@ -15,7 +15,7 @@
             "_isEnabled": true,
             "_comment": "_styleBeforeCompletion = hidden | visible",
             "_styleBeforeCompletion": "hidden",
-            "_comment": "_styleAfterClick = hidden | disabled | scroll",
+            "_comment": "_styleAfterClick = hidden | visible",
             "_styleAfterClick": "hidden",
             "_isFullWidth": true,
             "_comment": "_autoHide = it is recommended this be left set to false in courses that need to be screenreader-compatible.",

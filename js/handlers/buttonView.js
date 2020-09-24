@@ -273,8 +273,7 @@ define([
         this.allowVisible = false;
         this.checkButtonAutoHideSync();
         break;
-      case "disabled":
-        this.allowEnabled = false;
+      case "visible":
         this.checkButtonAutoHideSync();
       }
     },
