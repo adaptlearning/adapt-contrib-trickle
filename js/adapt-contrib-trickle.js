@@ -45,7 +45,7 @@ define([
       this.listenTo(Adapt, {
         'app:dataLoaded': this.onDataReady,
         'pageView:preRender': this.onPageViewPreRender,
-        'trickle:kill': this.onTrickleKill
+        'trickle:kill': this.kill
       });
     }
 
@@ -293,10 +293,9 @@ define([
     }
 
     /**
-     * When the trickle:kill event is triggered externally, turn off all trickle
-     * locking, continue rendering and set the page model state as killed
+     * Turn off all trickle locking, continue rendering and set the page model state as killed
      */
-    async onTrickleKill() {
+    async kill() {
       // Fetch the component model from the store incase it needs overriding by another extension
       const TrickleModel = Adapt.getModelClass('trickle-button');
       Adapt.trickle.isKilled = true;
@@ -324,6 +323,7 @@ define([
       Adapt.parentView.model.set('_isTrickleStarted', value);
       if (value) {
         Adapt.trigger('trickle:started');
+        this.trigger('started');
       }
     }
 
@@ -350,6 +350,7 @@ define([
       Adapt.parentView.model.set('_isTrickleFinished', value);
       if (value) {
         Adapt.trigger('trickle:finished');
+        this.trigger('finished');
       }
     }
 
@@ -366,6 +367,7 @@ define([
       Adapt.parentView.model.set('_isTrickleKilled', value);
       if (value) {
         Adapt.trigger('trickle:killed');
+        this.trigger('killed');
       }
     }
 

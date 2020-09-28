@@ -55,8 +55,8 @@ define([
       _.bindAll(this, 'tryButtonAutoHide');
       this.listenTo(Adapt.parentView, 'postRemove', this.onRemove);
       this.$el.on('onscreen', this.tryButtonAutoHide);
+      this.listenTo(Adapt.trickle, 'killed', this.updateButtonState);
       this.listenTo(Adapt, {
-        'trickle:kill': this.updateButtonState,
         'popup:opened': this.onPopupOpened,
         'popup:closed': this.onPopupClosed
       });
