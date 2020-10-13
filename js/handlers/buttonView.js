@@ -303,7 +303,7 @@ define([
       this.isStepLocking = false;
       this.overlayShownCount = 0;
       // move focus forward if it's on the aria-label
-      if (document.activeElement && document.activeElement.isSameNode(this.$('.aria-label')[0])) {
+      if (document.activeElement instanceof HTMLElement && document.activeElement.isSameNode(this.$('.aria-label')[0])) {
         this.$('.aria-label').focusNext();
       }
       // make label unfocusable as it is no longer needed
