@@ -53,6 +53,10 @@ define([
       }
 
       if (trickle._isEnabled === true) return true;
+
+      // if override and enabled
+      if (trickle._overrideInherited === true && trickle._isEnabled === true) return true;
+      
       return false;
     },
 

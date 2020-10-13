@@ -12,14 +12,16 @@
     margin: auto;
   }
 
-  &.is-full-width &__btn {
+  &.is-full-width .trickle__btn {
     width: 100%;
+    border-radius: 0px;
   }
 
   &__btn-icon .icon {
     .icon-controls-small-down;
   }
 
+  // --------------------------------------------------
   // Adds the necessary styling to lock the button
   // --------------------------------------------------
   &.is-locked {
@@ -28,13 +30,16 @@
     left: 0;
     right: 0;
   }
+  // --------------------------------------------------
 
+  // --------------------------------------------------
   // If full width config is enabled, button is fixed to the bottm of the screen
   // --------------------------------------------------
-  &.is-full-width &__inner {
+  &.is-full-width .trickle__inner {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
   }
+  // --------------------------------------------------
 }

@@ -109,18 +109,32 @@ define([
       articleBlocks.each(function(blockModel, index) {
         var blockTrickleConfig = Adapt.trickle.getModelConfig(blockModel);
 
-        // overlay block trickle on article trickle
-        // this allows values to carry through from the article to the block
-        // retains any value overriden in the block
+        
+        var baseConfig;
+        var overrideConfig;
+
+        // check if block trickle settings are set to override article
+        if (blockTrickleConfig._overrideInherited === true) {
+          // overlay block trickle on article trickle
+          // this allows values to carry through from the article to the block
+          // retains any value overriden in the block
+          baseConfig = articleTrickleConfig;
+          overrideConfig = blockTrickleConfig;
+        } else {
+          // retain article trickle on block trickle
+          // block level settings are ignored
+          baseConfig = blockTrickleConfig;
+          overrideConfig = articleTrickleConfig;
+        }
+
         for (var k in blockTrickleConfig) {
           //handle nested objects to one level
           if (typeof blockTrickleConfig[k] === "object") {
-            blockTrickleConfig[k] = _.extend({}, articleTrickleConfig[k], blockTrickleConfig[k]);
+            blockTrickleConfig[k] = _.extend({}, baseConfig[k], overrideConfig[k]);
           }
         }
 
-        blockTrickleConfig = _.extend({}, articleTrickleConfig, blockTrickleConfig);
-
+        blockTrickleConfig = _.extend({}, baseConfig, overrideConfig);
 
         // setup start/final config
         if (articleBlocks.length === index+1) {

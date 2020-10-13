@@ -242,6 +242,15 @@
               "required": false,
               "legend": "Trickle",
               "properties": {
+                "_overrideInherited": {
+                  "type": "boolean",
+                  "required": false,
+                  "default": false,
+                  "title": "Override Article Settings",
+                  "inputType": "Checkbox",
+                  "validators": [],
+                  "help": "Use block settings, overriding if Article has _onChildren activated"
+                },
                 "_isEnabled": {
                   "type": "boolean",
                   "required": false,
