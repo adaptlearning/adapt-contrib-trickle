@@ -114,7 +114,7 @@ define([
         var overrideConfig;
 
         // check if block trickle settings are set to override article
-        if (blockTrickleConfig._overrideInherited === true) {
+        if (!blockTrickleConfig.hasOwnProperty("_overrideInherited") || blockTrickleConfig._overrideInherited === true) {
           // overlay block trickle on article trickle
           // this allows values to carry through from the article to the block
           // retains any value overriden in the block
