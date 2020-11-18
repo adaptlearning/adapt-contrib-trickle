@@ -30,12 +30,7 @@
               "type": "number",
               "title": "Scroll Duration",
               "description": "Duration of the scroll animation in milliseconds",
-              "default": 500,
-              "_backboneForms": {
-                "validators": [
-                  "number"
-                ]
-              }
+              "default": 500
             },
             "_scrollTo": {
               "type": "string",
