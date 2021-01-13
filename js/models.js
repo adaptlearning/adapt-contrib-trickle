@@ -54,7 +54,7 @@ export const configDefaults = {
 };
 
 /**
- * Sets the specified default trickle configuration for the give model
+ * Sets the default trickle configuration for the given model
  * @param {Backbone.Model} model
  */
 export function setModelDefaults(model) {
@@ -101,7 +101,7 @@ export function getModelConfig(model) {
 }
 
 /**
- * Set the specified trickle configuration for the give model
+ * Set the specified trickle configuration for the given model
  * @param {Backbone.Model} model
  * @param {object} config
  */
@@ -131,7 +131,11 @@ export function getCompletionAttribute() {
   return trickle._completionAttribute || '_isComplete';
 }
 
-export function checkApplyLocks(model, value) {
+/**
+ * Reapply trickle locks if the completion attribute has changed on the give model
+ * @param {Backbone.Model} model
+ */
+export function checkApplyLocks(model) {
   const completionAttribute = getCompletionAttribute();
   if (!model.changed.hasOwnProperty(completionAttribute)) return;
   applyLocks();
@@ -149,7 +153,7 @@ export function applyLocks() {
   const TrickleModel = Adapt.getModelClass('trickle-button');
   Adapt.course.getAllDescendantModels(true).forEach(siteModel => {
     const trickleConfig = siteModel.get('_trickle');
-    // Check only sites with an enabled trickle configurations
+    // Check only sites with an enabled trickle configuration
     if (!trickleConfig || !trickleConfig._isEnabled) return;
     // Capture all subsequent parent models locked by each trickle configuration site
     let selfAndSubsequentLockingModels;
@@ -162,7 +166,8 @@ export function applyLocks() {
     const siteId = siteModel.get('_id');
     selfAndSubsequentLockingModels.forEach((model, index) => {
       const id = model.get('_id');
-      // Set the source trickle configuration and state of each model, except injected buttons
+      // Set the source trickle configuration and state of each model, except on injected buttons
+      // which are configured elsewhere
       const isButtonModel = (model instanceof TrickleModel);
       if (!isButtonModel) {
         model.set({
@@ -173,12 +178,12 @@ export function applyLocks() {
       const isFirst = (index === 0);
       if (isFirst) {
         // Store the new locking state of each model in the locks variable
-        modelsById[id] = model;
         // Don't unlock anything that was locked in a previous group
         // Don't attempt to lock the first of each group as it should be accessible to the user
+        modelsById[id] = model;
         locks[id] = locks[id] || false;
       } else {
-        // Attempt to lock all other subsequent models
+        // Attempt to lock all other subsequent parent models
         const config = getModelConfig(model);
         const isStepLocked = config &&
           config._stepLocking &&
@@ -212,7 +217,7 @@ export function applyLocks() {
 
 /**
  * Returns all of the contentobject descendant models directly subsequent to the
- * specified model through each ancestor
+ * given model through each ancestor
  * If fromModel is a component; its next sibling components, next block siblings
  * and next article siblings will be returned
  * @param {Backbone.Model} child
@@ -227,7 +232,7 @@ export function _getSelfAndAncestorNextSiblings(fromModel) {
   const allAncestors = fromModel.getAncestorModels();
   const inPageAncestors = allAncestors.slice(0, allAncestors.findIndex(parent => parent instanceof ContentObjectModel) + 1);
   // Move from the next ancestor down as we already have the parent's children (fromModel siblings)
-  // Collect all subsequent in-page siblings
+  // Collect all subsequent in-page ancestor siblings
   const subsequentInPageAncestors = [];
   inPageAncestors.slice(1).forEach((grandParent, previousIndex) => {
     const parent = inPageAncestors[previousIndex];
@@ -235,6 +240,7 @@ export function _getSelfAndAncestorNextSiblings(fromModel) {
     const subsequentAncestorSiblings = allGrandParentChildren.slice(allGrandParentChildren.findIndex(child => child === parent) + 1);
     subsequentInPageAncestors.push(...subsequentAncestorSiblings);
   });
+  // Combine and return entires set
   const selfAndSubsequentContentObjectDescendantModels = selfAndSubsequentSiblings.concat(subsequentInPageAncestors);
   return selfAndSubsequentContentObjectDescendantModels;
 }

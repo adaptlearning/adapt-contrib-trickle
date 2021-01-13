@@ -82,8 +82,8 @@ export default class TrickleButtonModel extends ComponentModel {
   }
 
   /**
-   * Apply start and final text amongst the current siblings.
-   * Siblings in assessments can be randomised so this must be derived at runtime.
+   * Apply start and final text amongst the current siblings
+   * Siblings in assessments can be randomised so this must be derived at runtime
    */
   calculateButtonText() {
     const siteId = this.get('_trickleConfigId');
