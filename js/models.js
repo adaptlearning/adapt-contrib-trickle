@@ -275,7 +275,7 @@ export function addComponents() {
         _renderPosition: 'outer-append'
       });
       trickleModel.setupModel();
-      // Tthis line would usually append a trickle button to an article or block
+      // This line would usually append a trickle button to an article or block
       buttonModelSite.getChildren().add(trickleModel);
     });
   });
