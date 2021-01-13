@@ -250,6 +250,15 @@
                   "inputType": "Checkbox",
                   "validators": []
                 },
+                "_isInherited": {
+                  "type": "boolean",
+                  "required": false,
+                  "default": false,
+                  "title": "Inherit Trickle config",
+                  "inputType": "Checkbox",
+                  "validators": [],
+                  "help": "Inherit the configuration from the parent article"
+                },
                 "_autoScroll": {
                   "type": "boolean",
                   "required": false,

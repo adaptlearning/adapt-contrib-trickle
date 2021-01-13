@@ -1,12 +1,8 @@
-define([
-  'core/js/adapt',
-  './trickleButtonView',
-  './trickleButtonModel'
-], function(Adapt, TrickleButtonView, TrickleButtonModel) {
+import Adapt from 'core/js/adapt';
+import TrickleButtonView from './TrickleButtonView';
+import TrickleButtonModel from './TrickleButtonModel';
 
-  Adapt.register('trickle-button', {
-    view: TrickleButtonView,
-    model: TrickleButtonModel
-  });
-
+export default Adapt.register('trickle-button', {
+  view: TrickleButtonView,
+  model: TrickleButtonModel
 });
