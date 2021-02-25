@@ -258,15 +258,6 @@ define([
     },
 
     onButtonClick: function() {
-      if (this.isStepLocked) {
-        Adapt.trigger("trickle:unwait");
-        this.isStepLocked = false;
-        this.isStepLockFinished = true;
-      } else {
-        this.model.set("_isTrickleAutoScrollComplete", false);
-        Adapt.trickle.scroll(this.model);
-      }
-
       var trickle = this.model.get("_trickle");
       switch (trickle._button._styleAfterClick) {
       case "hidden":
@@ -276,6 +267,15 @@ define([
       case "disabled":
         this.allowEnabled = false;
         this.checkButtonAutoHideSync();
+      }
+
+      if (this.isStepLocked) {
+        Adapt.trigger("trickle:unwait");
+        this.isStepLocked = false;
+        this.isStepLockFinished = true;
+      } else {
+        this.model.set("_isTrickleAutoScrollComplete", false);
+        Adapt.trickle.scroll(this.model);
       }
     },
 
