@@ -15,7 +15,7 @@
           "properties": {
             "_completionAttribute": {
               "type": "string",
-              "title": "Completion Attribute",
+              "title": "Completion attribute",
               "description": "Set which attribute is used to determine completion",
               "default": "_isComplete",
               "enum": [

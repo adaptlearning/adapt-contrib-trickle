@@ -23,30 +23,30 @@
             },
             "_autoScroll": {
               "type": "boolean",
-              "title": "Scroll Automatically",
+              "title": "Scroll automatically",
               "default": false
             },
             "_scrollDuration": {
               "type": "number",
-              "title": "Scroll Duration",
+              "title": "Scroll duration",
               "description": "Duration of the scroll animation in milliseconds",
               "default": 500
             },
             "_onChildren": {
               "type": "boolean",
-              "title": "Enable on Child Blocks",
+              "title": "Enable on child blocks",
               "description": "Set to false on the article to use trickle at article level",
               "default": false
             },
             "_scrollTo": {
               "type": "string",
-              "title": "Scroll To",
+              "title": "Scroll target",
               "description": "Set how trickle scrolls",
               "default": "@block +1"
             },
             "_button": {
               "type": "object",
-              "title": "Button Attributes",
+              "title": "Button",
               "default": {},
               "required": [
                 "_styleBeforeCompletion",
@@ -55,13 +55,12 @@
               "properties": {
                 "_isEnabled": {
                   "type": "boolean",
-                  "title": "Enabled",
+                  "title": "Add Trickle button",
                   "default": false
                 },
                 "_styleBeforeCompletion": {
                   "type": "string",
-                  "title": "Initial Visibility",
-                  "description": "Set button visibility before completion",
+                  "title": "Visibility before completion",
                   "default": "hidden",
                   "enum": [
                     "hidden",
@@ -71,8 +70,7 @@
                 },
                 "_styleAfterClick": {
                   "type": "string",
-                  "title": "Final Visibility",
-                  "description": "Set button visibility after completion",
+                  "title": "Visibility after completion",
                   "default": "hidden",
                   "enum": [
                     "hidden",
@@ -83,29 +81,29 @@
                 },
                 "_isFullWidth": {
                   "type": "boolean",
-                  "title": "Full Width",
+                  "title": "Make full width",
                   "default": true
                 },
                 "_autoHide": {
                   "type": "boolean",
-                  "title": "Hide on Scroll",
-                  "description": "Hides the button when it scrolls from view; not recommended for use in courses that need to be screenreader compatible.",
+                  "title": "Hide button when no longer in view",
+                  "description": "Hides the button when it scrolls from view; not recommended for use in courses that need to be screenreader compatible",
                   "default": false
                 },
                 "_className": {
                   "type": "string",
-                  "title": "Custom Classes",
+                  "title": "Custom classes",
                   "default": ""
                 },
                 "_hasIcon": {
                   "type": "boolean",
-                  "title": "Enable button icon",
+                  "title": "Enable icon",
                   "description": "Displays an icon alongside, or in place of, the Trickle button text. Default icon is a small downwards arrow",
                   "default": false
                 },
                 "text": {
                   "type": "string",
-                  "title": "Button Text",
+                  "title": "Default button text",
                   "default": "Continue",
                   "_adapt": {
                     "translatable": true
@@ -113,8 +111,8 @@
                 },
                 "startText": {
                   "type": "string",
-                  "title": "First Button Text",
-                  "description": "Only on articles when 'Enable on Child Blocks' set to true",
+                  "title": "First button text",
+                  "description": "Only on articles when 'Enable on child blocks' set to true",
                   "default": "Begin",
                   "_adapt": {
                     "translatable": true
@@ -122,8 +120,8 @@
                 },
                 "finalText": {
                   "type": "string",
-                  "title": "Final Button Text",
-                  "description": "Only on articles when 'Enable on Child Blocks' set to true",
+                  "title": "Final button text",
+                  "description": "Only on articles when 'Enable on child blocks' set to true",
                   "default": "Finish",
                   "_adapt": {
                     "translatable": true
@@ -131,29 +129,29 @@
                 },
                 "_component": {
                   "type": "string",
-                  "title": "Trickle Plugin",
+                  "title": "Trickle plugin",
                   "default": "trickle-button"
                 }
               }
             },
             "_stepLocking": {
               "type": "object",
-              "title": "Step Locking Attributes",
+              "title": "Step locking",
               "default": {},
               "properties": {
                 "_isEnabled": {
                   "type": "boolean",
-                  "title": "Enabled",
+                  "title": "Hide subsequent content",
                   "default": true
                 },
                 "_isCompletionRequired": {
                   "type": "boolean",
-                  "title": "Completion Required",
+                  "title": "Require content to be completed",
                   "default": true
                 },
                 "_isLockedOnRevisit": {
                   "type": "boolean",
-                  "title": "Locked On Revisit",
+                  "title": "Reset state on revisit",
                   "default": false
                 }
               }
