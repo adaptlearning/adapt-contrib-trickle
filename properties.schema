@@ -254,7 +254,7 @@
                   "type": "boolean",
                   "required": false,
                   "default": false,
-                  "title": "Inherit Trickle config",
+                  "title": "Inherit from article?",
                   "inputType": "Checkbox",
                   "validators": [],
                   "help": "Inherit the configuration from the parent article"
