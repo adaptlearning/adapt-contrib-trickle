@@ -257,7 +257,7 @@
                   "title": "Inherit from article?",
                   "inputType": "Checkbox",
                   "validators": [],
-                  "help": "Inherit the configuration from the parent article"
+                  "help": "If selected, this block will use the same trickle settings as the parent article"
                 },
                 "_autoScroll": {
                   "type": "boolean",
