@@ -106,7 +106,7 @@ define([
       if (scrollToId === '') return;
 
       if (hasTrickleButton) { // only set focus if there's a trickle button - see https://github.com/adaptlearning/adapt_framework/issues/2813
-        Adapt.a11y.focusFirst($('.' + scrollToId));
+        Adapt.a11y.focusFirst($('.' + scrollToId), { preventScroll: true });
       }
 
       if (isAutoScrollOff) return;
