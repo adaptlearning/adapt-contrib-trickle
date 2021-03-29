@@ -140,7 +140,7 @@ class TrickleController extends Backbone.Controller {
 
     if (hasTrickleButton) {
       // Only set focus if there is a trickle button - see https://github.com/adaptlearning/adapt_framework/issues/2813
-      a11y.focusFirst($('.' + scrollToId));
+      a11y.focusFirst($('.' + scrollToId), { preventScroll: true });
     }
 
     if (isAutoScrollOff) return false;
