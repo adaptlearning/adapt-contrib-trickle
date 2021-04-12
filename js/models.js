@@ -14,8 +14,8 @@ export function _deepDefaults(original, ...defaultObjects) {
   defaultObjects.forEach(defaults => {
     const keyValuePairs = Object.entries(defaults);
     keyValuePairs.forEach(([ key, defaultValue ]) => {
-      const isRecusiveObject = (typeof defaultValue === 'object' && !Array.isArray(defaultValue) && defaultValue !== null);
-      if (isRecusiveObject) {
+      const isRecursiveObject = (typeof defaultValue === 'object' && !Array.isArray(defaultValue) && defaultValue !== null);
+      if (isRecursiveObject) {
         original[key] = _deepDefaults(original[key] || {}, defaultValue);
         return;
       }
