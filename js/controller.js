@@ -24,6 +24,8 @@ class TrickleController extends Backbone.Controller {
       'change:_isLocked': this.checkIsFinished
     });
     this.listenTo(Adapt, {
+      // Reapply locks after assessment reset, this happens asynchronously
+      'assessments:reset': applyLocks,
       // Add trickle button components after the course json is loaded
       'app:dataLoaded': addComponents,
       // Reset trickle's global state when changing content objects
