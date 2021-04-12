@@ -20,8 +20,7 @@ export default class TrickleButtonModel extends ComponentModel {
   }
 
   /**
-   * Returns true if page truncation (step locking) is active
-   * @return {boolean}
+   * @return {boolean} true if page truncation (step locking) is active
    */
   isStepLocking() {
     const config = getModelConfig(this);
