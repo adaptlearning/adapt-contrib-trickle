@@ -134,7 +134,7 @@ class TrickleButtonView extends ComponentView {
 
   /**
    * Update the button state when any completion changes occur in the trickle button
-   * parent or descendents
+   * parent or descendants
    * @param {ModelEvent} event
    */
   async onStepUnlocked(event) {
