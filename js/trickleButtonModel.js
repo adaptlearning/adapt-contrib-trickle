@@ -9,8 +9,7 @@ import {
 export default class TrickleButtonModel extends ComponentModel {
 
   /**
-   * Returns true if the button is enabled in its trickle configuration
-   * @returns {boolean}
+   * @returns {boolean} true if the button is enabled in its trickle configuration
    */
   isEnabled() {
     const trickleConfig = getModelConfig(this);
