@@ -43,8 +43,11 @@ export const configDefaults = {
     _component: 'trickle-button',
     _className: '',
     text: 'Continue',
+    ariaLabel: '',
     startText: '',
-    finalText: ''
+    startAriaLabel: '',
+    finalText: '',
+    finalAriaLabel: ''
   },
   _stepLocking: {
     _isEnabled: true,
@@ -71,8 +74,10 @@ export function setModelDefaults(model) {
   });
   // Default startText and finalText when _onChildren: true
   if (config._onChildren) {
-    config._button.startText = config._button.startText || 'Begin';
-    config._button.finalText = config._button.finalText || 'Finish';
+    config._button.startText = config._button.startText ?? 'Begin';
+    config._button.startAriaLabel = config._button.startAriaLabel ?? '';
+    config._button.finalText = config._button.finalText ?? 'Finish';
+    config._button.finalAriaLabel = config._button.finalAriaLabel ?? '';
   }
   // Force step locking for _isFullWidth buttons
   if (config._button._isFullWidth) {

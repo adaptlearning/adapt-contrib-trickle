@@ -24,8 +24,11 @@
             "_className": "",
             "_hasIcon": false,
             "text": "Continue",
+            "ariaLabel": "",
             "startText": "Begin",
+            "startAriaLabel": "",
             "finalText": "Finish",
+            "finalAriaLabel": "",
             "_component": "trickle-button"
         },
         "_stepLocking": {

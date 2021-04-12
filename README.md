@@ -70,9 +70,15 @@ The attributes listed below are properly formatted as JSON in [*example.json*](h
 
 >>**text** (string):  Defines the default button text. The default is `"Continue"`.
 
+>>**ariaLabel** (string):  Defines the default button aria label. The default is `""`.
+
 >>**startText** (string):  Defines the first item button text when set on the article with **\_onChildren** set to `true`. The default is `"Begin"`.
 
+>>**startAriaLabel** (string):  Defines the first item button aria label when set on the article with **\_onChildren** set to `true`. The default is `""`.
+
 >>**finalText** (string):  Defines the last item button text when set on the article with **\_onChildren** set to `true`. The default is `"Finish"`.
+
+>>**finalAriaLabel** (string):  Defines the last item button aria label when set on the article with **\_onChildren** set to `true`. The default is `""`.
 
 >>**\_component** (string):  Defines the Trickle plug-in which should handle the interaction. At present only `"trickle-button"` is available, but it is possible to create new plug-ins. The default is `"trickle-button"`.
 
