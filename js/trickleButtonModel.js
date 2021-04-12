@@ -41,8 +41,7 @@ export default class TrickleButtonModel extends ComponentModel {
   }
 
   /**
-   * Returns true if all available siblings are complete, optional or not available
-   * @returns {boolean}
+   * @returns {boolean} true if all available siblings are complete, optional or not available
    */
   isStepUnlocked() {
     const completionAttribute = getCompletionAttribute();
