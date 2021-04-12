@@ -198,7 +198,7 @@ export function applyLocks() {
         modelsById[id] = model;
         locks[id] = locks[id] || isLocked;
       }
-      // Cascase inherited locks through the hierarchy of each subsequent parent
+      // Cascade inherited locks through the hierarchy of each subsequent parent
       model.getAllDescendantModels().forEach(model => {
         const descendantId = model.get('_id');
         modelsById[descendantId] = model;
