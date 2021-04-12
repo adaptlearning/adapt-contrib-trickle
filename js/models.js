@@ -132,7 +132,7 @@ export function getCompletionAttribute() {
 }
 
 /**
- * Reapply trickle locks if the completion attribute has changed on the give model
+ * Reapply trickle locks if the completion attribute has changed on the given model
  * @param {Backbone.Model} model
  */
 export function checkApplyLocks(model) {
