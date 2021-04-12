@@ -14,8 +14,8 @@ export function _deepDefaults(original, ...defaultObjects) {
   defaultObjects.forEach(defaults => {
     const keyValuePairs = Object.entries(defaults);
     keyValuePairs.forEach(([ key, defaultValue ]) => {
-      const isRecusiveObject = (typeof defaultValue === 'object' && !Array.isArray(defaultValue) && defaultValue !== null);
-      if (isRecusiveObject) {
+      const isRecursiveObject = (typeof defaultValue === 'object' && !Array.isArray(defaultValue) && defaultValue !== null);
+      if (isRecursiveObject) {
         original[key] = _deepDefaults(original[key] || {}, defaultValue);
         return;
       }
@@ -132,7 +132,7 @@ export function getCompletionAttribute() {
 }
 
 /**
- * Reapply trickle locks if the completion attribute has changed on the give model
+ * Reapply trickle locks if the completion attribute has changed on the given model
  * @param {Backbone.Model} model
  */
 export function checkApplyLocks(model) {
@@ -198,7 +198,7 @@ export function applyLocks() {
         modelsById[id] = model;
         locks[id] = locks[id] || isLocked;
       }
-      // Cascase inherited locks through the hierarchy of each subsequent parent
+      // Cascade inherited locks through the hierarchy of each subsequent parent
       model.getAllDescendantModels().forEach(model => {
         const descendantId = model.get('_id');
         modelsById[descendantId] = model;
@@ -240,7 +240,7 @@ export function _getSelfAndAncestorNextSiblings(fromModel) {
     const subsequentAncestorSiblings = allGrandParentChildren.slice(allGrandParentChildren.findIndex(child => child === parent) + 1);
     subsequentInPageAncestors.push(...subsequentAncestorSiblings);
   });
-  // Combine and return entires set
+  // Combine and return entire set
   const selfAndSubsequentContentObjectDescendantModels = selfAndSubsequentSiblings.concat(subsequentInPageAncestors);
   return selfAndSubsequentContentObjectDescendantModels;
 }

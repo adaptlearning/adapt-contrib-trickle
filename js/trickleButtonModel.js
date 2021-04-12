@@ -9,8 +9,7 @@ import {
 export default class TrickleButtonModel extends ComponentModel {
 
   /**
-   * Returns true if the button is enabled in its trickle configuration
-   * @returns {boolean}
+   * @returns {boolean} true if the button is enabled in its trickle configuration
    */
   isEnabled() {
     const trickleConfig = getModelConfig(this);
@@ -21,8 +20,7 @@ export default class TrickleButtonModel extends ComponentModel {
   }
 
   /**
-   * Returns true if page truncation (step locking) is active
-   * @return {boolean}
+   * @return {boolean} true if page truncation (step locking) is active
    */
   isStepLocking() {
     const config = getModelConfig(this);
@@ -32,8 +30,7 @@ export default class TrickleButtonModel extends ComponentModel {
   }
 
   /**
-   * Returns true if completion is required to unlock this step
-   * @return {boolean}
+   * @return {boolean} true if completion is required to unlock this step
    */
   isStepLockingCompletionRequired() {
     const config = getModelConfig(this);
@@ -44,8 +41,7 @@ export default class TrickleButtonModel extends ComponentModel {
   }
 
   /**
-   * Returns true if all available siblings are complete, optional or not available
-   * @returns {boolean}
+   * @returns {boolean} true if all available siblings are complete, optional or not available
    */
   isStepUnlocked() {
     const completionAttribute = getCompletionAttribute();
@@ -60,8 +56,7 @@ export default class TrickleButtonModel extends ComponentModel {
   }
 
   /**
-   * Returns true if this button should always be locked on revisit
-   * @returns {boolean}
+   * @returns {boolean} true if this button should always be locked on revisit
    */
   isStepLockedOnRevisit() {
     const trickleConfig = getModelConfig(this);
@@ -69,9 +64,8 @@ export default class TrickleButtonModel extends ComponentModel {
   }
 
   /**
-   * Returns true if completion is not required or if completion has been fullfilled
+   * @return {boolean} true if completion is not required or if completion has been fulfilled
    * and the button has been clicked
-   * @return {boolean}
    */
   isFinished() {
     const isStepUnlocked = this.isStepUnlocked();
