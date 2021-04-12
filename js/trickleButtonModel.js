@@ -56,8 +56,7 @@ export default class TrickleButtonModel extends ComponentModel {
   }
 
   /**
-   * Returns true if this button should always be locked on revisit
-   * @returns {boolean}
+   * @returns {boolean} true if this button should always be locked on revisit
    */
   isStepLockedOnRevisit() {
     const trickleConfig = getModelConfig(this);
