@@ -48,9 +48,8 @@ class TrickleController extends Backbone.Controller {
   set isStarted(value) {
     if (!Adapt.parentView) return;
     Adapt.parentView.model.set('_isTrickleStarted', value);
-    if (value) {
-      Adapt.trigger('trickle:started');
-    }
+    if (!value) return;
+    Adapt.trigger('trickle:started');
   }
 
   /**
@@ -162,9 +161,8 @@ class TrickleController extends Backbone.Controller {
   set isFinished(value) {
     if (!Adapt.parentView) return;
     Adapt.parentView.model.set('_isTrickleFinished', value);
-    if (value) {
-      Adapt.trigger('trickle:finished');
-    }
+    if (!value) return;
+    Adapt.trigger('trickle:finished');
   }
 
   checkIsFinished() {
@@ -203,9 +201,8 @@ class TrickleController extends Backbone.Controller {
   set isKilled(value) {
     if (!Adapt.parentView) return;
     Adapt.parentView.model.set('_isTrickleKilled', value);
-    if (value) {
-      Adapt.trigger('trickle:killed');
-    }
+    if (!value) return;
+    Adapt.trigger('trickle:killed');
   }
 
   /**
