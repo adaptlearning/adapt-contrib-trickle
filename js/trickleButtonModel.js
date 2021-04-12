@@ -64,9 +64,8 @@ export default class TrickleButtonModel extends ComponentModel {
   }
 
   /**
-   * Returns true if completion is not required or if completion has been fullfilled
+   * @return {boolean} true if completion is not required or if completion has been fulfilled
    * and the button has been clicked
-   * @return {boolean}
    */
   isFinished() {
     const isStepUnlocked = this.isStepUnlocked();
