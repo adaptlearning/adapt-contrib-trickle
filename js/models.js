@@ -240,7 +240,7 @@ export function _getSelfAndAncestorNextSiblings(fromModel) {
     const subsequentAncestorSiblings = allGrandParentChildren.slice(allGrandParentChildren.findIndex(child => child === parent) + 1);
     subsequentInPageAncestors.push(...subsequentAncestorSiblings);
   });
-  // Combine and return entires set
+  // Combine and return entire set
   const selfAndSubsequentContentObjectDescendantModels = selfAndSubsequentSiblings.concat(subsequentInPageAncestors);
   return selfAndSubsequentContentObjectDescendantModels;
 }
