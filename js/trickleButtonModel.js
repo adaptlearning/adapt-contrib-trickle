@@ -32,8 +32,7 @@ export default class TrickleButtonModel extends ComponentModel {
   }
 
   /**
-   * Returns true if completion is required to unlock this step
-   * @return {boolean}
+   * @return {boolean} true if completion is required to unlock this step
    */
   isStepLockingCompletionRequired() {
     const config = getModelConfig(this);
