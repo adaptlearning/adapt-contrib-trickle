@@ -283,10 +283,8 @@
                   "type": "boolean",
                   "required": false,
                   "default": false,
-                  "title": "Inherit from article?",
-                  "inputType": "Checkbox",
-                  "validators": [],
-                  "help": "If selected, this block will use the same trickle settings as the parent article"
+                  "title": "Inherit settings from parent article",
+                  "inputType": "Checkbox"
                 },
                 "_autoScroll": {
                   "type": "boolean",
