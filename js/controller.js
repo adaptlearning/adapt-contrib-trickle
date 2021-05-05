@@ -127,7 +127,9 @@ class TrickleController extends Backbone.Controller {
 
     if (scrollToId === '') return;
 
-    const isDescendant = Boolean(Adapt.parentView.model.getAllDescendantModels().find(model => model.get('_id') === scrollToId));
+    const isDescendant = Adapt.parentView.model.getAllDescendantModels().some(model => {
+      return model.get('_id') === scrollToId;
+    });
     if (!isDescendant) {
       applyLocks();
       await Adapt.navigateToElement(scrollToId);
