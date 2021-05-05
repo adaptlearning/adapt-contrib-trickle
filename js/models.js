@@ -121,7 +121,7 @@ export function setModelConfig(model, config) {
  */
 export function checkApplyModelDefaults(model) {
   const trickleConfig = getModelConfig(model);
-  if (!trickleConfig || !trickleConfig._isEnabled) return false;
+  if (!trickleConfig?._isEnabled) return false;
   setModelDefaults(model);
 }
 
