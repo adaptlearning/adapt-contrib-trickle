@@ -206,7 +206,7 @@ class TrickleButtonView extends ComponentView {
     const measurements = this.$el.onscreen();
     // This is to fix common miscalculation issues
     const isJustOffscreen = (measurements.bottom > -100);
-    const isButtonAutoHidden = !(measurements.onscreen || isJustOffscreen);
+    const isButtonAutoHidden = !measurements.onscreen && !isJustOffscreen;
     this.model.set('_isButtonAutoHidden', isButtonAutoHidden);
     this.updateButtonState();
   }
