@@ -210,7 +210,7 @@ export function applyLocks() {
     });
   });
   // Apply only changed locking states
-  Object.entries(locks).forEach(([id, isLocked]) => {
+  Object.entries(locks).forEach(([ id, isLocked ]) => {
     const model = modelsById[id];
     const wasLocked = model.get('_isLocked');
     if (wasLocked === isLocked) return;
