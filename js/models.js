@@ -258,7 +258,7 @@ export function addComponents() {
   data.forEach(siteModel => {
     if (siteModel instanceof CourseModel) return;
     let trickleConfig = siteModel.get('_trickle');
-    if (!trickleConfig || !trickleConfig._isEnabled) return;
+    if (!trickleConfig?._isEnabled) return;
     // Add a trickle button component model to each trickle site where applicable
     const siteId = siteModel.get('_id');
     const buttonModelSites = trickleConfig._onChildren ? siteModel.getChildren().models : [siteModel];
