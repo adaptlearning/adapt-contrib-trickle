@@ -17,7 +17,7 @@ class TrickleController extends Backbone.Controller {
     this.checkIsFinished = _.debounce(this.checkIsFinished, 1);
     this.listenTo(data, {
       // Set trickle defaults on every new model where applicable
-      'add': checkApplyModelDefaults,
+      add: checkApplyModelDefaults,
       // Check that the locking is accurate after any completion
       'change:_isInteractionComplete change:_isComplete': checkApplyLocks,
       // Check whether trickle is finished after any locking changes
