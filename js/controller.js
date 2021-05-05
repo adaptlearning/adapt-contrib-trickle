@@ -112,9 +112,7 @@ class TrickleController extends Backbone.Controller {
         // Allows trickle to scroll to a sibling / cousin component
         // relative to the current trickle item
         var relativeModel = fromModel.findRelativeModel(scrollTo, {
-          filter: (model) => {
-            return model.get('_isAvailable');
-          }
+          filter: model => model.get('_isAvailable')
         });
         if (relativeModel === undefined) return;
         scrollToId = relativeModel.get('_id');
