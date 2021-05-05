@@ -131,9 +131,7 @@ export function checkApplyModelDefaults(model) {
  * @return {string}
  */
 export function getCompletionAttribute() {
-  var trickle = Adapt.config.get('_trickle');
-  if (!trickle) return '_isComplete';
-  return trickle._completionAttribute || '_isComplete';
+  return Adapt.config.get('_trickle')?._completionAttribute || '_isComplete';
 }
 
 /**
