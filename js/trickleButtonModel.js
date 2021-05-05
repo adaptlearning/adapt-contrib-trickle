@@ -44,14 +44,14 @@ export default class TrickleButtonModel extends ComponentModel {
    */
   isStepUnlocked() {
     const completionAttribute = getCompletionAttribute();
-    return !(this.getSiblings().find(sibling => {
+    return this.getSiblings().every(sibling => {
       if (sibling === this) {
-        return;
+        return true;
       }
-      return !sibling.get(completionAttribute) &&
-        !sibling.get('_isOptional') &&
-        sibling.get('_isAvailable');
-    }));
+      return sibling.get(completionAttribute) ||
+        sibling.get('_isOptional') ||
+        !sibling.get('_isAvailable');
+    });
   }
 
   /**
