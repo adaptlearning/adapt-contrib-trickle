@@ -41,8 +41,7 @@ class TrickleController extends Backbone.Controller {
    * Returns true if the current page is or was locked by trickle
    */
   get isStarted() {
-    if (!Adapt.parentView) return false;
-    return Boolean(Adapt.parentView.model.get('_isTrickleStarted'));
+    return Boolean(Adapt.parentView?.model.get('_isTrickleStarted'));
   }
 
   set isStarted(value) {
