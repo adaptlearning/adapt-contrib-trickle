@@ -24,8 +24,7 @@ export default class TrickleButtonModel extends ComponentModel {
    */
   isStepLocking() {
     const config = getModelConfig(this);
-    const isStepLocking = config._stepLocking &&
-      config._stepLocking._isEnabled;
+    const isStepLocking = config._stepLocking?._isEnabled;
     return isStepLocking;
   }
 
