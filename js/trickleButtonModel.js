@@ -13,9 +13,7 @@ export default class TrickleButtonModel extends ComponentModel {
    */
   isEnabled() {
     const trickleConfig = getModelConfig(this);
-    const isEnabled = trickleConfig._isEnabled &&
-      trickleConfig._button &&
-      trickleConfig._button._isEnabled;
+    const isEnabled = trickleConfig._isEnabled && trickleConfig._button?._isEnabled;
     return isEnabled;
   }
 
