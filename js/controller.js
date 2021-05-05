@@ -70,9 +70,9 @@ class TrickleController extends Backbone.Controller {
    * Returns true if the current page is locked by trickle
    */
   get isTrickling() {
-    const isTrickling = Boolean(Adapt.parentView.model.getAllDescendantModels().find(model => {
+    const isTrickling = Adapt.parentView.model.getAllDescendantModels().some(model => {
       return model.get('_isAvailable') && model.get('_isTrickled') && model.get('_isLocked');
-    }));
+    });
     return isTrickling;
   }
 
