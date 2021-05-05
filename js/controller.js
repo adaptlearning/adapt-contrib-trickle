@@ -92,7 +92,7 @@ class TrickleController extends Backbone.Controller {
    */
   async scroll(fromModel) {
     const trickleConfig = getModelConfig(fromModel);
-    if (!trickleConfig || !trickleConfig._isEnabled) return false;
+    if (!trickleConfig?._isEnabled) return false;
 
     const isArticleWithOnChildren = (fromModel.get('_type') === 'article' && trickleConfig._onChildren);
     if (isArticleWithOnChildren) return false;
