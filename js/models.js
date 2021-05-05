@@ -157,7 +157,7 @@ export function applyLocks() {
   Adapt.course.getAllDescendantModels(true).forEach(siteModel => {
     const trickleConfig = siteModel.get('_trickle');
     // Check only sites with an enabled trickle configuration
-    if (!trickleConfig || !trickleConfig._isEnabled) return;
+    if (!trickleConfig?._isEnabled) return;
     // Capture all subsequent parent models locked by each trickle configuration site
     let selfAndSubsequentLockingModels;
     if (trickleConfig._onChildren) {
