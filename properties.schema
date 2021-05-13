@@ -109,20 +109,20 @@
                     "_styleBeforeCompletion": {
                       "type": "string",
                       "required": false,
-                      "enum": ["hidden", "visible"],
+                      "enum": ["hidden", "visible", "disabled"],
                       "default": "hidden",
                       "title": "Initial Visibility",
-                      "inputType": {"type": "Select", "options":["hidden", "visible"]},
+                      "inputType": {"type": "Select", "options":["hidden", "visible", "disabled"]},
                       "validators": ["required"],
                       "help": "Set button visibility before completion"
                     },
                     "_styleAfterClick": {
                       "type": "string",
                       "required": false,
-                      "enum": ["hidden", "disabled", "scroll"],
+                      "enum": ["hidden", "visible", "disabled"],
                       "default": "hidden",
                       "title": "Final Visibility",
-                      "inputType": {"type": "Select", "options":["hidden", "disabled", "scroll"]},
+                      "inputType": {"type": "Select", "options":["hidden", "visible", "disabled"]},
                       "validators": ["required"],
                       "help": "Set button visibility after completion"
                     },
@@ -169,6 +169,15 @@
                       "validators": [],
                       "translatable": true
                     },
+                    "ariaLabel": {
+                      "type": "string",
+                      "required": false,
+                      "default": "Continue",
+                      "title": "Button Aria Label",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    },
                     "startText": {
                       "type": "string",
                       "required": false,
@@ -179,11 +188,31 @@
                       "help": "Only on articles when 'Enable on Child Blocks' set to true",
                       "translatable": true
                     },
+                    "startAriaLabel": {
+                      "type": "string",
+                      "required": false,
+                      "default": "Begin",
+                      "title": "First Button Aria Label",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": "Only on articles when 'Enable on Child Blocks' set to true",
+                      "translatable": true
+                    },
                     "finalText": {
                       "type": "string",
                       "required": false,
                       "default": "Finish",
                       "title": "Final Button Text",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": "Only on articles when 'Enable on Child Blocks' set to true",
+                      "translatable": true
+                    },
+                    "finalAriaLabel": {
+                      "type": "string",
+                      "required": false,
+                      "default": "Finish",
+                      "title": "Final Button Aria Label",
                       "inputType": "Text",
                       "validators": [],
                       "help": "Only on articles when 'Enable on Child Blocks' set to true",
@@ -250,6 +279,13 @@
                   "inputType": "Checkbox",
                   "validators": []
                 },
+                "_isInherited": {
+                  "type": "boolean",
+                  "required": false,
+                  "default": false,
+                  "title": "Inherit settings from parent article",
+                  "inputType": "Checkbox"
+                },
                 "_autoScroll": {
                   "type": "boolean",
                   "required": false,
@@ -291,19 +327,19 @@
                     "_styleBeforeCompletion": {
                       "type": "string",
                       "required": false,
-                      "enum": ["hidden", "visible"],
+                      "enum": ["hidden", "visible", "disabled"],
                       "default": "hidden",
                       "title": "Initial Visibility",
-                      "inputType": {"type": "Select", "options":["hidden", "visible"]},
+                      "inputType": {"type": "Select", "options":["hidden", "visible", "disabled"]},
                       "help": "Set button visibility before completion"
                     },
                     "_styleAfterClick": {
                       "type": "string",
                       "required": false,
-                      "enum": ["hidden", "disabled", "scroll"],
+                      "enum": ["hidden", "visible", "disabled"],
                       "default": "hidden",
                       "title": "Final Visibility",
-                      "inputType": {"type": "Select", "options":["hidden", "disabled", "scroll"]},
+                      "inputType": {"type": "Select", "options":["hidden", "visible", "disabled"]},
                       "help": "Set button visibility after completion"
                     },
                     "_isFullWidth": {
@@ -349,6 +385,15 @@
                       "validators": [],
                       "translatable": true
                     },
+                    "ariaLabel": {
+                      "type": "string",
+                      "required": false,
+                      "default": "Continue",
+                      "title": "Button Aria Label",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    },
                     "startText": {
                       "type": "string",
                       "required": false,
@@ -359,11 +404,31 @@
                       "help": "Only on articles when 'Enable on Child Blocks' set to true",
                       "translatable": true
                     },
+                    "startAriaLabel": {
+                      "type": "string",
+                      "required": false,
+                      "default": "Begin",
+                      "title": "First Button Aria Label",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": "Only on articles when 'Enable on Child Blocks' set to true",
+                      "translatable": true
+                    },
                     "finalText": {
                       "type": "string",
                       "required": false,
                       "default": "Finish",
                       "title": "Final Button Text",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": "Only on articles when 'Enable on Child Blocks' set to true",
+                      "translatable": true
+                    },
+                    "finalAriaLabel": {
+                      "type": "string",
+                      "required": false,
+                      "default": "Finish",
+                      "title": "Final Button Aria Label",
                       "inputType": "Text",
                       "validators": [],
                       "help": "Only on articles when 'Enable on Child Blocks' set to true",
