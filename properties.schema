@@ -109,20 +109,20 @@
                     "_styleBeforeCompletion": {
                       "type": "string",
                       "required": false,
-                      "enum": ["hidden", "visible"],
+                      "enum": ["hidden", "visible", "disabled"],
                       "default": "hidden",
                       "title": "Initial Visibility",
-                      "inputType": {"type": "Select", "options":["hidden", "visible"]},
+                      "inputType": {"type": "Select", "options":["hidden", "visible", "disabled"]},
                       "validators": ["required"],
                       "help": "Set button visibility before completion"
                     },
                     "_styleAfterClick": {
                       "type": "string",
                       "required": false,
-                      "enum": ["hidden", "disabled", "scroll"],
+                      "enum": ["hidden", "visible", "disabled"],
                       "default": "hidden",
                       "title": "Final Visibility",
-                      "inputType": {"type": "Select", "options":["hidden", "disabled", "scroll"]},
+                      "inputType": {"type": "Select", "options":["hidden", "visible", "disabled"]},
                       "validators": ["required"],
                       "help": "Set button visibility after completion"
                     },
@@ -327,19 +327,19 @@
                     "_styleBeforeCompletion": {
                       "type": "string",
                       "required": false,
-                      "enum": ["hidden", "visible"],
+                      "enum": ["hidden", "visible", "disabled"],
                       "default": "hidden",
                       "title": "Initial Visibility",
-                      "inputType": {"type": "Select", "options":["hidden", "visible"]},
+                      "inputType": {"type": "Select", "options":["hidden", "visible", "disabled"]},
                       "help": "Set button visibility before completion"
                     },
                     "_styleAfterClick": {
                       "type": "string",
                       "required": false,
-                      "enum": ["hidden", "disabled", "scroll"],
+                      "enum": ["hidden", "visible", "disabled"],
                       "default": "hidden",
                       "title": "Final Visibility",
-                      "inputType": {"type": "Select", "options":["hidden", "disabled", "scroll"]},
+                      "inputType": {"type": "Select", "options":["hidden", "visible", "disabled"]},
                       "help": "Set button visibility after completion"
                     },
                     "_isFullWidth": {
