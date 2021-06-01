@@ -56,9 +56,9 @@ The attributes listed below are properly formatted as JSON in [*example.json*](h
 
 >>**\_isEnabled** (boolean):  If set to `false`, no button is displayed, so step-locking is triggered by component completion only. The page will scroll to the specified destination if **\_autoScroll** is set to `true`. The default is `true`.
 
->>**\_styleBeforeCompletion** (string):  Determines whether the Trickle button is visible even while subsequent sections of the page remain inaccessible. Acceptable values are `"hidden"` and `"visible"`. The default is `"hidden"`.
+>>**\_styleBeforeCompletion** (string):  Determines whether the Trickle button is visible even while subsequent sections of the page remain inaccessible. Acceptable values are `"hidden"`, `"disabled"`, and `"visible"`. The default is `"hidden"`.
 
->>**\_styleAfterClick** (string): Determines the properties of the Trickle button after it has been clicked. Acceptable values are `"hidden"`, `"disabled"`, and `"scroll"`. `"hidden"` hides the button. `"disabled"` applies the "disabled" CSS class. The value `"scroll"` will cause the button to maintain its visibility allowing the user an alternative method for scrolling down the page by using the button (even after all sections have been revealed). The default is `"hidden"`.
+>>**\_styleAfterClick** (string): Determines the properties of the Trickle button after it has been clicked. Acceptable values are `"hidden"`, `"disabled"`, and `"visible"`. `"hidden"` hides the button. `"disabled"` applies the "disabled" CSS class. The value `"visible"` will cause the button to maintain its visibility allowing the user an alternative method for scrolling down the page by using the button (even after all sections have been revealed). The default is `"hidden"`.
 
 >>**\_isFullWidth** (boolean):  Will position the button fixed to the bottom of the window. This option will force to `true`  **\_isEnabled** in the **\_stepLocking** attribute group (**\_stepLocking.\_isEnabled: true**). When **\_autoHide** is set to `true`, the button will fade-out when the learner scrolls up, away from the button. The default is `true`.
 
@@ -70,9 +70,15 @@ The attributes listed below are properly formatted as JSON in [*example.json*](h
 
 >>**text** (string):  Defines the default button text. The default is `"Continue"`.
 
+>>**ariaLabel** (string):  Defines the default button aria label. The default is `""`.
+
 >>**startText** (string):  Defines the first item button text when set on the article with **\_onChildren** set to `true`. The default is `"Begin"`.
 
+>>**startAriaLabel** (string):  Defines the first item button aria label when set on the article with **\_onChildren** set to `true`. The default is `""`.
+
 >>**finalText** (string):  Defines the last item button text when set on the article with **\_onChildren** set to `true`. The default is `"Finish"`.
+
+>>**finalAriaLabel** (string):  Defines the last item button aria label when set on the article with **\_onChildren** set to `true`. The default is `""`.
 
 >>**\_component** (string):  Defines the Trickle plug-in which should handle the interaction. At present only `"trickle-button"` is available, but it is possible to create new plug-ins. The default is `"trickle-button"`.
 
@@ -93,8 +99,8 @@ The following attribute can be added to *config.json* to overide which completio
 No known limitations.
 
 ----------------------------
-**Version number:**  4.0.6  <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a>  
-**Framework versions:**  5+  
+**Version number:**  5.0.0  <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a>  
+**Framework versions:**  5.8+  
 **Author / maintainer:** Adapt Core Team with [contributors](https://github.com/adaptlearning/adapt-contrib-trickle/graphs/contributors)  
 **Accessibility support:** WAI AA  
 **RTL support:** Yes  

@@ -7,15 +7,16 @@
     // Manual Configuration Options
     "_trickle": {
         "_isEnabled": true,
+        "_isInherited": false,
         "_autoScroll": true,
         "_scrollDuration": 500,
         "_onChildren": true,
         "_scrollTo": "@block +1",
         "_button": {
             "_isEnabled": true,
-            "_comment": "_styleBeforeCompletion = hidden | visible",
+            "_comment": "_styleBeforeCompletion = hidden | disabled | visible",
             "_styleBeforeCompletion": "hidden",
-            "_comment": "_styleAfterClick = hidden | disabled | scroll",
+            "_comment": "_styleAfterClick = hidden | disabled | visible",
             "_styleAfterClick": "hidden",
             "_isFullWidth": true,
             "_comment": "_autoHide = it is recommended this be left set to false in courses that need to be screenreader-compatible.",
@@ -23,8 +24,11 @@
             "_className": "",
             "_hasIcon": false,
             "text": "Continue",
+            "ariaLabel": "",
             "startText": "Begin",
+            "startAriaLabel": "",
             "finalText": "Finish",
+            "finalAriaLabel": "",
             "_component": "trickle-button"
         },
         "_stepLocking": {
