@@ -64,7 +64,8 @@
                   "default": "hidden",
                   "enum": [
                     "hidden",
-                    "visible"
+                    "visible",
+                    "disabled"
                   ],
                   "_backboneForms": "Select"
                 },
@@ -74,8 +75,8 @@
                   "default": "hidden",
                   "enum": [
                     "hidden",
-                    "disabled",
-                    "scroll"
+                    "visible",
+                    "disabled"
                   ],
                   "_backboneForms": "Select"
                 },
@@ -109,6 +110,14 @@
                     "translatable": true
                   }
                 },
+                "ariaLabel": {
+                  "type": "string",
+                  "title": "Default button ARIA label",
+                  "default": "Continue",
+                  "_adapt": {
+                    "translatable": true
+                  }
+                },
                 "startText": {
                   "type": "string",
                   "title": "First button text",
@@ -118,9 +127,27 @@
                     "translatable": true
                   }
                 },
+                "startAriaLabel": {
+                  "type": "string",
+                  "title": "First button ARIA label",
+                  "description": "Only on articles when 'Enable on child blocks' set to true",
+                  "default": "Begin",
+                  "_adapt": {
+                    "translatable": true
+                  }
+                },
                 "finalText": {
                   "type": "string",
                   "title": "Final button text",
+                  "description": "Only on articles when 'Enable on child blocks' set to true",
+                  "default": "Finish",
+                  "_adapt": {
+                    "translatable": true
+                  }
+                },
+                "finalAriaLabel": {
+                  "type": "string",
+                  "title": "Final button ARIA label",
                   "description": "Only on articles when 'Enable on child blocks' set to true",
                   "default": "Finish",
                   "_adapt": {
