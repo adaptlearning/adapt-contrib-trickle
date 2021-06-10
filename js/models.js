@@ -28,7 +28,7 @@ export function _deepDefaults(original, ...defaultObjects) {
 }
 
 export const configDefaults = {
-  _isEnabled: true,
+  _isEnabled: false,
   _isInherited: false,
   _autoScroll: true,
   _scrollTo: '@block +1',
@@ -57,16 +57,21 @@ export const configDefaults = {
 };
 
 /**
- * Sets the default trickle configuration for the given model
+ * Returns true if the model is the root of its trickle configuration
+ * @param {Backbone.Model} model
+ * @returns {Boolean}
+ */
+export function isModelSite(model) {
+  const models = getModelInheritanceChain(model);
+  return (models?.length === 1 && models[0] === model && models[0].get('_trickle')?._isEnabled);
+}
+
+/**
+ * Get the default trickle configuration for the given model
  * @param {Backbone.Model} model
  */
-export function setModelDefaults(model) {
-  const hasProxiedConfig = model.get('_trickleConfigId');
-  if (hasProxiedConfig) {
-    // Return if the model has been setup (a clone) and is now known to be proxied elsewhere.
-    return;
-  }
-  const config = getModelConfig(model);
+export function getModelConfigDefaults(model) {
+  const config = {};
   // Setup default legacy article behaviour, onChildren === isArticle if omitted
   const isArticle = (model.get('_type') === 'article');
   _deepDefaults(config, configDefaults, {
@@ -83,46 +88,57 @@ export function setModelDefaults(model) {
   if (config._button._isFullWidth) {
     config._stepLocking._isEnabled = true;
   }
-  setModelConfig(model, config);
+  return config;
 }
 
 /**
- * Returns the specified or derived trickle configuration for the given model
+ * Returns an array of models from which to derive a trickle config or null
+ * @param {Backbone.Model} configModel
+ * @returns {[Backbone.Model]|null}
+ */
+export function getModelInheritanceChain(configModel) {
+  switch (configModel.get('_type')) {
+    case 'article':
+      return [ configModel ];
+    case 'block':
+      if (!data.isReady) return [ configModel ];
+      return [ configModel, configModel.getParent() ].filter(ancestor => {
+        const config = ancestor.get('_trickle');
+        // Remove models with no config and models which explicitly require inheritance
+        return (config && !config._isInherited);
+      });
+  }
+  return null;
+};
+
+/**
+ * Returns the derived trickle configuration for the given model
  * @param {Backbone.Model} model
  * @returns {Object}
  */
 export function getModelConfig(model) {
-  const inheritedConfigId = model.get('_trickleConfigId');
-  if (inheritedConfigId) {
-    const inheritedConfig = Adapt.findById(inheritedConfigId).get('_trickle');
-    const localConfig = model.get('_trickle') || {};
-    // Introduced for the AAT whereby explicit inheritance is required
-    const isInheritedOnly = model.get(localConfig._isInherited);
-    const localOverrides = isInheritedOnly ? {} : localConfig;
-    const derivedConfig = $.extend(true, {}, inheritedConfig, localOverrides);
-    return derivedConfig;
-  }
-  return model.get('_trickle');
+  const inheritance = getModelInheritanceChain(model);
+  if (!inheritance?.length) return null;
+  const config = $.extend(true, {}, ...inheritance.reverse().map((inheritModel, index, arr) => {
+    const isLast = (index === arr.length - 1);
+    const defaults = isLast ? getModelConfigDefaults(inheritModel) : null;
+    return $.extend(true, {}, defaults, inheritModel.get('_trickle'));
+  }));
+  return config;
 }
 
 /**
- * Set the specified trickle configuration for the given model
+ * Returns the first model in the inheritance chain with _onChildren: true
  * @param {Backbone.Model} model
- * @param {object} config
+ * @returns {Backbone.Model}
  */
-export function setModelConfig(model, config) {
-  model.unset('_trickleConfigId');
-  model.set('_trickle', config);
-}
-
-/**
- * Add trickle configuration defaults to applicable models
- * @param {Backbone.Model} model
- */
-export function checkApplyModelDefaults(model) {
-  const trickleConfig = getModelConfig(model);
-  if (!trickleConfig?._isEnabled) return false;
-  setModelDefaults(model);
+export function getModelContainer(model) {
+  const inheritance = getModelInheritanceChain(model);
+  return inheritance?.find(inheritModel => {
+    const defaults = getModelConfigDefaults(inheritModel);
+    const config = $.extend(true, {}, defaults, inheritModel.get('_trickle'));
+    return config._onChildren;
+  });
 }
 
 /**
@@ -149,58 +165,44 @@ export function checkApplyLocks(model) {
  * to each trickle configuration
  */
 export function applyLocks() {
+  if (!data.isReady) return;
   const completionAttribute = getCompletionAttribute();
   const locks = {};
   const modelsById = {};
   // Fetch the component model from the store incase it needs overriding by another extension
-  const TrickleModel = Adapt.getModelClass('trickle-button');
-  Adapt.course.getAllDescendantModels(true).forEach(siteModel => {
-    const trickleConfig = siteModel.get('_trickle');
-    // Check only sites with an enabled trickle configuration
+  const TrickleButtonModel = Adapt.getModelClass('trickle-button');
+  // Fetch all configured sites
+  const siteModels = Adapt.course.getAllDescendantModels(true).filter(model => isModelSite(model));
+  siteModels.forEach(siteModel => {
+    const trickleConfig = getModelConfig(siteModel);
+    // Do no process disabled sites
     if (!trickleConfig?._isEnabled) return;
-    // Capture all subsequent parent models locked by each trickle configuration site
-    let selfAndSubsequentLockingModels;
-    if (trickleConfig._onChildren) {
-      const firstChild = siteModel.getAvailableChildModels()[0];
-      selfAndSubsequentLockingModels = _getSelfAndAncestorNextSiblings(firstChild);
-    } else {
-      selfAndSubsequentLockingModels = _getSelfAndAncestorNextSiblings(siteModel);
-    }
-    const siteId = siteModel.get('_id');
+    const isStepLocked = trickleConfig &&
+      trickleConfig._stepLocking &&
+      trickleConfig._stepLocking._isEnabled;
+    // Capture all subsequent models whose locking is directly impacted by this site
+    const selfAndSubsequentLockingModels = _getSelfAndAncestorNextSiblings(
+      trickleConfig._onChildren
+        ? siteModel.getAvailableChildModels()[0]
+        : siteModel
+    );
     selfAndSubsequentLockingModels.forEach((model, index) => {
+      const previousModel = selfAndSubsequentLockingModels[index - 1];
       const id = model.get('_id');
-      // Set the source trickle configuration and state of each model, except on injected buttons
-      // which are configured elsewhere
-      const isButtonModel = (model instanceof TrickleModel);
-      if (!isButtonModel) {
-        model.set({
-          _trickleConfigId: siteId,
-          _isTrickled: true
-        });
-      }
+      const isButtonModel = (model instanceof TrickleButtonModel);
+      // Do not stop at TrickleButtonModels
+      model.set('_isTrickled', !isButtonModel);
       const isFirst = (index === 0);
-      if (isFirst) {
-        // Store the new locking state of each model in the locks variable
-        // Don't unlock anything that was locked in a previous group
-        // Don't attempt to lock the first of each group as it should be accessible to the user
-        modelsById[id] = model;
-        locks[id] = locks[id] || false;
-      } else {
-        // Attempt to lock all other subsequent parent models
-        const config = getModelConfig(model);
-        const isStepLocked = config &&
-          config._stepLocking &&
-          config._stepLocking._isEnabled;
-        const previousLockingModel = selfAndSubsequentLockingModels[index - 1];
-        // Lock according to stepLocking config and previous model state
-        const isLocked = isStepLocked &&
-          !previousLockingModel.get(completionAttribute) &&
-          !previousLockingModel.get('_isOptional');
-        // Store the new locking state of each model in the locks variable
-        // Don't unlock anything that was locked in a previous group
-        modelsById[id] = model;
-        locks[id] = locks[id] || isLocked;
-      }
+      // Do not force lock the first model in each site
+      const isLocked = !isFirst &&
+        isStepLocked &&
+        !previousModel?.get(completionAttribute) &&
+        !previousModel?.get('_isOptional');
+      // Attempt to lock subsequent models
+      modelsById[id] = model;
+      // Store the new locking state of each model in the locks variable
+      // Don't unlock anything that was locked in a previous group
+      locks[id] = locks[id] || isLocked;
       // Cascade inherited locks through the hierarchy of each subsequent parent
       model.getAllDescendantModels().forEach(descendant => {
         const descendantId = descendant.get('_id');
@@ -257,24 +259,22 @@ export function addComponents() {
   let uid = 0;
   data.forEach(siteModel => {
     if (siteModel instanceof CourseModel) return;
-    let trickleConfig = siteModel.get('_trickle');
+    let trickleConfig = getModelConfig(siteModel);
     if (!trickleConfig?._isEnabled) return;
     // Add a trickle button component model to each trickle site where applicable
-    const siteId = siteModel.get('_id');
     const buttonModelSites = trickleConfig._onChildren ? siteModel.getChildren().models : [siteModel];
     buttonModelSites.forEach(buttonModelSite => {
-      buttonModelSite.set({
-        _isTrickled: true,
-        _trickleConfigId: siteId
-      });
+      if (buttonModelSite.get('_isTrickleSiteConfigured')) return;
+      buttonModelSite.set('_isTrickleSiteConfigured', true);
+      const parentId = buttonModelSite.get('_id');
       const trickleModel = new TrickleModel({
         _id: `trickle-${uid++}`,
         _type: 'component',
         _component: 'trickle-button',
-        _parentId: buttonModelSite.get('_id'),
+        _parentId: parentId,
         _isAvailable: true,
         _layout: 'full',
-        _trickleConfigId: siteId,
+        _trickle: { _isEnabled: true },
         _renderPosition: 'outer-append'
       });
       trickleModel.setupModel();
@@ -282,7 +282,19 @@ export function addComponents() {
       buttonModelSite.getChildren().add(trickleModel);
     });
   });
-  applyLocks();
+}
+
+/**
+ * Pretty print locking state for current page
+ */
+export function log() {
+  if (!Adapt.parentView?.model?.isTypeGroup('page')) return;
+  Adapt.parentView.model.getAllDescendantModels(true).forEach(model => {
+    if (!model.get('_isTrickleSiteConfigured')) return;
+    const isLocked = model.get('_isLocked');
+    const isTrickled = model.get('_isTrickled');
+    console.log(`${model.get('_id')} isLocked: ${isLocked} isTrickled: ${isTrickled} `);
+  });
 }
 
 /**
@@ -291,13 +303,14 @@ export function addComponents() {
 export default {
   _deepDefaults,
   configDefaults,
-  setModelDefaults,
+  getModelContainer,
+  getModelConfigDefaults,
   getModelConfig,
-  setModelConfig,
-  checkApplyModelDefaults,
   getCompletionAttribute,
   checkApplyLocks,
   applyLocks,
   _getSelfAndAncestorNextSiblings,
-  addComponents
+  addComponents,
+  log,
+  isModelSite
 };

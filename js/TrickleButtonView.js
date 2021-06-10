@@ -12,7 +12,7 @@ import {
 class TrickleButtonView extends ComponentView {
 
   className() {
-    const config = getModelConfig(this.model);
+    const config = getModelConfig(this.model.getParent());
     return [
       'trickle',
       this.model.get('_id'),
@@ -52,7 +52,7 @@ class TrickleButtonView extends ComponentView {
   render() {
     const data = this.model.toJSON();
     data._globals = Adapt.course.get('_globals');
-    data._trickle = getModelConfig(this.model);
+    data._trickle = getModelConfig(this.model.getParent());
     this.$el.html(Handlebars.templates[TrickleButtonView.template](data));
   }
 
@@ -198,7 +198,7 @@ class TrickleButtonView extends ComponentView {
 
   tryButtonAutoHide() {
     if (!this.model.get('_isButtonVisible')) return;
-    const trickleConfig = getModelConfig(this.model);
+    const trickleConfig = getModelConfig(this.model.getParent());
     if (!trickleConfig._button._autoHide) {
       this.model.set('_isButtonAutoHidden', false);
       return;
