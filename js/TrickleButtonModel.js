@@ -84,12 +84,13 @@ export default class TrickleButtonModel extends ComponentModel {
    * Siblings in assessments can be randomised so this must be derived at runtime
    */
   calculateButtonText() {
-    const trickleConfig = getModelConfig(this.getParent());
+    const parentModel = this.getParent();
+    const trickleConfig = getModelConfig(parentModel);
     let isStart = false;
     let isFinal = false;
     if (trickleConfig._onChildren) {
-      const parentId = this.getParent().get('_id');
-      const trickleParent = getModelContainer(this.getParent());
+      const parentId = parentModel.get('_id');
+      const trickleParent = getModelContainer(parentModel);
       const trickleSiblings = trickleParent.getAllDescendantModels(true).filter(model => {
         return model.get('_isAvailable') && model.get('_isTrickled');
       });

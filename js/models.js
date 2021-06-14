@@ -119,8 +119,7 @@ export function getModelInheritanceChain(configModel) {
  */
 export function getModelConfig(model) {
   const inheritance = getModelInheritanceChain(model);
-  if (!inheritance?.length) return null;
-  if (isModelArticleWithOnChildren(model)) return null;
+  if (!inheritance?.length || isModelArticleWithOnChildren(model)) return null;
   const config = $.extend(true, {}, ...inheritance.reverse().map((inheritModel, index, arr) => {
     const isLast = (index === arr.length - 1);
     const defaults = isLast ? getModelConfigDefaults(inheritModel) : null;
@@ -211,7 +210,7 @@ export function applyLocks() {
     if (wasLocked === isLocked) return;
     model.set('_isLocked', isLocked);
   });
-  log();
+  logTrickleState();
 }
 
 /**
@@ -253,8 +252,7 @@ export function addButtonComponents() {
   data.forEach(buttonModelSite => {
     if (buttonModelSite instanceof CourseModel) return;
     let trickleConfig = getModelConfig(buttonModelSite);
-    if (!trickleConfig || !trickleConfig?._isEnabled) return;
-    if (buttonModelSite.get('_isTrickleSiteConfigured')) return;
+    if (!trickleConfig || !trickleConfig?._isEnabled || buttonModelSite.get('_isTrickleSiteConfigured')) return;
     buttonModelSite.set('_isTrickleSiteConfigured', true);
     const parentId = buttonModelSite.get('_id');
     const trickleButtonModel = new TrickleButtonModel({
@@ -276,7 +274,7 @@ export function addButtonComponents() {
 /**
  * Pretty print locking state for current page
  */
-export function log() {
+export function logTrickleState() {
   if (!Adapt.parentView?.model?.isTypeGroup('page')) return;
   logging.debug(`TRICKLE STATE`);
   Adapt.parentView.model.getAllDescendantModels(true).forEach(model => {
@@ -302,5 +300,5 @@ export default {
   applyLocks,
   _getAncestorNextSiblings,
   addButtonComponents,
-  log
+  logTrickleState
 };
