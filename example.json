@@ -1,4 +1,4 @@
-    // TRICKLE STYLE BUTTON ON ALL ARTICLE BLOCKS
+    // TO HAVE A TRICKLE BUTTON ON ALL BLOCKS IN AN ARTICLE
     // put in article.json
     "_trickle": {
         "_isEnabled": true

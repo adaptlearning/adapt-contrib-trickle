@@ -3,9 +3,10 @@ import data from 'core/js/data';
 import a11y from 'core/js/a11y';
 import {
   checkApplyLocks,
-  addComponents,
+  addButtonComponents,
   applyLocks,
-  getModelConfig
+  getModelConfig,
+  isModelArticleWithOnChildren
 } from './models';
 
 /** @typedef {import('core/js/childEvent').default} ChildEvent  */
@@ -23,8 +24,6 @@ class TrickleController extends Backbone.Controller {
     this.listenTo(Adapt, {
       // Reapply locks after assessment reset, this happens asynchronously
       'assessments:reset': applyLocks,
-      // Add trickle button components after the course json is loaded
-      'app:dataLoaded': addComponents,
       // Reset trickle's global state when changing content objects
       'contentObjectView:preRender': this.reset,
       // Stop rendering where necessary before a child is rendered
@@ -32,6 +31,13 @@ class TrickleController extends Backbone.Controller {
       // Temporarily remove trickle from the current content object
       'trickle:kill': this.kill
     });
+    this.onDataReady();
+  }
+
+  async onDataReady() {
+    await data.whenReady()
+    addButtonComponents();
+    applyLocks();
   }
 
   /**
@@ -89,8 +95,7 @@ class TrickleController extends Backbone.Controller {
     const trickleConfig = getModelConfig(fromModel);
     if (!trickleConfig?._isEnabled) return false;
 
-    const isArticleWithOnChildren = (fromModel.get('_type') === 'article' && trickleConfig._onChildren);
-    if (isArticleWithOnChildren) return false;
+    if (isModelArticleWithOnChildren(fromModel)) return false;
 
     const isAutoScrollOff = !trickleConfig._autoScroll;
     const hasTrickleButton = trickleConfig._button._isEnabled;
