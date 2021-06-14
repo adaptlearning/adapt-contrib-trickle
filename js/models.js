@@ -278,12 +278,12 @@ export function addButtonComponents() {
  */
 export function log() {
   if (!Adapt.parentView?.model?.isTypeGroup('page')) return;
-  logging.info(`TRICKLE STATE`);
+  logging.debug(`TRICKLE STATE`);
   Adapt.parentView.model.getAllDescendantModels(true).forEach(model => {
     const isLocked = model.get('_isLocked');
     const isTrickled = model.get('_isTrickled');
     if (!isTrickled) return;
-    logging.info(`${model.get('_type')} ${model.get('_id')} isLocked: ${isLocked} isTrickled: ${isTrickled}`);
+    logging.debug(`${model.get('_type')} ${model.get('_id')} isLocked: ${isLocked} isTrickled: ${isTrickled}`);
   });
 }
 
