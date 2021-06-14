@@ -211,7 +211,7 @@ export function applyLocks() {
     if (wasLocked === isLocked) return;
     model.set('_isLocked', isLocked);
   });
-  log()
+  log();
 }
 
 /**
