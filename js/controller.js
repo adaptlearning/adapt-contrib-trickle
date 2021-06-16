@@ -2,11 +2,11 @@ import Adapt from 'core/js/adapt';
 import data from 'core/js/data';
 import a11y from 'core/js/a11y';
 import {
-  checkApplyModelDefaults,
   checkApplyLocks,
-  addComponents,
+  addButtonComponents,
   applyLocks,
-  getModelConfig
+  getModelConfig,
+  isModelArticleWithOnChildren
 } from './models';
 
 /** @typedef {import('core/js/childEvent').default} ChildEvent  */
@@ -16,8 +16,6 @@ class TrickleController extends Backbone.Controller {
   initialize() {
     this.checkIsFinished = _.debounce(this.checkIsFinished, 1);
     this.listenTo(data, {
-      // Set trickle defaults on every new model where applicable
-      add: checkApplyModelDefaults,
       // Check that the locking is accurate after any completion
       'change:_isInteractionComplete change:_isComplete': checkApplyLocks,
       // Check whether trickle is finished after any locking changes
@@ -26,8 +24,6 @@ class TrickleController extends Backbone.Controller {
     this.listenTo(Adapt, {
       // Reapply locks after assessment reset, this happens asynchronously
       'assessments:reset': applyLocks,
-      // Add trickle button components after the course json is loaded
-      'app:dataLoaded': addComponents,
       // Reset trickle's global state when changing content objects
       'contentObjectView:preRender': this.reset,
       // Stop rendering where necessary before a child is rendered
@@ -35,6 +31,13 @@ class TrickleController extends Backbone.Controller {
       // Temporarily remove trickle from the current content object
       'trickle:kill': this.kill
     });
+    this.onDataReady();
+  }
+
+  async onDataReady() {
+    await data.whenReady();
+    addButtonComponents();
+    applyLocks();
   }
 
   /**
@@ -58,9 +61,7 @@ class TrickleController extends Backbone.Controller {
    */
   onAddChildView(event) {
     if (this.isKilled) return;
-    if (event.hasRequestChild) {
-      applyLocks();
-    }
+    if (event.hasRequestChild) applyLocks();
     const isManagedByTrickleAndLocked = (event.model.get('_isTrickled') && event.model.get('_isLocked'));
     if (!isManagedByTrickleAndLocked) return;
     event.stop();
@@ -94,8 +95,7 @@ class TrickleController extends Backbone.Controller {
     const trickleConfig = getModelConfig(fromModel);
     if (!trickleConfig?._isEnabled) return false;
 
-    const isArticleWithOnChildren = (fromModel.get('_type') === 'article' && trickleConfig._onChildren);
-    if (isArticleWithOnChildren) return false;
+    if (isModelArticleWithOnChildren(fromModel)) return false;
 
     const isAutoScrollOff = !trickleConfig._autoScroll;
     const hasTrickleButton = trickleConfig._button._isEnabled;
@@ -103,28 +103,28 @@ class TrickleController extends Backbone.Controller {
       return;
     }
 
-    const scrollTo = trickleConfig._scrollTo;
-    const firstCharacter = scrollTo.substr(0, 1);
-    let scrollToId = '';
-    switch (firstCharacter) {
-      case '@':
-        // NAVIGATE BY RELATIVE TYPE
-        // Allows trickle to scroll to a sibling / cousin component
-        // relative to the current trickle item
-        var relativeModel = fromModel.findRelativeModel(scrollTo, {
-          filter: model => model.get('_isAvailable')
-        });
-        if (relativeModel === undefined) return;
-        scrollToId = relativeModel.get('_id');
-        break;
-      case '.':
-        // NAVIGATE BY CLASS
-        scrollToId = scrollTo.substr(1, scrollTo.length - 1);
-        break;
-      default:
-        scrollToId = scrollTo;
-    }
+    const getScrollToId = () => {
+      const scrollTo = trickleConfig._scrollTo;
+      const firstCharacter = scrollTo.substr(0, 1);
+      switch (firstCharacter) {
+        case '@':
+          // NAVIGATE BY RELATIVE TYPE
+          // Allows trickle to scroll to a sibling / cousin component
+          // relative to the current trickle item
+          var relativeModel = fromModel.findRelativeModel(scrollTo, {
+            filter: model => model.get('_isAvailable')
+          });
+          if (relativeModel === undefined) return;
+          return relativeModel.get('_id');
+        case '.':
+          // NAVIGATE BY CLASS
+          return scrollTo.substr(1, scrollTo.length - 1);
+        default:
+          return scrollTo;
+      }
+    };
 
+    let scrollToId = getScrollToId();
     if (scrollToId === '') return;
 
     const isDescendant = Adapt.parentView.model.getAllDescendantModels().some(model => {
@@ -132,6 +132,12 @@ class TrickleController extends Backbone.Controller {
     });
     if (!isDescendant) {
       applyLocks();
+      // Navigate to another content object
+      const model = Adapt.findById(scrollToId);
+      const contentObject = model.isTypeGroup('contentobject') ? model : model.findAncestor('contentobject');
+      await Adapt.navigateToElement(contentObject.get('_id'));
+      // Recalculate the relative id after the page is ready as it may change
+      scrollToId = getScrollToId();
       await Adapt.navigateToElement(scrollToId);
       return;
     }

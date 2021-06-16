@@ -1,7 +1,7 @@
-import Adapt from 'core/js/adapt';
 import controller from './controller';
 import ComponentModel from 'core/js/models/componentModel';
 import {
+  getModelContainer,
   getModelConfig,
   getCompletionAttribute
 } from './models';
@@ -12,7 +12,7 @@ export default class TrickleButtonModel extends ComponentModel {
    * @returns {boolean} true if the button is enabled in its trickle configuration
    */
   isEnabled() {
-    const trickleConfig = getModelConfig(this);
+    const trickleConfig = getModelConfig(this.getParent());
     const isEnabled = trickleConfig._isEnabled && trickleConfig._button?._isEnabled;
     return isEnabled;
   }
@@ -21,7 +21,7 @@ export default class TrickleButtonModel extends ComponentModel {
    * @return {boolean} true if page truncation (step locking) is active
    */
   isStepLocking() {
-    const config = getModelConfig(this);
+    const config = getModelConfig(this.getParent());
     const isStepLocking = config._stepLocking?._isEnabled;
     return isStepLocking;
   }
@@ -30,7 +30,7 @@ export default class TrickleButtonModel extends ComponentModel {
    * @return {boolean} true if completion is required to unlock this step
    */
   isStepLockingCompletionRequired() {
-    const config = getModelConfig(this);
+    const config = getModelConfig(this.getParent());
     const isStepLockingCompletionRequired = config._stepLocking &&
       config._stepLocking._isEnabled &&
       config._stepLocking._isCompletionRequired;
@@ -56,7 +56,7 @@ export default class TrickleButtonModel extends ComponentModel {
    * @returns {boolean} true if this button should always be locked on revisit
    */
   isStepLockedOnRevisit() {
-    const trickleConfig = getModelConfig(this);
+    const trickleConfig = getModelConfig(this.getParent());
     return Boolean(trickleConfig._stepLocking._isLockedOnRevisit);
   }
 
@@ -72,20 +72,27 @@ export default class TrickleButtonModel extends ComponentModel {
     return isFinished;
   }
 
+  isLastInContentObject() {
+    const contentObject = this.findAncestor('contentobject');
+    const allDescendants = contentObject.getAllDescendantModels(true);
+    const lastDescendant = allDescendants[allDescendants.length - 1];
+    return (this === lastDescendant);
+  }
+
   /**
    * Apply start and final text amongst the current siblings
    * Siblings in assessments can be randomised so this must be derived at runtime
    */
   calculateButtonText() {
-    const siteId = this.get('_trickleConfigId');
-    const trickleConfig = getModelConfig(Adapt.findById(siteId));
+    const parentModel = this.getParent();
+    const trickleConfig = getModelConfig(parentModel);
     let isStart = false;
     let isFinal = false;
     if (trickleConfig._onChildren) {
-      const parentId = this.getParent().get('_id');
-      const trickleParent = Adapt.findById(siteId);
+      const parentId = parentModel.get('_id');
+      const trickleParent = getModelContainer(parentModel);
       const trickleSiblings = trickleParent.getAllDescendantModels(true).filter(model => {
-        return model.get('_isAvailable') && model.get('_isTrickled') && model.get('_trickleConfigId') === siteId;
+        return model.get('_isAvailable') && model.get('_isTrickled');
       });
       const index = trickleSiblings.findIndex(model => model.get('_id') === parentId);
       isStart = (index === 0);
@@ -132,12 +139,17 @@ export default class TrickleButtonModel extends ComponentModel {
       return;
     };
 
-    const isTrickleKilled = controller.isKilled;
+    const trickleConfig = getModelConfig(this.getParent());
+    if (this.isLastInContentObject() && !trickleConfig._button._showEndOfPage) {
+      return this.set({
+        _isButtonVisible: false,
+        _isButtonDisabled: true
+      });
+    }
 
+    const isTrickleKilled = controller.isKilled;
     const isStepUnlocked = this.isStepUnlocked() || isTrickleKilled;
     const isFinished = this.isFinished() || isTrickleKilled;
-    const trickleConfig = getModelConfig(this);
-
     const isButtonVisibleBeforeCompletion = (trickleConfig._button._styleBeforeCompletion !== 'hidden');
     // Force button to be hidden after completion if _isFullWidth, otherwise absolutely positioned buttons will stack
     const isButtonVisibleAfterCompletion = (trickleConfig._button._styleAfterClick !== 'hidden') && !trickleConfig._button._isFullWidth;
