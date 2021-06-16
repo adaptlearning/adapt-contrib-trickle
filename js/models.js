@@ -120,11 +120,11 @@ export function getModelInheritanceChain(configModel) {
 export function getModelConfig(model) {
   const inheritance = getModelInheritanceChain(model);
   if (!inheritance?.length || isModelArticleWithOnChildren(model)) return null;
-  const config = inheritance.reverse().map((inheritModel, index, arr) => {
+  const config = $.extend(true, {}, ...inheritance.reverse().map((inheritModel, index, arr) => {
     const isLast = (index === arr.length - 1);
     const defaults = isLast ? getModelConfigDefaults(inheritModel) : null;
     return $.extend(true, {}, defaults, inheritModel.get('_trickle'));
-  });
+  }));
   if (!config._isEnabled) return null;
   return config;
 }
