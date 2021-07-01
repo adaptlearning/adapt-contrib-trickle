@@ -283,7 +283,7 @@ export function addButtonComponents() {
  * Pretty print locking state for current page
  */
 export function logTrickleState() {
-  if (logging._config._level !== 'debug') return;
+  if (logging._config?._level !== 'debug') return;
   if (!Adapt.parentView?.model?.isTypeGroup('page')) {
     logging.debug('TRICKLE GLOBAL STATE');
     Adapt.course.getAllDescendantModels(true).filter(model => model.get('_isAvailable')).forEach(model => {
