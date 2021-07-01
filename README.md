@@ -82,6 +82,8 @@ The attributes listed below are properly formatted as JSON in [*example.json*](h
 
 >>**\_component** (string):  Defines the Trickle plug-in which should handle the interaction. At present only `"trickle-button"` is available, but it is possible to create new plug-ins. The default is `"trickle-button"`.
 
+>>**\_showEndOfPage** (boolean):  When set to `false`, hides any end-of-page button. The default is `true`.
+
 >**\_stepLocking** (object):  Step locking (section hiding) attributes group contains values for **\_isEnabled**, **\_isCompletionRequired**, and **\_isLockedOnRevisit**.
 
 >>**\_isEnabled** (boolean):  Will allow Trickle to truncate the page at the step until the user is allowed to move forward. The default is `true`. Note that if **\_isFullWidth** is set to `true` on the **\_button** attribute group (see above), **\_isEnabled** will be forced to `true` regardless of what you set here.
