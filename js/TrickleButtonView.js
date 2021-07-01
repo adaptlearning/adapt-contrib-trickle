@@ -72,6 +72,7 @@ class TrickleButtonView extends ComponentView {
     const parentModel = this.model.getParent();
     const completionAttribute = getCompletionAttribute();
     this.listenTo(parentModel, {
+      'change:_requireCompletionOf': this.onStepUnlocked,
       [`bubble:change:${completionAttribute}`]: this.onStepUnlocked,
       [`change:${completionAttribute}`]: this.onParentComplete
     });
