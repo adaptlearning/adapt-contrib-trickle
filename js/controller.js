@@ -17,7 +17,7 @@ class TrickleController extends Backbone.Controller {
     this.checkIsFinished = _.debounce(this.checkIsFinished, 1);
     this.listenTo(data, {
       // Check that the locking is accurate after any completion
-      'change:_isInteractionComplete change:_isComplete': checkApplyLocks,
+      'change:_isInteractionComplete change:_isComplete change:_isAvailable add remove': checkApplyLocks,
       // Check whether trickle is finished after any locking changes
       'change:_isLocked': this.checkIsFinished
     });
@@ -107,15 +107,16 @@ class TrickleController extends Backbone.Controller {
       const scrollTo = trickleConfig._scrollTo;
       const firstCharacter = scrollTo.substr(0, 1);
       switch (firstCharacter) {
-        case '@':
+        case '@': {
           // NAVIGATE BY RELATIVE TYPE
           // Allows trickle to scroll to a sibling / cousin component
           // relative to the current trickle item
-          var relativeModel = fromModel.findRelativeModel(scrollTo, {
+          const relativeModel = fromModel.findRelativeModel(scrollTo, {
             filter: model => model.get('_isAvailable')
           });
           if (relativeModel === undefined) return;
           return relativeModel.get('_id');
+        }
         case '.':
           // NAVIGATE BY CLASS
           return scrollTo.substr(1, scrollTo.length - 1);

@@ -20,7 +20,7 @@ export function _deepDefaults(original, ...defaultObjects) {
         original[key] = _deepDefaults(original[key] || {}, defaultValue);
         return;
       }
-      const isValueAlreadySet = original.hasOwnProperty(key);
+      const isValueAlreadySet = Object.prototype.hasOwnProperty.call(original, key);
       if (isValueAlreadySet) return;
       original[key] = defaultValue;
     });
@@ -100,7 +100,15 @@ export function getModelInheritanceChain(configModel) {
   if (!data.isReady) throw new Error('Trickle cannot resolve inheritance chains until data is ready');
   const type = configModel.get('_type');
   if (type === 'block') {
-    return [ configModel, configModel.getParent() ].filter(ancestor => {
+    const parentModel = configModel.getParent();
+    const parentConfig = parentModel.get('_trickle');
+    const blockConfig = configModel.get('_trickle');
+    const isParentEnabledNotOnChildren = (parentConfig && parentConfig._isEnabled && parentConfig._onChildren === false);
+    const isNoChildConfig = (!blockConfig || !blockConfig._isEnabled);
+    if (isParentEnabledNotOnChildren && isNoChildConfig) {
+      return null;
+    }
+    return [ configModel, parentModel ].filter(ancestor => {
       const config = ancestor.get('_trickle');
       // Remove models with no config and models which explicitly require inheritance
       return (config && !config._isInherited);
@@ -158,7 +166,7 @@ export function getCompletionAttribute() {
  */
 export function checkApplyLocks(model) {
   const completionAttribute = getCompletionAttribute();
-  if (!model.changed.hasOwnProperty(completionAttribute)) return;
+  if (!Object.prototype.hasOwnProperty.call(model.changed, completionAttribute)) return;
   applyLocks();
 }
 
@@ -174,7 +182,7 @@ export function applyLocks() {
   // Fetch the component model from the store incase it needs overriding by another extension
   const TrickleButtonModel = Adapt.getModelClass('trickle-button');
   // Check all models for trickle potential
-  Adapt.course.getAllDescendantModels(true).forEach(siteModel => {
+  Adapt.course.getAllDescendantModels(true).filter(model => model.get('_isAvailable')).forEach(siteModel => {
     const trickleConfig = getModelConfig(siteModel);
     if (!trickleConfig || !trickleConfig._isEnabled) return;
     const isStepLocked = Boolean(trickleConfig?._stepLocking?._isEnabled);
@@ -251,7 +259,7 @@ export function addButtonComponents() {
   let uid = 0;
   data.forEach(buttonModelSite => {
     if (buttonModelSite instanceof CourseModel) return;
-    let trickleConfig = getModelConfig(buttonModelSite);
+    const trickleConfig = getModelConfig(buttonModelSite);
     if (!trickleConfig || !trickleConfig?._isEnabled || buttonModelSite.get('_isTrickleSiteConfigured')) return;
     buttonModelSite.set('_isTrickleSiteConfigured', true);
     const parentId = buttonModelSite.get('_id');
@@ -275,13 +283,21 @@ export function addButtonComponents() {
  * Pretty print locking state for current page
  */
 export function logTrickleState() {
-  if (!Adapt.parentView?.model?.isTypeGroup('page')) return;
-  logging.debug(`TRICKLE STATE`);
-  Adapt.parentView.model.getAllDescendantModels(true).forEach(model => {
+  if (logging._config._level !== 'debug') return;
+  if (!Adapt.parentView?.model?.isTypeGroup('page')) {
+    logging.debug('TRICKLE GLOBAL STATE');
+    Adapt.course.getAllDescendantModels(true).filter(model => model.get('_isAvailable')).forEach(model => {
+      const isLocked = model.get('_isLocked');
+      const isTrickled = model.get('_isTrickled');
+      logging.debug(`${' '.repeat(model.getAncestorModels().length)}${model.get('_type')} ${model.get('_id')} isLocked: ${isLocked} isTrickled: ${isTrickled}`);
+    });
+    return;
+  }
+  logging.debug('TRICKLE STATE');
+  Adapt.parentView.model.getAllDescendantModels(true).filter(model => model.get('_isAvailable')).forEach(model => {
     const isLocked = model.get('_isLocked');
     const isTrickled = model.get('_isTrickled');
-    if (!isTrickled) return;
-    logging.debug(`${model.get('_type')} ${model.get('_id')} isLocked: ${isLocked} isTrickled: ${isTrickled}`);
+    logging.debug(`${' '.repeat(model.getAncestorModels().length)}${model.get('_type')} ${model.get('_id')} isLocked: ${isLocked} isTrickled: ${isTrickled}`);
   });
 }
 
