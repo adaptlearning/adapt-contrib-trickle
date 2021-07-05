@@ -103,8 +103,8 @@ export function getModelInheritanceChain(configModel) {
     const parentModel = configModel.getParent();
     const parentConfig = parentModel.get('_trickle');
     const blockConfig = configModel.get('_trickle');
-    const isParentEnabledNotOnChildren = (parentConfig && parentConfig._isEnabled && parentConfig._onChildren === false);
-    const isNoChildConfig = (!blockConfig || !blockConfig._isEnabled);
+    const isParentEnabledNotOnChildren = (parentConfig?._isEnabled && parentConfig._onChildren === false);
+    const isNoChildConfig = (!blockConfig?._isEnabled);
     if (isParentEnabledNotOnChildren && isNoChildConfig) {
       return null;
     }
