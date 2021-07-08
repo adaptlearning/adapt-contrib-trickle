@@ -143,7 +143,7 @@ export default class TrickleButtonModel extends ComponentModel {
     };
 
     const trickleConfig = getModelConfig(this.getParent());
-    if (this.isLastInContentObject() && !trickleConfig._button._showEndOfPage) {
+    if (this.isLastInContentObject() && trickleConfig._button._showEndOfPage === false) {
       return this.set({
         _isButtonVisible: false,
         _isButtonDisabled: true
