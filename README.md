@@ -82,6 +82,8 @@ The attributes listed below are properly formatted as JSON in [*example.json*](h
 
 >>**\_component** (string):  Defines the Trickle plug-in which should handle the interaction. At present only `"trickle-button"` is available, but it is possible to create new plug-ins. The default is `"trickle-button"`.
 
+>>**\_showEndOfPage** (boolean):  When set to `false`, hides any end-of-page button. The default is `true`.
+
 >**\_stepLocking** (object):  Step locking (section hiding) attributes group contains values for **\_isEnabled**, **\_isCompletionRequired**, and **\_isLockedOnRevisit**.
 
 >>**\_isEnabled** (boolean):  Will allow Trickle to truncate the page at the step until the user is allowed to move forward. The default is `true`. Note that if **\_isFullWidth** is set to `true` on the **\_button** attribute group (see above), **\_isEnabled** will be forced to `true` regardless of what you set here.
@@ -99,7 +101,7 @@ The following attribute can be added to *config.json* to overide which completio
 No known limitations.
 
 ----------------------------
-**Version number:**  5.0.0  <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a>  
+**Version number:**  5.1.0  <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a>  
 **Framework versions:**  5.8+  
 **Author / maintainer:** Adapt Core Team with [contributors](https://github.com/adaptlearning/adapt-contrib-trickle/graphs/contributors)  
 **Accessibility support:** WAI AA  
