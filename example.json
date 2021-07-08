@@ -29,7 +29,8 @@
             "startAriaLabel": "",
             "finalText": "Finish",
             "finalAriaLabel": "",
-            "_component": "trickle-button"
+            "_component": "trickle-button",
+            "_showEndOfPage": true
         },
         "_stepLocking": {
             "_isEnabled": true,

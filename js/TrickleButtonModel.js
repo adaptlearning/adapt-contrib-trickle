@@ -42,6 +42,9 @@ export default class TrickleButtonModel extends ComponentModel {
    */
   isStepUnlocked() {
     const completionAttribute = getCompletionAttribute();
+    // Check if completion is blocked by another extension
+    const isCompletionBlocked = (this.getParent().get('_requireCompletionOf') === Number.POSITIVE_INFINITY);
+    if (isCompletionBlocked) return;
     return this.getSiblings().every(sibling => {
       if (sibling === this) {
         return true;
