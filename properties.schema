@@ -368,6 +368,15 @@
                       "validators": [],
                       "help": "Hides the button when it scrolls from view; not recommended for use in courses that need to be screenreader compatible."
                     },
+                    "_showEndOfPage": {
+                      "type": "boolean",
+                      "required": false,
+                      "default": true,
+                      "title": "Show end-of-page button",
+                      "inputType": "Checkbox",
+                      "validators": [],
+                      "help": "When set to `false`, hides this button only if it appears at the end of a page."
+                    },
                     "_className": {
                       "type": "string",
                       "required": false,
