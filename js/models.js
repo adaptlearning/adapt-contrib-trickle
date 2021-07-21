@@ -271,7 +271,8 @@ export function addButtonComponents() {
       _isAvailable: true,
       _layout: 'full',
       _trickle: { _isEnabled: true },
-      _renderPosition: 'outer-append'
+      _renderPosition: 'outer-append',
+      _isTrackable: false
     });
     trickleButtonModel.setupModel();
     // This line would usually append a trickle button to an article or block
