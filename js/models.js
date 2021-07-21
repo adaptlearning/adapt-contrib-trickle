@@ -63,7 +63,8 @@ export const configDefaults = {
  */
 export function isModelArticleWithOnChildren(model) {
   const type = model.get('_type');
-  return (type === 'article' && model.get('_trickle')?._onChildren);
+  const trickleConfig = model.get('_trickle');
+  return (type === 'article' && trickleConfig && trickleConfig._onChildren !== false);
 }
 
 /**
