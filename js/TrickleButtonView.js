@@ -59,7 +59,7 @@ class TrickleButtonView extends ComponentView {
   setupEventListeners() {
     this.tryButtonAutoHide = this.tryButtonAutoHide.bind(this);
     this.listenTo(Adapt.parentView, 'postRemove', this.onRemove);
-    this.listenTo(Adapt, 'tricke:killed', this.updateButtonState);
+    this.listenTo(Adapt, 'trickle:killed', this.updateButtonState);
     if (this.model.isStepUnlocked() && this.model.isFinished()) {
       // Already complete, no need to listen to anything else
       return;
