@@ -1,0 +1,32 @@
+{
+  "$anchor": "trickle-config",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "$patch": {
+    "source": {
+      "$ref": "config"
+    },
+    "with": {
+      "properties": {
+        "_trickle": {
+          "type": "object",
+          "title": "Trickle",
+          "default": {},
+          "properties": {
+            "_completionAttribute": {
+              "type": "string",
+              "title": "Completion attribute",
+              "description": "Set which attribute is used to determine completion",
+              "default": "_isComplete",
+              "enum": [
+                "_isInteractionComplete",
+                "_isComplete"
+              ],
+              "_backboneForms": "Select"
+            }
+          }
+        }
+      }
+    }
+  }
+}

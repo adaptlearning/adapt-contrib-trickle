@@ -1,0 +1,191 @@
+{
+  "$anchor": "trickle-block",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "$patch": {
+    "source": {
+      "$ref": "block"
+    },
+    "with": {
+      "properties": {
+        "_trickle": {
+          "type": "object",
+          "title": "Trickle",
+          "default": {},
+          "required": [
+            "_scrollDuration"
+          ],
+          "properties": {
+            "_isEnabled": {
+              "type": "boolean",
+              "title": "Enable Trickle",
+              "default": false
+            },
+            "_isInherited": {
+              "type": "boolean",
+              "title": "Inherit settings from parent article",
+              "default": false
+            },
+            "_autoScroll": {
+              "type": "boolean",
+              "title": "Scroll automatically",
+              "default": false
+            },
+            "_scrollDuration": {
+              "type": "number",
+              "title": "Scroll duration",
+              "description": "Duration of the scroll animation in milliseconds",
+              "default": 500
+            },
+            "_scrollTo": {
+              "type": "string",
+              "title": "Scroll target",
+              "description": "Set how trickle scrolls",
+              "default": "@block +1"
+            },
+            "_button": {
+              "type": "object",
+              "title": "Button",
+              "default": {},
+              "properties": {
+                "_isEnabled": {
+                  "type": "boolean",
+                  "title": "Add Trickle button",
+                  "default": true
+                },
+                "_styleBeforeCompletion": {
+                  "type": "string",
+                  "title": "Visibility before completion",
+                  "default": "hidden",
+                  "enum": [
+                    "hidden",
+                    "visible",
+                    "disabled"
+                  ],
+                  "_backboneForms": "Select"
+                },
+                "_styleAfterClick": {
+                  "type": "string",
+                  "title": "Visibility after completion",
+                  "default": "hidden",
+                  "enum": [
+                    "hidden",
+                    "visible",
+                    "disabled"
+                  ],
+                  "_backboneForms": "Select"
+                },
+                "_isFullWidth": {
+                  "type": "boolean",
+                  "title": "Make full width",
+                  "default": true
+                },
+                "_autoHide": {
+                  "type": "boolean",
+                  "title": "Hide button when no longer in view",
+                  "description": "Hides the button when it scrolls from view; not recommended for use in courses that need to be screenreader compatible",
+                  "default": false
+                },
+                "_showEndOfPage": {
+                  "type": "boolean",
+                  "title": "Show end of page button",
+                  "default": true
+                },
+                "_className": {
+                  "type": "string",
+                  "title": "Custom classes",
+                  "default": ""
+                },
+                "_hasIcon": {
+                  "type": "boolean",
+                  "title": "Enable icon",
+                  "description": "Displays an icon alongside, or in place of, the Trickle button text. Default icon is a small downwards arrow",
+                  "default": false
+                },
+                "text": {
+                  "type": "string",
+                  "title": "Default button text",
+                  "default": "Continue",
+                  "_adapt": {
+                    "translatable": true
+                  }
+                },
+                "ariaLabel": {
+                  "type": "string",
+                  "title": "Default button ARIA label",
+                  "default": "Continue",
+                  "_adapt": {
+                    "translatable": true
+                  }
+                },
+                "startText": {
+                  "type": "string",
+                  "title": "First button text",
+                  "description": "Only on articles when 'Enable on child blocks' set to true",
+                  "default": "Begin",
+                  "_adapt": {
+                    "translatable": true
+                  }
+                },
+                "startAriaLabel": {
+                  "type": "string",
+                  "title": "First button ARIA label",
+                  "description": "Only on articles when 'Enable on child blocks' set to true",
+                  "default": "Begin",
+                  "_adapt": {
+                    "translatable": true
+                  }
+                },
+                "finalText": {
+                  "type": "string",
+                  "title": "Final button text",
+                  "description": "Only on articles when 'Enable on child blocks' set to true",
+                  "default": "Finish",
+                  "_adapt": {
+                    "translatable": true
+                  }
+                },
+                "finalAriaLabel": {
+                  "type": "string",
+                  "title": "Final button ARIA label",
+                  "description": "Only on articles when 'Enable on child blocks' set to true",
+                  "default": "Finish",
+                  "_adapt": {
+                    "translatable": true
+                  }
+                },
+                "_component": {
+                  "type": "string",
+                  "title": "Trickle plugin",
+                  "default": "trickle-button"
+                }
+              }
+            },
+            "_stepLocking": {
+              "type": "object",
+              "title": "Step locking",
+              "default": {},
+              "properties": {
+                "_isEnabled": {
+                  "type": "boolean",
+                  "title": "Hide subsequent content",
+                  "default": true
+                },
+                "_isCompletionRequired": {
+                  "type": "boolean",
+                  "title": "Require content to be completed",
+                  "default": true
+                },
+                "_isLockedOnRevisit": {
+                  "type": "boolean",
+                  "title": "Reset state on revisit",
+                  "default": false
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
