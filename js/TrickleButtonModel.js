@@ -66,7 +66,7 @@ export default class TrickleButtonModel extends ComponentModel {
    */
   isStepComplete() {
     const completionAttribute = getCompletionAttribute();
-    const isParentComplete = (this.getParent().get(completionAttribute));
+    const isParentComplete = this.getParent().get(completionAttribute);
     return isParentComplete;
   }
 
