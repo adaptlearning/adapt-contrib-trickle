@@ -8,6 +8,12 @@ import {
 
 export default class TrickleButtonModel extends ComponentModel {
 
+  init() {
+    super.init();
+    if (!this.isStepComplete()) return;
+    this.setCompletionStatus();
+  }
+
   /**
    * @returns {boolean} true if the button is enabled in its trickle configuration
    */
@@ -53,6 +59,15 @@ export default class TrickleButtonModel extends ComponentModel {
         sibling.get('_isOptional') ||
         !sibling.get('_isAvailable');
     });
+  }
+
+  /**
+   * @returns {boolean} true if the parent container is already complete
+   */
+  isStepComplete() {
+    const completionAttribute = getCompletionAttribute();
+    const isParentComplete = this.getParent().get(completionAttribute);
+    return isParentComplete;
   }
 
   /**
