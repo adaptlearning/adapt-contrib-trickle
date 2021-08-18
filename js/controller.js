@@ -36,8 +36,11 @@ class TrickleController extends Backbone.Controller {
 
   async onDataReady() {
     await data.whenReady();
-    addButtonComponents();
-    applyLocks();
+    Adapt.wait.for(done => {
+      addButtonComponents();
+      applyLocks();
+      done();
+    });
   }
 
   /**
