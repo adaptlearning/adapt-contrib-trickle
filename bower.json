@@ -3,7 +3,7 @@
   "version": "5.2.1",
   "framework": ">=5.8",
   "homepage": "https://github.com/adaptlearning/adapt-contrib-trickle",
-  "issues": "https://github.com/adaptlearning/adapt_framework/issues/new",
+  "bugs": "https://github.com/adaptlearning/adapt-contrib-trickle/issues",
   "extension" : "trickle",
   "displayName" : "Trickle",
   "description": "A vertical locking extension",
