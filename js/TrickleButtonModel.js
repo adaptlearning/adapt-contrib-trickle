@@ -44,18 +44,9 @@ export default class TrickleButtonModel extends ComponentModel {
   }
 
   /**
-   * @returns {boolean} true if the button has already been completed
-   */
-  isButtonComplete() {
-    return this.get('_isComplete');
-  }
-
-  /**
    * @returns {boolean} true if all available siblings are complete, optional or not available
-   * or if the button is already completed
    */
   isStepUnlocked() {
-    if (this.isButtonComplete()) return true;
     const completionAttribute = getCompletionAttribute();
     // Check if completion is blocked by another extension
     const isCompletionBlocked = (this.getParent().get('_requireCompletionOf') === Number.POSITIVE_INFINITY);
@@ -71,11 +62,9 @@ export default class TrickleButtonModel extends ComponentModel {
   }
 
   /**
-   * @returns {boolean} true if the parent container is already complete or the
-   * button is already completed
+   * @returns {boolean} true if the parent container is already complete
    */
   isStepComplete() {
-    if (this.isButtonComplete()) return true;
     const completionAttribute = getCompletionAttribute();
     const isParentComplete = this.getParent().get(completionAttribute);
     return isParentComplete;
@@ -96,7 +85,7 @@ export default class TrickleButtonModel extends ComponentModel {
   isFinished() {
     const isStepUnlocked = this.isStepUnlocked();
     const isStepLockingCompletionRequired = this.isStepLockingCompletionRequired();
-    const isButtonComplete = this.isButtonComplete();
+    const isButtonComplete = this.get('_isComplete');
     const isFinished = ((isStepUnlocked || !isStepLockingCompletionRequired) && isButtonComplete);
     return isFinished;
   }
@@ -158,8 +147,9 @@ export default class TrickleButtonModel extends ComponentModel {
   /**
    * Calculate the current button visible and enabled states
    * @param {boolean} isButtonDisableForced Set to true to signify that the button must not be enabled
+   * @param {boolean} isButtonHiddenForced Set to true to signify that the button must not be visible
    */
-  calculateButtonState(isButtonDisableForced = false) {
+  calculateButtonState(isButtonDisableForced = false, isButtonHiddenForced = false) {
     if (!this.isEnabled()) {
       this.set({
         _isButtonVisible: false,
@@ -178,7 +168,6 @@ export default class TrickleButtonModel extends ComponentModel {
 
     const isTrickleKilled = controller.isKilled;
     const isStepUnlocked = this.isStepUnlocked() || isTrickleKilled;
-    const isButtonComplete = this.isButtonComplete() || isTrickleKilled;
     const isFinished = this.isFinished() || isTrickleKilled;
     const isButtonVisibleBeforeCompletion = (trickleConfig._button._styleBeforeCompletion !== 'hidden');
     // Force button to be hidden after completion if _isFullWidth, otherwise absolutely positioned buttons will stack
@@ -189,15 +178,15 @@ export default class TrickleButtonModel extends ComponentModel {
     const isNoCompletionRequiredAndLockedVisible = (!isStepLockingCompletionRequired && !isFinished && isButtonVisibleBeforeCompletion);
     const isNoCompletionRequiredAndUnlockedVisible = (!isStepLockingCompletionRequired && isStepUnlocked && !isFinished);
     const isNoCompletionRequiredAndFinishedVisible = (!isStepLockingCompletionRequired && isFinished && isButtonVisibleAfterCompletion);
-    const isStepLockedAndVisibleBeforeCompletion = (isStepLockingCompletionRequired && !isStepUnlocked && isButtonVisibleBeforeCompletion);
-    const isButtonCompleteAndVisibleAfterCompletion = (isStepLockingCompletionRequired && isButtonComplete && isButtonVisibleAfterCompletion);
+    const isStepLockedAndVisibleBeforeCompletion = (isStepLockingCompletionRequired && !isStepUnlocked && isButtonVisibleBeforeCompletion && !isButtonHiddenForced);
+    const isFinishedAndVisibleAfterCompletion = (isStepLockingCompletionRequired && isFinished && isButtonVisibleAfterCompletion);
     const isStepUnlockedAndButtonIncomplete = (isStepLockingCompletionRequired && isStepUnlocked && !isFinished);
 
     const isButtonVisible = isNoCompletionRequiredAndLockedVisible ||
       isNoCompletionRequiredAndUnlockedVisible ||
       isNoCompletionRequiredAndFinishedVisible ||
       isStepLockedAndVisibleBeforeCompletion ||
-      isButtonCompleteAndVisibleAfterCompletion ||
+      isFinishedAndVisibleAfterCompletion ||
       isStepUnlockedAndButtonIncomplete;
 
     const isButtonEnabledBeforeCompletion = (trickleConfig._button._styleBeforeCompletion !== 'disabled');

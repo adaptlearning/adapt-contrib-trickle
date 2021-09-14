@@ -31,6 +31,7 @@ class TrickleButtonView extends ComponentView {
   initialize() {
     this.openPopupCount = 0;
     this.isAwaitingFinish = false;
+    this.wasButtonClicked = false;
     this.model.calculateButtonText();
     this.calculateButtonState();
     this.setupEventListeners();
@@ -146,6 +147,7 @@ class TrickleButtonView extends ComponentView {
     // Assuming step locking completion is required, setting this model as complete
     // will cause onParentComplete to fire
     this.model.setCompletionStatus();
+    this.wasButtonClicked = true;
     const isStepLockingCompletionRequired = this.model.isStepLockingCompletionRequired();
     if (isStepLockingCompletionRequired && !wasComplete) return;
     // Assuming step locking completion is NOT required, continue and scroll
