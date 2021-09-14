@@ -47,7 +47,7 @@ class TrickleButtonView extends ComponentView {
    */
   calculateButtonState() {
     const isDisabledByPopups = (this.openPopupCount > 0);
-    this.model.calculateButtonState(isDisabledByPopups);
+    this.model.calculateButtonState(isDisabledByPopups, this.wasButtonClicked);
   }
 
   render() {
