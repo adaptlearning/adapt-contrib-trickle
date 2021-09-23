@@ -147,8 +147,9 @@ export default class TrickleButtonModel extends ComponentModel {
   /**
    * Calculate the current button visible and enabled states
    * @param {boolean} isButtonDisableForced Set to true to signify that the button must not be enabled
+   * @param {boolean} isButtonHiddenForced Set to true to signify that the button must not be visible
    */
-  calculateButtonState(isButtonDisableForced = false) {
+  calculateButtonState(isButtonDisableForced = false, isButtonHiddenForced = false) {
     if (!this.isEnabled()) {
       this.set({
         _isButtonVisible: false,
@@ -177,7 +178,7 @@ export default class TrickleButtonModel extends ComponentModel {
     const isNoCompletionRequiredAndLockedVisible = (!isStepLockingCompletionRequired && !isFinished && isButtonVisibleBeforeCompletion);
     const isNoCompletionRequiredAndUnlockedVisible = (!isStepLockingCompletionRequired && isStepUnlocked && !isFinished);
     const isNoCompletionRequiredAndFinishedVisible = (!isStepLockingCompletionRequired && isFinished && isButtonVisibleAfterCompletion);
-    const isStepLockedAndVisibleBeforeCompletion = (isStepLockingCompletionRequired && !isStepUnlocked && isButtonVisibleBeforeCompletion);
+    const isStepLockedAndVisibleBeforeCompletion = (isStepLockingCompletionRequired && !isStepUnlocked && isButtonVisibleBeforeCompletion && !isButtonHiddenForced);
     const isFinishedAndVisibleAfterCompletion = (isStepLockingCompletionRequired && isFinished && isButtonVisibleAfterCompletion);
     const isStepUnlockedAndButtonIncomplete = (isStepLockingCompletionRequired && isStepUnlocked && !isFinished);
 

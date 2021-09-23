@@ -30,7 +30,8 @@ class TrickleButtonView extends ComponentView {
 
   initialize() {
     this.openPopupCount = 0;
-    this.isAwaitingFinish = false;
+    this.isAwaitingPopupClose = false;
+    this.wasButtonClicked = false;
     this.model.calculateButtonText();
     this.calculateButtonState();
     this.setupEventListeners();
@@ -46,7 +47,7 @@ class TrickleButtonView extends ComponentView {
    */
   calculateButtonState() {
     const isDisabledByPopups = (this.openPopupCount > 0);
-    this.model.calculateButtonState(isDisabledByPopups);
+    this.model.calculateButtonState(isDisabledByPopups, this.wasButtonClicked);
   }
 
   render() {
@@ -94,7 +95,7 @@ class TrickleButtonView extends ComponentView {
   async onPopupClosed() {
     this.openPopupCount--;
     if (this.openPopupCount) return;
-    if (this.isAwaitingFinish) {
+    if (this.isAwaitingPopupClose) {
       // Had completed with an open popup, perform final part of finishing
       return this.finish();
     }
@@ -146,6 +147,7 @@ class TrickleButtonView extends ComponentView {
     // Assuming step locking completion is required, setting this model as complete
     // will cause onParentComplete to fire
     this.model.setCompletionStatus();
+    this.wasButtonClicked = true;
     const isStepLockingCompletionRequired = this.model.isStepLockingCompletionRequired();
     if (isStepLockingCompletionRequired && !wasComplete) return;
     // Assuming step locking completion is NOT required, continue and scroll
@@ -166,7 +168,7 @@ class TrickleButtonView extends ComponentView {
     if (controller.isKilled) return;
     if (this.openPopupCount > 0) {
       // Has completed with an open popup, defer finish until popup closed
-      this.isAwaitingFinish = true;
+      this.isAwaitingPopupClose = true;
       return;
     }
     await this.finish();
