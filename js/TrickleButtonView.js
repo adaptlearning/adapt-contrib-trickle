@@ -62,7 +62,7 @@ class TrickleButtonView extends ComponentView {
     // Add async delay on each call to onParent complete
     // to wait for autoscroll question feedback notify to appear
     const onParentComplete = this.onParentComplete.bind(this);
-    this.onParentComplete = (...args) => _.delay(onParentComplete(...args), 100);
+    this.onParentComplete = (...args) => _.delay(() => onParentComplete(...args), 100);
     this.listenTo(Adapt.parentView, 'postRemove', this.onRemove);
     this.listenTo(Adapt, 'trickle:killed', this.updateButtonState);
     if (this.model.isStepUnlocked() && this.model.isFinished()) {
