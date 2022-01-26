@@ -168,6 +168,7 @@ export function getCompletionAttribute() {
 export function checkApplyLocks(model) {
   const completionAttribute = getCompletionAttribute();
   if (!Object.prototype.hasOwnProperty.call(model.changed, completionAttribute)) return;
+  // Apply the locks lazily
   debouncedApplyLocks();
 }
 
