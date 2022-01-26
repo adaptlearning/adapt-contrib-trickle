@@ -17,13 +17,13 @@ class TrickleController extends Backbone.Controller {
   initialize() {
     this.checkIsFinished = _.debounce(this.checkIsFinished, 1);
     this.listenTo(data, {
-      // Check that the locking is accurate after any completion
+      // Check that the locking is accurate after any completion, this happens asynchronously
       'change:_isInteractionComplete change:_isComplete change:_isAvailable add remove': checkApplyLocks,
       // Check whether trickle is finished after any locking changes
       'change:_isLocked': this.checkIsFinished
     });
     this.listenTo(Adapt, {
-      // Reapply locks after assessment reset, this happens asynchronously
+      // Reapply locks after assessment reset, this happens asynchronously where possible
       'assessments:reset': this.onAssessmentReset,
       // Reset trickle's global state when changing content objects
       'contentObjectView:preRender': this.reset,
@@ -36,7 +36,7 @@ class TrickleController extends Backbone.Controller {
   }
 
   onAssessmentReset() {
-    // If mid render the apply locks immediately
+    // If mid render then apply locks immediately
     const isMidRender = !Adapt.parentView?.model.get('_isReady');
     if (isMidRender) return applyLocks();
     // Otherwise apply them lazily
