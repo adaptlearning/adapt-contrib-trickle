@@ -5,6 +5,7 @@ import {
   checkApplyLocks,
   addButtonComponents,
   applyLocks,
+  debouncedApplyLocks,
   getModelConfig,
   isModelArticleWithOnChildren
 } from './models';
@@ -23,7 +24,7 @@ class TrickleController extends Backbone.Controller {
     });
     this.listenTo(Adapt, {
       // Reapply locks after assessment reset, this happens asynchronously
-      'assessments:reset': applyLocks,
+      'assessments:reset': this.onAssessmentReset,
       // Reset trickle's global state when changing content objects
       'contentObjectView:preRender': this.reset,
       // Stop rendering where necessary before a child is rendered
@@ -32,6 +33,14 @@ class TrickleController extends Backbone.Controller {
       'trickle:kill': this.kill
     });
     this.onDataReady();
+  }
+
+  onAssessmentReset() {
+    // If mid render the apply locks immediately
+    const isMidRender = !Adapt.parentView?.model.get('_isReady');
+    if (isMidRender) return applyLocks();
+    // Otherwise apply them lazily
+    debouncedApplyLocks();
   }
 
   async onDataReady() {
