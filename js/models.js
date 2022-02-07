@@ -168,7 +168,8 @@ export function getCompletionAttribute() {
 export function checkApplyLocks(model) {
   const completionAttribute = getCompletionAttribute();
   if (!Object.prototype.hasOwnProperty.call(model.changed, completionAttribute)) return;
-  applyLocks();
+  // Apply the locks lazily
+  debouncedApplyLocks();
 }
 
 /**
@@ -221,6 +222,8 @@ export function applyLocks() {
   });
   logTrickleState();
 }
+
+export const debouncedApplyLocks = _.debounce(applyLocks, 1);
 
 /**
  * Returns all of the contentobject descendant models directly subsequent to the
@@ -316,6 +319,7 @@ export default {
   getCompletionAttribute,
   checkApplyLocks,
   applyLocks,
+  debouncedApplyLocks,
   _getAncestorNextSiblings,
   addButtonComponents,
   logTrickleState
