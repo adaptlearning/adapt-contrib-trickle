@@ -17,6 +17,7 @@ class TrickleController extends Backbone.Controller {
   initialize() {
     this.checkIsFinished = _.debounce(this.checkIsFinished, 1);
     this.listenTo(data, {
+      'ready': this.onDataReady,
       // Check that the locking is accurate after any completion, this happens asynchronously
       'change:_isInteractionComplete change:_isComplete change:_isAvailable add remove': checkApplyLocks,
       // Check whether trickle is finished after any locking changes
@@ -32,7 +33,6 @@ class TrickleController extends Backbone.Controller {
       // Temporarily remove trickle from the current content object
       'trickle:kill': this.kill
     });
-    this.onDataReady();
   }
 
   onAssessmentReset() {
@@ -44,7 +44,6 @@ class TrickleController extends Backbone.Controller {
   }
 
   async onDataReady() {
-    await data.whenReady();
     Adapt.wait.for(done => {
       addButtonComponents();
       applyLocks();
