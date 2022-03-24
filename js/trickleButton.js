@@ -1,8 +1,8 @@
-import Adapt from 'core/js/adapt';
+import components from 'core/js/components';
 import TrickleButtonView from './TrickleButtonView';
 import TrickleButtonModel from './TrickleButtonModel';
 
-export default Adapt.register('trickle-button', {
+export default components.register('trickle-button', {
   view: TrickleButtonView,
   model: TrickleButtonModel
 });

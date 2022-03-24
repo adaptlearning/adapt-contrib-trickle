@@ -119,7 +119,7 @@ class TrickleButtonView extends ComponentView {
     const isButtonDisabled = this.model.get('_isButtonDisabled');
     const $button = this.$('.js-trickle-btn');
     const $ariaLabel = this.$('.aria-label');
-    Adapt.a11y.toggleEnabled($button, !isButtonDisabled);
+    a11y.toggleEnabled($button, !isButtonDisabled);
     if (!isButtonDisabled) {
       // move focus forward if it's on the aria-label
       if (document.activeElement instanceof HTMLElement && document.activeElement.isSameNode($ariaLabel[0])) {
