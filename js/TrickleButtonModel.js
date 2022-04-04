@@ -153,7 +153,7 @@ export default class TrickleButtonModel extends ComponentModel {
     if (!this.isEnabled()) {
       this.set({
         _isButtonVisible: false,
-        _isButtonDisabled: true
+        _isButtonDisabled: !this.isStepUnlocked()
       });
       return;
     };
