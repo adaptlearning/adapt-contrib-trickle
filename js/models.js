@@ -1,4 +1,5 @@
 import Adapt from 'core/js/adapt';
+import components from 'core/js/components';
 import data from 'core/js/data';
 import logging from 'core/js/logging';
 import ContentObjectModel from 'core/js/models/contentObjectModel';
@@ -182,7 +183,7 @@ export function applyLocks() {
   const locks = {};
   const modelsById = {};
   // Fetch the component model from the store incase it needs overriding by another extension
-  const TrickleButtonModel = Adapt.getModelClass('trickle-button');
+  const TrickleButtonModel = components.getModelClass('trickle-button');
   // Check all models for trickle potential
   Adapt.course.getAllDescendantModels(true).filter(model => model.get('_isAvailable')).forEach(siteModel => {
     const trickleConfig = getModelConfig(siteModel);
@@ -259,7 +260,7 @@ export function _getAncestorNextSiblings(fromModel) {
  */
 export function addButtonComponents() {
   // Fetch the component model from the store incase it needs overriding by another extension
-  const TrickleButtonModel = Adapt.getModelClass('trickle-button');
+  const TrickleButtonModel = components.getModelClass('trickle-button');
   let uid = 0;
   data.forEach(buttonModelSite => {
     if (buttonModelSite instanceof CourseModel) return;

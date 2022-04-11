@@ -1,4 +1,6 @@
 import Adapt from 'core/js/adapt';
+import wait from 'core/js/wait';
+import components from 'core/js/components';
 import data from 'core/js/data';
 import a11y from 'core/js/a11y';
 import {
@@ -9,6 +11,7 @@ import {
   getModelConfig,
   isModelArticleWithOnChildren
 } from './models';
+import router from 'core/js/router';
 
 /** @typedef {import('core/js/childEvent').default} ChildEvent  */
 
@@ -17,7 +20,7 @@ class TrickleController extends Backbone.Controller {
   initialize() {
     this.checkIsFinished = _.debounce(this.checkIsFinished, 1);
     this.listenTo(data, {
-      'ready': this.onDataReady,
+      ready: this.onDataReady,
       // Check that the locking is accurate after any completion, this happens asynchronously
       'change:_isInteractionComplete change:_isComplete change:_isAvailable add remove': checkApplyLocks,
       // Check whether trickle is finished after any locking changes
@@ -44,7 +47,7 @@ class TrickleController extends Backbone.Controller {
   }
 
   async onDataReady() {
-    Adapt.wait.for(done => {
+    wait.for(done => {
       addButtonComponents();
       applyLocks();
       done();
@@ -145,12 +148,12 @@ class TrickleController extends Backbone.Controller {
     if (!isDescendant) {
       applyLocks();
       // Navigate to another content object
-      const model = Adapt.findById(scrollToId);
+      const model = data.findById(scrollToId);
       const contentObject = model.isTypeGroup('contentobject') ? model : model.findAncestor('contentobject');
-      await Adapt.navigateToElement(contentObject.get('_id'));
+      await router.navigateToElement(contentObject.get('_id'));
       // Recalculate the relative id after the page is ready as it may change
       scrollToId = getScrollToId();
-      await Adapt.navigateToElement(scrollToId);
+      await router.navigateToElement(scrollToId);
       return;
     }
 
@@ -164,7 +167,7 @@ class TrickleController extends Backbone.Controller {
     if (isAutoScrollOff) return false;
 
     const duration = trickleConfig._scrollDuration || 500;
-    Adapt.scrollTo('.' + scrollToId, { duration });
+    router.navigateToElement('.' + scrollToId, { duration });
   }
 
   /**
@@ -194,7 +197,7 @@ class TrickleController extends Backbone.Controller {
    */
   async kill() {
     // Fetch the component model from the store incase it needs overriding by another extension
-    const TrickleModel = Adapt.getModelClass('trickle-button');
+    const TrickleModel = components.getModelClass('trickle-button');
     this.isKilled = true;
     Adapt.parentView.model.getAllDescendantModels().forEach(model => {
       const isButtonModel = (model instanceof TrickleModel);
