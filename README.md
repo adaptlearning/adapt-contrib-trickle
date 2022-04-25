@@ -101,8 +101,8 @@ The following attribute can be added to *config.json* to overide which completio
 No known limitations.
 
 ----------------------------
-**Version number:**  5.2.6  <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a>
-**Framework versions:**  5.8+
+**Version number:**  6.0.0  <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a>
+**Framework versions:**  5.19.1+
 **Author / maintainer:** Adapt Core Team with [contributors](https://github.com/adaptlearning/adapt-contrib-trickle/graphs/contributors)
 **Accessibility support:** WAI AA
 **RTL support:** Yes
