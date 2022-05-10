@@ -206,6 +206,8 @@ export function applyLocks() {
       // Don't unlock anything that was locked in a previous group
       modelsById[id] = model;
       locks[id] = locks[id] || isLocked;
+      // Don't modify the children if they are managed by another locking mechanism
+      if (model.get('_lockType')) return;
       // Cascade inherited locks through the hierarchyd
       model.getAllDescendantModels().forEach(descendant => {
         const descendantId = descendant.get('_id');
