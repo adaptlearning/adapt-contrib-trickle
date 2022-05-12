@@ -44,6 +44,17 @@
               "description": "Set how trickle scrolls",
               "default": "@block +1"
             },
+            "_completionAttribute": {
+              "type": "string",
+              "title": "Completion attribute",
+              "description": "Set which attribute is used to determine completion",
+              "default": "_isComplete",
+              "enum": [
+                "_isInteractionComplete",
+                "_isComplete"
+              ],
+              "_backboneForms": "Select"
+            },
             "_button": {
               "type": "object",
               "title": "Button",

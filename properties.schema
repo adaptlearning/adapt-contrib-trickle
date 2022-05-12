@@ -94,6 +94,16 @@
                   "validators": [],
                   "help": "Set how trickle scrolls"
                 },
+                "_completionAttribute": {
+                  "type": "string",
+                  "required": false,
+                  "enum": ["_isInteractionComplete", "_isComplete"],
+                  "default": "_isComplete",
+                  "title": "Completion Attribute",
+                  "inputType": {"type": "Select", "options":["_isInteractionComplete", "_isComplete"]},
+                  "validators": [],
+                  "help": "Set which attribute is used to determine completion"
+                },
                 "_button": {
                   "type": "object",
                   "required": false,
@@ -319,6 +329,16 @@
                   "inputType": "Text",
                   "validators": [],
                   "help": "Set how trickle scrolls"
+                },
+                "_completionAttribute": {
+                  "type": "string",
+                  "required": false,
+                  "enum": ["_isInteractionComplete", "_isComplete"],
+                  "default": "_isComplete",
+                  "title": "Completion Attribute",
+                  "inputType": {"type": "Select", "options":["_isInteractionComplete", "_isComplete"]},
+                  "validators": [],
+                  "help": "Set which attribute is used to determine completion"
                 },
                 "_button": {
                   "type": "object",

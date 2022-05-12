@@ -12,6 +12,7 @@
         "_scrollDuration": 500,
         "_onChildren": true,
         "_scrollTo": "@block +1",
+        "_completionAttribute": "_isInteractionComplete|_isComplete", //(default=_isComplete)
         "_button": {
             "_isEnabled": true,
             "_comment": "_styleBeforeCompletion = hidden | disabled | visible",

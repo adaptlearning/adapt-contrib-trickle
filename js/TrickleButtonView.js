@@ -75,7 +75,7 @@ class TrickleButtonView extends ComponentView {
       'popup:closed': this.onPopupClosed
     });
     const parentModel = this.model.getParent();
-    const completionAttribute = getCompletionAttribute();
+    const completionAttribute = getCompletionAttribute(parentModel);
     this.listenTo(parentModel, {
       'change:_requireCompletionOf': this.onStepUnlocked,
       [`bubble:change:${completionAttribute}`]: this.onStepUnlocked,
@@ -164,7 +164,7 @@ class TrickleButtonView extends ComponentView {
   async onParentComplete(model, value) {
     if (!value) return;
     const parentModel = this.model.getParent();
-    const completionAttribute = getCompletionAttribute();
+    const completionAttribute = getCompletionAttribute(parentModel);
     this.stopListening(parentModel, {
       [`bubble:change:${completionAttribute}`]: this.onStepUnlocked,
       [`change:${completionAttribute}`]: this.onParentComplete

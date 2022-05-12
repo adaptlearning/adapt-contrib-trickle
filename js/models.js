@@ -158,8 +158,8 @@ export function getModelContainer(model) {
  * listen for completion
  * @return {string}
  */
-export function getCompletionAttribute() {
-  return Adapt.config.get('_trickle')?._completionAttribute || '_isComplete';
+export function getCompletionAttribute(model = null) {
+  return getModelConfig(model)?._completionAttribute || Adapt.config.get('_trickle')?._completionAttribute || '_isComplete';
 }
 
 /**
@@ -167,7 +167,8 @@ export function getCompletionAttribute() {
  * @param {Backbone.Model} model
  */
 export function checkApplyLocks(model) {
-  const completionAttribute = getCompletionAttribute();
+  if (!data.isReady) return;
+  const completionAttribute = getCompletionAttribute(model);
   if (!Object.prototype.hasOwnProperty.call(model.changed, completionAttribute)) return;
   // Apply the locks lazily
   debouncedApplyLocks();
@@ -179,7 +180,6 @@ export function checkApplyLocks(model) {
  */
 export function applyLocks() {
   if (!data.isReady) return;
-  const completionAttribute = getCompletionAttribute();
   const locks = {};
   const modelsById = {};
   // Fetch the component model from the store incase it needs overriding by another extension
@@ -189,6 +189,7 @@ export function applyLocks() {
     const trickleConfig = getModelConfig(siteModel);
     if (!trickleConfig || !trickleConfig._isEnabled) return;
     const isStepLocked = Boolean(trickleConfig?._stepLocking?._isEnabled);
+    const completionAttribute = getCompletionAttribute(siteModel);
     const isLocked = isStepLocked &&
       !siteModel?.get(completionAttribute) &&
       !siteModel?.get('_isOptional');

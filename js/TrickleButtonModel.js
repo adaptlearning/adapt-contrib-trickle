@@ -47,9 +47,10 @@ export default class TrickleButtonModel extends ComponentModel {
    * @returns {boolean} true if all available siblings are complete, optional or not available
    */
   isStepUnlocked() {
-    const completionAttribute = getCompletionAttribute();
+    const parentModel = this.getParent();
+    const completionAttribute = getCompletionAttribute(parentModel);
     // Check if completion is blocked by another extension
-    const isCompletionBlocked = (this.getParent().get('_requireCompletionOf') === Number.POSITIVE_INFINITY);
+    const isCompletionBlocked = (parentModel.get('_requireCompletionOf') === Number.POSITIVE_INFINITY);
     if (isCompletionBlocked) return;
     return this.getSiblings().every(sibling => {
       if (sibling === this) {
@@ -65,8 +66,9 @@ export default class TrickleButtonModel extends ComponentModel {
    * @returns {boolean} true if the parent container is already complete
    */
   isStepComplete() {
-    const completionAttribute = getCompletionAttribute();
-    const isParentComplete = this.getParent().get(completionAttribute);
+    const parentModel = this.getParent();
+    const completionAttribute = getCompletionAttribute(parentModel);
+    const isParentComplete = parentModel.get(completionAttribute);
     return isParentComplete;
   }
 
