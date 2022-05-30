@@ -5,17 +5,17 @@
   <button {{#if buttonAriaLabel}}aria-label="{{buttonAriaLabel}}" {{/if}}class="trickle__btn js-trickle-btn {{#if _isButtonDisabled}} is-disabled{{/if}}{{#if _trickle._button._hasIcon}} btn-icon{{/if}}{{#if buttonText}} btn-text{{/if}}"{{#if _isButtonDisabled}} aria-disabled="true"{{/if}}>
 
     {{#if _trickle._button._hasIcon}}
-    <div class="trickle__btn-icon">
-      <div class="icon"></div>
-    </div>
+    <span class="trickle__btn-icon">
+      <span class="icon"></span>
+    </span>
     {{/if}}
 
     {{#if buttonText}}
-    <div class="trickle__btn-text">
-      <div class="trickle__btn-text-inner js-trickle-btn-text">
+    <span class="trickle__btn-text">
+      <span class="trickle__btn-text-inner js-trickle-btn-text">
         {{buttonText}}
-      </div>
-    </div>
+      </span>
+    </span>
     {{/if}}
 
   </button>
