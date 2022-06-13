@@ -65,7 +65,17 @@ export const configDefaults = {
 export function isModelArticleWithOnChildren(model) {
   const type = model.get('_type');
   const trickleConfig = model.get('_trickle');
-  return (type === 'article' && trickleConfig && trickleConfig._onChildren !== false);
+  return (type === 'article' && trickleConfig?._onChildren !== false);
+}
+
+/**
+ * @param {Backbone.Model} model
+ * @returns {Boolean}
+ */
+export function isModelBlockWithArticleNotChildren(model) {
+  const type = model.get('_type');
+  const parentTrickleConfig = model.getParent()?.get('_trickle');
+  return (type === 'block' && parentTrickleConfig?._isEnabled === true && parentTrickleConfig?._onChildren === false);
 }
 
 /**
@@ -129,7 +139,7 @@ export function getModelInheritanceChain(configModel) {
  */
 export function getModelConfig(model) {
   const inheritance = getModelInheritanceChain(model);
-  if (!inheritance?.length || isModelArticleWithOnChildren(model)) return null;
+  if (!inheritance?.length || isModelArticleWithOnChildren(model) || isModelBlockWithArticleNotChildren(model)) return null;
   const config = $.extend(true, {}, ...inheritance.reverse().map((inheritModel, index, arr) => {
     const isLast = (index === arr.length - 1);
     const defaults = isLast ? getModelConfigDefaults(inheritModel) : null;
