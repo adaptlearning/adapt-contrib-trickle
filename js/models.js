@@ -240,9 +240,9 @@ export function isEnabled(model, { trickleConfig = getModelConfig(model) } = {})
 export function isLocked(model, { trickleConfig = getModelConfig(model) } = {}) {
   const isStepLocked = Boolean(trickleConfig?._stepLocking?._isEnabled);
   if (!isStepLocked) return false;
-  const isCompletionRquired = Boolean(trickleConfig?._stepLocking?._isCompletionRequired);
+  const isCompletionRequired = Boolean(trickleConfig?._stepLocking?._isCompletionRequired);
   const completionAttribute = getCompletionAttribute(model);
-  if (!isCompletionRquired) {
+  if (!isCompletionRequired) {
     const TrickleModel = components.getModelClass('trickle-button');
     const trickleButton = model.getAvailableChildModels().find(model => model instanceof TrickleModel);
     const isTrickleButtonComplete = Boolean(trickleButton?.get(completionAttribute));
