@@ -18,6 +18,8 @@ import router from 'core/js/router';
 class TrickleController extends Backbone.Controller {
 
   initialize() {
+    this.checkIsFinished = _.debounce(this.checkIsFinished, 1);
+
     this.listenTo(data, {
       ready: this.onDataReady
     });
@@ -28,7 +30,6 @@ class TrickleController extends Backbone.Controller {
     if (trickleConfig?._isEnabled === false) return;
 
     this.setUpEventListeners();
-    this.checkIsFinished = _.debounce(this.checkIsFinished, 1);
 
     wait.for(done => {
       addButtonComponents();
