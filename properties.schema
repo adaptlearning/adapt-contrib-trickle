@@ -26,6 +26,15 @@
               "required": false,
               "legend": "Trickle",
               "properties": {
+                "_isEnabled": {
+                  "type": "boolean",
+                  "required": true,
+                  "default": true,
+                  "title": "Is Enabled",
+                  "inputType": "Checkbox",
+                  "validators": [],
+                  "help": "Controls whether the Trickle extension is enabled or disabled."
+                },
                 "_completionAttribute": {
                   "type": "string",
                   "required": false,

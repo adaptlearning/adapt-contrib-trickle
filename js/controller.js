@@ -18,14 +18,33 @@ import router from 'core/js/router';
 class TrickleController extends Backbone.Controller {
 
   initialize() {
-    this.checkIsFinished = _.debounce(this.checkIsFinished, 1);
     this.listenTo(data, {
-      ready: this.onDataReady,
+      ready: this.onDataReady
+    });
+  }
+
+   async onDataReady() {
+    const trickleConfig = Adapt.config.get('_trickle') || {};
+    if (!trickleConfig?._isEnabled) return;
+
+    this.setUpEventListeners();
+    this.checkIsFinished = _.debounce(this.checkIsFinished, 1);
+
+    wait.for(done => {
+      addButtonComponents();
+      applyLocks();
+      done();
+    });
+  }
+
+  setUpEventListeners() {
+    this.listenTo(data, {
       // Check that the locking is accurate after any completion, this happens asynchronously
       'change:_isInteractionComplete change:_isComplete change:_isAvailable add remove': checkApplyLocks,
       // Check whether trickle is finished after any locking changes
       'change:_isLocked': this.checkIsFinished
     });
+
     this.listenTo(Adapt, {
       // Reapply locks after assessment reset, this happens asynchronously where possible
       'assessments:reset': this.onAssessmentReset,
@@ -44,14 +63,6 @@ class TrickleController extends Backbone.Controller {
     if (isMidRender) return applyLocks();
     // Otherwise apply them lazily
     debouncedApplyLocks();
-  }
-
-  async onDataReady() {
-    wait.for(done => {
-      addButtonComponents();
-      applyLocks();
-      done();
-    });
   }
 
   /**
