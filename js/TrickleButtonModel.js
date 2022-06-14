@@ -3,7 +3,8 @@ import ComponentModel from 'core/js/models/componentModel';
 import {
   getModelContainer,
   getModelConfig,
-  getCompletionAttribute
+  getCompletionAttribute,
+  applyLocks
 } from './models';
 
 export default class TrickleButtonModel extends ComponentModel {
@@ -139,11 +140,12 @@ export default class TrickleButtonModel extends ComponentModel {
    * on revisit
    */
   checkIfResetOnRevisit() {
-    if (this.isStepUnlocked() && !this.isStepLockedOnRevisit()) return;
+    if (this.isFinished() && !this.isStepLockedOnRevisit()) return;
     this.set({
       _isComplete: false,
       _isInteractionComplete: false
     });
+    applyLocks();
   }
 
   /**

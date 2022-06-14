@@ -197,12 +197,8 @@ export function applyLocks() {
   // Check all models for trickle potential
   Adapt.course.getAllDescendantModels(true).filter(model => model.get('_isAvailable')).forEach(siteModel => {
     const trickleConfig = getModelConfig(siteModel);
-    if (!trickleConfig || !trickleConfig._isEnabled) return;
-    const isStepLocked = Boolean(trickleConfig?._stepLocking?._isEnabled);
-    const completionAttribute = getCompletionAttribute(siteModel);
-    const isLocked = isStepLocked &&
-      !siteModel?.get(completionAttribute) &&
-      !siteModel?.get('_isOptional');
+    if (!isEnabled(siteModel, { trickleConfig })) return;
+    const isModelLocked = isLocked(siteModel, { trickleConfig });
     const id = siteModel.get('_id');
     modelsById[id] = siteModel;
     locks[id] = locks[id] || false;
@@ -216,7 +212,7 @@ export function applyLocks() {
       // Store the new locking state of each model in the locks variable
       // Don't unlock anything that was locked in a previous group
       modelsById[id] = model;
-      locks[id] = locks[id] || isLocked;
+      locks[id] = locks[id] || isModelLocked;
       // Don't modify the children if they are managed by another locking mechanism
       if (model.get('_lockType')) return;
       // Cascade inherited locks through the hierarchyd
@@ -228,13 +224,33 @@ export function applyLocks() {
     });
   });
   // Apply only changed locking states
-  Object.entries(locks).forEach(([ id, isLocked ]) => {
+  Object.entries(locks).forEach(([ id, isModelLocked ]) => {
     const model = modelsById[id];
     const wasLocked = model.get('_isLocked');
-    if (wasLocked === isLocked) return;
-    model.set('_isLocked', isLocked);
+    if (wasLocked === isModelLocked) return;
+    model.set('_isLocked', isModelLocked);
   });
   logTrickleState();
+}
+
+export function isEnabled(model, { trickleConfig = getModelConfig(model) } = {}) {
+  return (trickleConfig?._isEnabled === true);
+}
+
+export function isLocked(model, { trickleConfig = getModelConfig(model) } = {}) {
+  const isStepLocked = Boolean(trickleConfig?._stepLocking?._isEnabled);
+  if (!isStepLocked) return false;
+  const isCompletionRequired = Boolean(trickleConfig?._stepLocking?._isCompletionRequired);
+  const completionAttribute = getCompletionAttribute(model);
+  if (!isCompletionRequired) {
+    const TrickleModel = components.getModelClass('trickle-button');
+    const trickleButton = model.getAvailableChildModels().find(model => model instanceof TrickleModel);
+    const isTrickleButtonComplete = Boolean(trickleButton?.get(completionAttribute));
+    return !isTrickleButtonComplete;
+  }
+  const isModelLocked = !model?.get(completionAttribute) &&
+    !model?.get('_isOptional');
+  return isModelLocked;
 }
 
 export const debouncedApplyLocks = _.debounce(applyLocks, 1);
