@@ -179,7 +179,9 @@ export function getCompletionAttribute(model = null) {
 export function checkApplyLocks(model) {
   if (!data.isReady) return;
   const completionAttribute = getCompletionAttribute(model);
-  if (!Object.prototype.hasOwnProperty.call(model.changed, completionAttribute)) return;
+  const hasCompletionChanged = Object.prototype.hasOwnProperty.call(model.changed, completionAttribute);
+  const hasAvailabilityChanged = Object.prototype.hasOwnProperty.call(model.changed, '_isAvailable');
+  if (!hasCompletionChanged && !hasAvailabilityChanged) return;
   // Apply the locks lazily
   debouncedApplyLocks();
 }
