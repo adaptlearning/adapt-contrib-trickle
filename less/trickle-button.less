@@ -33,8 +33,15 @@
   // --------------------------------------------------
   &.is-full-width &__inner {
     position: fixed;
-    bottom: 0;
     left: 0;
     right: 0;
+
+    html:not(.is-nav-bottom) & {
+      bottom: 0;
+    }
+
+    html.is-nav-bottom & {
+      bottom: @navigation-height;
+    }
   }
 }
