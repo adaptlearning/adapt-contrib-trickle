@@ -198,7 +198,9 @@ export function applyLocks() {
   const TrickleButtonModel = components.getModelClass('trickle-button');
   // Check all models for trickle potential
   Adapt.course.getAllDescendantModels(true).filter(model => model.get('_isAvailable')).forEach(siteModel => {
-    sideModel.set('_isLocked', false);
+    if (siteModel.has('_trickle') && siteModel.get('_trickle')._isEnabled) {
+      siteModel.set('_isLocked', false);
+    }
     const trickleConfig = getModelConfig(siteModel);
     if (!isEnabled(siteModel, { trickleConfig })) return;
     const isModelLocked = isLocked(siteModel, { trickleConfig });
