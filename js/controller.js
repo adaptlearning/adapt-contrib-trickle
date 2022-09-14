@@ -152,7 +152,10 @@ class TrickleController extends Backbone.Controller {
     };
 
     let scrollToId = getScrollToId();
-    if (scrollToId === '') return;
+    if (!scrollToId) {
+      logging.error(`Cannot scroll to the next id as none was found at id: "${fromModel.get('_id')}" with _scrollTo: "${trickleConfig._scrollTo}". Suggestion: Set _showEndOfPage to false.`)
+      return
+    }
 
     const isDescendant = Adapt.parentView.model.getAllDescendantModels().some(model => {
       return model.get('_id') === scrollToId;
