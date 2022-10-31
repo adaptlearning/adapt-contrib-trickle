@@ -141,6 +141,7 @@ export default class TrickleButtonModel extends ComponentModel {
    */
   checkIfResetOnRevisit() {
     if (this.isFinished() && !this.isStepLockedOnRevisit()) return;
+    if (!this.get('_isComplete') && !this.get('_isInteractionComplete')) return;
     this.set({
       _isComplete: false,
       _isInteractionComplete: false

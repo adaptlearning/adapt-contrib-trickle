@@ -25,7 +25,7 @@ class TrickleController extends Backbone.Controller {
     });
   }
 
-   async onDataReady() {
+  async onDataReady() {
     const trickleConfig = Adapt.config.get('_trickle');
     if (trickleConfig?._isEnabled === false) return;
 
