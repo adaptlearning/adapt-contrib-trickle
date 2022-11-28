@@ -97,7 +97,11 @@ export default class TrickleButtonModel extends ComponentModel {
     const contentObject = this.findAncestor('contentobject');
     const allDescendants = contentObject.getAllDescendantModels(true);
     const lastDescendant = allDescendants[allDescendants.length - 1];
-    return (this === lastDescendant);
+    const parentModel = this.getParent();
+    const trickleParent = getModelContainer(parentModel);
+    // Check if completion is blocked by another extension
+    const isParentFinished = (trickleParent.get('_requireCompletionOf') !== Number.POSITIVE_INFINITY);
+    return (isParentFinished && this === lastDescendant);
   }
 
   /**
