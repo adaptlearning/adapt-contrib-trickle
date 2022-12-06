@@ -34,8 +34,15 @@
   // --------------------------------------------------
   &.is-full-width &__inner {
     position: fixed;
-    bottom: 0;
     left: 0;
     right: 0;
+
+    html.is-nav-top & {
+      bottom: 0;
+    }
+
+    html.is-nav-bottom & {
+      bottom: @navigation-height;
+    }
   }
 }
