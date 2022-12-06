@@ -35,6 +35,15 @@
                   "validators": [],
                   "help": "Controls whether the Trickle extension is enabled or disabled."
                 },
+                "_logState": {
+                  "type": "boolean",
+                  "required": true,
+                  "default": false,
+                  "title": "Log state",
+                  "inputType": "Checkbox",
+                  "validators": [],
+                  "help": "Controls whether the Trickle extension logs its state to the browser console."
+                },
                 "_completionAttribute": {
                   "type": "string",
                   "required": false,

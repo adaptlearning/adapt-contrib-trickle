@@ -44,5 +44,6 @@
     // trickle button should be displayed
     // Put in config.json
     "_trickle": {
+        "_logState": false,
         "_completionAttribute": "_isInteractionComplete|_isComplete", //(default=_isComplete)
     }

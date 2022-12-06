@@ -97,7 +97,11 @@ export default class TrickleButtonModel extends ComponentModel {
     const contentObject = this.findAncestor('contentobject');
     const allDescendants = contentObject.getAllDescendantModels(true);
     const lastDescendant = allDescendants[allDescendants.length - 1];
-    return (this === lastDescendant);
+    const parentModel = this.getParent();
+    const trickleParent = getModelContainer(parentModel);
+    // Check if completion is blocked by another extension
+    const isParentFinished = (trickleParent.get('_requireCompletionOf') !== Number.POSITIVE_INFINITY);
+    return (isParentFinished && this === lastDescendant);
   }
 
   /**
@@ -141,6 +145,7 @@ export default class TrickleButtonModel extends ComponentModel {
    */
   checkIfResetOnRevisit() {
     if (this.isFinished() && !this.isStepLockedOnRevisit()) return;
+    if (!this.get('_isComplete') && !this.get('_isInteractionComplete')) return;
     this.set({
       _isComplete: false,
       _isInteractionComplete: false
