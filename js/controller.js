@@ -3,6 +3,7 @@ import wait from 'core/js/wait';
 import components from 'core/js/components';
 import data from 'core/js/data';
 import a11y from 'core/js/a11y';
+import logging from 'core/js/logging';
 import {
   checkApplyLocks,
   addButtonComponents,
