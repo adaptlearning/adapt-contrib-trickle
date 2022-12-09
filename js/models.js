@@ -210,8 +210,9 @@ export function applyLocks() {
     subsequentLockingModels.forEach((model, index) => {
       const id = model.get('_id');
       const isButtonModel = (model instanceof TrickleButtonModel);
+      const isTrickled = model.get('_isTrickled');
       // Do not stop at TrickleButtonModels
-      model.set('_isTrickled', !isButtonModel);
+      if (isTrickled !== isButtonModel) model.set('_isTrickled', !isButtonModel);
       // Store the new locking state of each model in the locks variable
       // Don't unlock anything that was locked in a previous group
       modelsById[id] = model;
