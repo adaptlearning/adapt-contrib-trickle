@@ -150,7 +150,8 @@ export function getModelConfig(model) {
 }
 
 /**
- * Returns the first model in the inheritance chain with _onChildren: true
+ * Returns the first model in the inheritance chain with `_onChildren: true`.
+ * If no model found, return the first inheritance model (should match the param model but inheritance checks the `_trickle` config).
  * @param {Backbone.Model} model
  * @returns {Backbone.Model}
  */
@@ -160,7 +161,7 @@ export function getModelContainer(model) {
     const defaults = getModelConfigDefaults(inheritModel);
     const config = $.extend(true, {}, defaults, inheritModel.get('_trickle'));
     return config._onChildren;
-  });
+  }) ?? inheritance?.[0];
 }
 
 /**
@@ -209,9 +210,8 @@ export function applyLocks() {
     subsequentLockingModels.forEach((model, index) => {
       const id = model.get('_id');
       const isButtonModel = (model instanceof TrickleButtonModel);
-      const isTrickled = model.get('_isTrickled');
       // Do not stop at TrickleButtonModels
-      if (isTrickled !== isButtonModel) model.set('_isTrickled', !isButtonModel);
+      model.set('_isTrickled', !isButtonModel);
       // Store the new locking state of each model in the locks variable
       // Don't unlock anything that was locked in a previous group
       modelsById[id] = model;
