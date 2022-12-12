@@ -150,7 +150,8 @@ export function getModelConfig(model) {
 }
 
 /**
- * Returns the first model in the inheritance chain with _onChildren: true
+ * Returns the first model in the inheritance chain with `_onChildren: true`.
+ * If no model found, return the first inheritance model (should match the param model but inheritance checks the `_trickle` config).
  * @param {Backbone.Model} model
  * @returns {Backbone.Model}
  */
@@ -160,7 +161,7 @@ export function getModelContainer(model) {
     const defaults = getModelConfigDefaults(inheritModel);
     const config = $.extend(true, {}, defaults, inheritModel.get('_trickle'));
     return config._onChildren;
-  });
+  }) ?? inheritance?.[0];
 }
 
 /**
