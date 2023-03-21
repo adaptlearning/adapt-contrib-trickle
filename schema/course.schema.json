@@ -12,16 +12,23 @@
           "type": "object",
           "default": {},
           "properties": {
-            "_trickle": {
+            "_extensions": {
               "type": "object",
               "default": {},
               "properties": {
-                "incompleteContent": {
-                  "type": "string",
-                  "title": "Incomplete content",
-                  "default": "There is incomplete content above. You must complete this before you can proceed through the course.",
-                  "_adapt": {
-                    "translatable": true
+                "_trickle": {
+                  "type": "object",
+                  "title": "Trickle",
+                  "default": {},
+                  "properties": {
+                    "incompleteContent": {
+                      "type": "string",
+                      "title": "Incomplete content",
+                      "default": "There is incomplete content above. You must complete this before you can proceed through the course.",
+                      "_adapt": {
+                        "translatable": true
+                      }
+                    }
                   }
                 }
               }
