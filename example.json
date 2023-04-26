@@ -47,3 +47,9 @@
         "_logState": false,
         "_completionAttribute": "_isInteractionComplete|_isComplete", //(default=_isComplete)
     }
+
+    // Disable Trickle globally
+    // Put in config.json
+    "_trickle": {
+        "_isEnabled": false
+    }

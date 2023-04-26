@@ -30,7 +30,7 @@ With the [Adapt CLI](https://github.com/adaptlearning/adapt-cli) installed, run 
 
 - **Trickle** may be configured on two levels: article (*articles.json*) and block (*blocks.json*). The **\_onChildren** attribute determines whether the configuration applies only to the article or to the article's blocks. Attributes set in a child block override those set by its parent article.
 - The default value of **\_completionAttribute** may be overridden on _config.json_.
-- _**Trickle** may also be added to_ course.json _as a simple switch to enable/disable **Trickle** during development. Its attributes will not be inherited by its child elements._
+- _**Trickle** may also be added to_ config.json _as a simple switch to enable/disable **Trickle** during development. Its attributes will not be inherited by its child elements._
 
 The attributes listed below are properly formatted as JSON in [*example.json*](https://github.com/adaptlearning/adapt-contrib-trickle/blob/master/example.json).  Visit the [**Trickle** wiki](https://github.com/adaptlearning/adapt-contrib-trickle/wiki) for more information about how they appear in the [authoring tool](https://github.com/adaptlearning/adapt_authoring/wiki).
 
@@ -38,7 +38,7 @@ The attributes listed below are properly formatted as JSON in [*example.json*](h
 
 **\_trickle** (object): The Trickle attributes group contains values for **\_isEnabled**, **\_autoScroll**, **\_scrollDuration**, **\_onChildren**, **\_scrollTo**, **\_button**, and **\_stepLocking**.
 
->**\_isEnabled** (boolean):  Turns on and off the **Trickle** extension. Can be set in *course.json*, *articles.json* and *blocks.json* to disable **Trickle** where not required. Also useful during course development.
+>**\_isEnabled** (boolean):  Turns on and off the **Trickle** extension. Can be set in *config.json*, *articles.json* and *blocks.json* to disable **Trickle** where not required. Also useful to disable during course development.
 
 >**\_autoScroll** (boolean):  If set to `true`, the page will scroll automatically to the destination specified in **\_scrollTo** when the button is clicked. The learner must manually scroll if this is set to `false`. The default is `true`.
 
@@ -102,7 +102,7 @@ No known limitations.
 
 ----------------------------
 <a href="https://community.adaptlearning.org/" target="_blank"><img src="https://github.com/adaptlearning/documentation/blob/master/04_wiki_assets/plug-ins/images/adapt-logo-mrgn-lft.jpg" alt="adapt learning logo" align="right"></a>
-**Author / maintainer:** Adapt Core Team with [contributors](https://github.com/adaptlearning/adapt-contrib-trickle/graphs/contributors)
-**Accessibility support:** WAI AA
-**RTL support:** Yes
-**Cross-platform coverage:** Chrome, Chrome for Android, Firefox (ESR + latest version), Edge, IE11, Safari 14 for macOS/iOS/iPadOS, Opera
+**Author / maintainer:** Adapt Core Team with [contributors](https://github.com/adaptlearning/adapt-contrib-trickle/graphs/contributors)<br>
+**Accessibility support:** WAI AA<br>
+**RTL support:** Yes<br>
+**Cross-platform coverage:** Chrome, Chrome for Android, Firefox (ESR + latest version), Edge, IE11, Safari 14 for macOS/iOS/iPadOS, Opera<br>
