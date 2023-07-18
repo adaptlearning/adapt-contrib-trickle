@@ -40,13 +40,14 @@ class TrickleController extends Backbone.Controller {
   }
 
   setUpEventListeners() {
+    this.stopListening();
     this.listenTo(data, {
+      ready: this.onDataReady,
       // Check that the locking is accurate after any completion, this happens asynchronously
       'change:_isInteractionComplete change:_isComplete change:_isAvailable add remove': checkApplyLocks,
       // Check whether trickle is finished after any locking changes
       'change:_isLocked': this.checkIsFinished
     });
-
     this.listenTo(Adapt, {
       // Reapply locks after assessment reset, this happens asynchronously where possible
       'assessments:reset': this.onAssessmentReset,
@@ -244,14 +245,10 @@ class TrickleController extends Backbone.Controller {
   /**
    * Reset the page trickle state
    */
-  reset() {
+  async reset() {
+    await wait.queue();
     this.isKilled = false;
-    if (!this.isTrickling) {
-      this.isStarted = false;
-      this.isFinished = false;
-      return;
-    }
-    this.isStarted = true;
+    this.isStarted = this.isTrickling;
     this.isFinished = false;
   }
 
