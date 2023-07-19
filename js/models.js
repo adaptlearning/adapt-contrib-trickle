@@ -270,7 +270,7 @@ export function _getAncestorNextSiblings(fromModel) {
   if (!fromModel) return [];
   // Fetch all subsequent siblings
   const allSiblings = fromModel.getParent().getAvailableChildModels();
-  const subsequentSiblings = allSiblings.slice(allSiblings.findIndex(sibling => sibling === fromModel) + 1);
+  const subsequentSiblings = allSiblings.slice(allSiblings.findIndex(sibling => sibling.get('_id') === fromModel.get('_id')) + 1);
   // Fetch all ancestors between the page and the child
   const allAncestors = fromModel.getAncestorModels();
   const inPageAncestors = allAncestors.slice(0, allAncestors.findIndex(parent => parent instanceof ContentObjectModel) + 1);
