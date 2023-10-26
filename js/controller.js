@@ -99,10 +99,15 @@ class TrickleController extends Backbone.Controller {
    * Returns true if the current page is locked by trickle
    */
   get isTrickling() {
-    const isTrickling = Adapt.parentView.model.getAllDescendantModels().some(model => {
-      return model.get('_isAvailable') && model.get('_isTrickled') && model.get('_isLocked');
-    });
-    return isTrickling;
+    const currentDescendants = Adapt.parentView.model.getAllDescendantModels();
+    const isDescendantBlockedByTrickle = currentDescendants.some(model => model.get('_isAvailable') && model.get('_isTrickled') && model.get('_isLocked'));
+    if (isDescendantBlockedByTrickle) return true;
+    const TrickleModel = components.getModelClass('trickle-button');
+    const lastDescendant = currentDescendants[currentDescendants.length - 1];
+    const lastTrickleButton = currentDescendants.reverse().find(model => (model instanceof TrickleModel));
+    const isLastDescendantExpectingMoreChildren = (lastDescendant.get('_requireCompletionOf') === Number.POSITIVE_INFINITY && lastDescendant.get('_canRequestChild'));
+    const isLastTrickleButtonWaiting = (!lastTrickleButton?.get('_isComplete'));
+    return (isLastDescendantExpectingMoreChildren && isLastTrickleButtonWaiting);
   }
 
   /**
