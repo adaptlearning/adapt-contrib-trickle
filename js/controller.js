@@ -20,20 +20,21 @@ class TrickleController extends Backbone.Controller {
 
   initialize() {
     this.checkIsFinished = _.debounce(this.checkIsFinished, 1);
+    this.listenTo(data, "ready", this.onDataReady);
+    this.listenTo(Adapt, 'adapt:start', this.onAdaptStart);
+  }
 
-    this.listenTo(Adapt, {
-      'adapt:start': this.onAdaptStart
-    });
+  async onDataReady() {
+    const trickleConfig = Adapt.config.get('_trickle');
+    if (trickleConfig?._isEnabled === false) return;
+    addButtonComponents();
   }
 
   async onAdaptStart() {
     const trickleConfig = Adapt.config.get('_trickle');
     if (trickleConfig?._isEnabled === false) return;
-
     this.setUpEventListeners();
-
     wait.for(done => {
-      addButtonComponents();
       applyLocks();
       done();
     });
