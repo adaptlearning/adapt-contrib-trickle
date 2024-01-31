@@ -16,9 +16,9 @@ class TrickleButtonView extends ComponentView {
     return [
       'trickle',
       this.model.get('_id'),
-      config._button._component,
-      config._button._isFullWidth && 'is-full-width',
-      config._button._className
+      config?._button._component,
+      config?._button._isFullWidth && 'is-full-width',
+      config?._button._className
     ].filter(Boolean).join(' ');
   }
 
