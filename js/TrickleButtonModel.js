@@ -20,6 +20,7 @@ export default class TrickleButtonModel extends ComponentModel {
    */
   isEnabled() {
     const trickleConfig = getModelConfig(this.getParent());
+    if (!trickleConfig) return false;
     const isEnabled = trickleConfig._isEnabled && trickleConfig._button?._isEnabled;
     return isEnabled;
   }
@@ -29,6 +30,7 @@ export default class TrickleButtonModel extends ComponentModel {
    */
   isStepLocking() {
     const config = getModelConfig(this.getParent());
+    if (!config) return false;
     const isStepLocking = config._stepLocking?._isEnabled;
     return isStepLocking;
   }
@@ -38,6 +40,7 @@ export default class TrickleButtonModel extends ComponentModel {
    */
   isStepLockingCompletionRequired() {
     const config = getModelConfig(this.getParent());
+    if (!config) return false;
     const isStepLockingCompletionRequired = config._stepLocking &&
       config._stepLocking._isEnabled &&
       config._stepLocking._isCompletionRequired;
@@ -111,6 +114,7 @@ export default class TrickleButtonModel extends ComponentModel {
   calculateButtonText() {
     const parentModel = this.getParent();
     const trickleConfig = getModelConfig(parentModel);
+    if (!trickleConfig) return;
     let isStart = false;
     let isFinal = false;
     if (trickleConfig._onChildren) {
