@@ -128,6 +128,8 @@ class TrickleButtonView extends ComponentView {
       // make label unfocusable as it is no longer needed
       a11y.toggleAccessibleEnabled($ariaLabel, false);
     }
+    const isButtonLocked = (this.model.get('_isButtonVisible')) && isButtonDisabled;
+    $button.toggleClass('is-locked', isButtonLocked);
     const $buttonText = this.$('.js-trickle-btn-text');
     const text = this.model.get('buttonText');
     const ariaLabel = this.model.get('buttonAriaLabel');
