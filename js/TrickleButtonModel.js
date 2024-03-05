@@ -56,7 +56,8 @@ export default class TrickleButtonModel extends ComponentModel {
     // Check if completion is blocked by another extension
     const isCompletionBlocked = (parentModel.get('_requireCompletionOf') === Number.POSITIVE_INFINITY);
     if (isCompletionBlocked) return;
-    return this.getSiblings().every(sibling => {
+    // use getParent().getChildren() instead of getSiblings() as children change but siblings don't
+    return this.getParent().getChildren().every(sibling => {
       if (sibling === this) {
         return true;
       }
