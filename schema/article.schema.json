@@ -126,6 +126,15 @@
                     "translatable": true
                   }
                 },
+                "textLocked": {
+                  "type": "string",
+                  "title": "Button text when locked",
+                  "default": "",
+                  "description": "This text can be shown before the Trickle has been unlocked",
+                  "_adapt": {
+                    "translatable": true
+                  }
+                },
                 "ariaLabel": {
                   "type": "string",
                   "title": "Default button ARIA label",

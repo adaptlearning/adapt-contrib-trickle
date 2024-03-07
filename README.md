@@ -70,6 +70,8 @@ The attributes listed below are properly formatted as JSON in [*example.json*](h
 
 >>**text** (string):  Defines the default button text. The default is `"Continue"`.
 
+>>**textLocked** (string):  Defines the default button text when the button is locked. If not set, `text` will be used.
+
 >>**ariaLabel** (string):  Defines the default button aria label. The default is `""`.
 
 >>**startText** (string):  Defines the first item button text when set on the article with **\_onChildren** set to `true`. The default is `"Begin"`.

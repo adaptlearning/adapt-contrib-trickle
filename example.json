@@ -25,6 +25,7 @@
             "_className": "",
             "_hasIcon": false,
             "text": "Continue",
+            "textLocked": "",
             "ariaLabel": "",
             "startText": "Begin",
             "startAriaLabel": "",

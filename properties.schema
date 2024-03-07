@@ -206,6 +206,16 @@
                       "validators": [],
                       "translatable": true
                     },
+                    "textLocked": {
+                      "type": "string",
+                      "required": false,
+                      "default": "",
+                      "title": "Button Text when locked",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true,
+                      "help": "This text can be shown before the Trickle has been unlocked"
+                    },
                     "ariaLabel": {
                       "type": "string",
                       "required": false,
@@ -440,6 +450,16 @@
                       "inputType": "Text",
                       "validators": [],
                       "translatable": true
+                    },
+                    "textLocked": {
+                      "type": "string",
+                      "required": false,
+                      "default": "",
+                      "title": "Button Text when locked",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true,
+                      "help": "This text can be shown before the Trickle has been unlocked"
                     },
                     "ariaLabel": {
                       "type": "string",
