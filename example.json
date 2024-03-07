@@ -27,6 +27,7 @@
             "text": "Continue",
             "textLocked": "",
             "ariaLabel": "",
+            "ariaLabelLocked": "",
             "startText": "Begin",
             "startAriaLabel": "",
             "finalText": "Finish",

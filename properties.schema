@@ -225,6 +225,16 @@
                       "validators": [],
                       "translatable": true
                     },
+                    "ariaLabelLocked": {
+                      "type": "string",
+                      "required": false,
+                      "default": "",
+                      "title": "Button Aria Label when locked",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true,
+                      "help": "The aria label when 'Button Text when locked' is set"
+                    },
                     "startText": {
                       "type": "string",
                       "required": false,
@@ -469,6 +479,16 @@
                       "inputType": "Text",
                       "validators": [],
                       "translatable": true
+                    },
+                    "ariaLabelLocked": {
+                      "type": "string",
+                      "required": false,
+                      "default": "Continue",
+                      "title": "Button Aria Label when locked",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true,
+                      "help": "The aria label when 'Button Text when locked' is set"
                     },
                     "startText": {
                       "type": "string",
