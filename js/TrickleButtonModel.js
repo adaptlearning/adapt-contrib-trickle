@@ -118,6 +118,7 @@ export default class TrickleButtonModel extends ComponentModel {
     if (!trickleConfig) return;
     let isStart = false;
     let isFinal = false;
+    const isLocked = this.get('_isButtonDisabled');
     if (trickleConfig._onChildren) {
       const parentId = parentModel.get('_id');
       const trickleParent = getModelContainer(parentModel);
@@ -132,11 +133,15 @@ export default class TrickleButtonModel extends ComponentModel {
       trickleConfig._button.startText :
       (isFinal && trickleConfig._button.finalText) ?
         trickleConfig._button.finalText :
+        (isLocked && trickleConfig._button.textLocked) ?
+        trickleConfig._button.textLocked :
         trickleConfig._button.text;
     const ariaLabel = (isStart && trickleConfig._button.startAriaLabel) ?
       trickleConfig._button.startAriaLabel :
       (isFinal && trickleConfig._button.finalAriaLabel) ?
         trickleConfig._button.finalAriaLabel :
+        (isLocked && trickleConfig._button.ariaLabelLocked) ?
+        trickleConfig._button.ariaLabelLocked : 
         trickleConfig._button.ariaLabel;
     this.set({
       buttonText: text,
