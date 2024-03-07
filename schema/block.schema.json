@@ -138,6 +138,15 @@
                     "translatable": true
                   }
                 },
+                "ariaLabelLocked": {
+                  "type": "string",
+                  "title": "Button ARIA label when locked",
+                  "default": "",
+                  "description": "The aria label when 'Button text when locked' is set",
+                  "_adapt": {
+                    "translatable": true
+                  }
+                },
                 "startText": {
                   "type": "string",
                   "title": "First button text",
