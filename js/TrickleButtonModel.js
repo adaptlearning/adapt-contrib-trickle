@@ -133,15 +133,15 @@ export default class TrickleButtonModel extends ComponentModel {
       trickleConfig._button.startText :
       (isFinal && trickleConfig._button.finalText) ?
         trickleConfig._button.finalText :
-        (isLocked && trickleConfig._button.textLocked) ?
-        trickleConfig._button.textLocked :
+        (isLocked && trickleConfig._button.disabledText) ?
+        trickleConfig._button.disabledText :
         trickleConfig._button.text;
     const ariaLabel = (isStart && trickleConfig._button.startAriaLabel) ?
       trickleConfig._button.startAriaLabel :
       (isFinal && trickleConfig._button.finalAriaLabel) ?
         trickleConfig._button.finalAriaLabel :
-        (isLocked && trickleConfig._button.ariaLabelLocked) ?
-        trickleConfig._button.ariaLabelLocked : 
+        (isLocked && trickleConfig._button.disabledAriaLabel) ?
+        trickleConfig._button.disabledAriaLabel : 
         trickleConfig._button.ariaLabel;
     this.set({
       buttonText: text,

@@ -70,11 +70,11 @@ The attributes listed below are properly formatted as JSON in [*example.json*](h
 
 >>**text** (string):  Defines the default button text. The default is `"Continue"`.
 
->>**textLocked** (string):  Defines the default button text when the button is locked. If not set, `text`, `startText`, or `finalText` will be used. `_styleBeforeCompletion` must be set to `visible`. The default is `""`.
+>>**disabledText** (string):  Defines the default button text when the button is disabled. If not set, `text`, `startText`, or `finalText` will be used. `_styleBeforeCompletion` must be set to `visible`. The default is `""`.
 
 >>**ariaLabel** (string):  Defines the default button aria label. The default is `""`.
 
->>**ariaLabelLocked** (string):  Defines the button aria label when using `textLocked`. The default is `""`.
+>>**disabledAriaLabel** (string):  Defines the button aria label when using `disabledText`. The default is `""`.
 
 >>**startText** (string):  Defines the first item button text when set on the article with **\_onChildren** set to `true`. The default is `"Begin"`.
 

@@ -126,11 +126,11 @@
                     "translatable": true
                   }
                 },
-                "textLocked": {
+                "disabledText": {
                   "type": "string",
-                  "title": "Button text when locked",
+                  "title": "Button text when disabled",
                   "default": "",
-                  "description": "This text can be shown before the Trickle has been unlocked",
+                  "description": "This text can be shown while the button is disabled",
                   "_adapt": {
                     "translatable": true
                   }
@@ -143,11 +143,11 @@
                     "translatable": true
                   }
                 },
-                "ariaLabelLocked": {
+                "disabledAriaLabel": {
                   "type": "string",
-                  "title": "Button ARIA label when locked",
+                  "title": "Button ARIA label when disabled",
                   "default": "",
-                  "description": "The aria label when 'Button text when locked' is set",
+                  "description": "The aria label when 'Button text when disabled' is set",
                   "_adapt": {
                     "translatable": true
                   }

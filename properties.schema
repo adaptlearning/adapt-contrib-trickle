@@ -206,15 +206,15 @@
                       "validators": [],
                       "translatable": true
                     },
-                    "textLocked": {
+                    "disabledText": {
                       "type": "string",
                       "required": false,
                       "default": "",
-                      "title": "Button Text when locked",
+                      "title": "Button Text when disabled",
                       "inputType": "Text",
                       "validators": [],
                       "translatable": true,
-                      "help": "This text can be shown before the Trickle has been unlocked"
+                      "help": "This text can be shown while the button is disabled"
                     },
                     "ariaLabel": {
                       "type": "string",
@@ -225,15 +225,15 @@
                       "validators": [],
                       "translatable": true
                     },
-                    "ariaLabelLocked": {
+                    "disabledAriaLabel": {
                       "type": "string",
                       "required": false,
                       "default": "",
-                      "title": "Button Aria Label when locked",
+                      "title": "Button Aria Label when disabled",
                       "inputType": "Text",
                       "validators": [],
                       "translatable": true,
-                      "help": "The aria label when 'Button Text when locked' is set"
+                      "help": "The aria label when 'Button Text when disabled' is set"
                     },
                     "startText": {
                       "type": "string",
@@ -461,15 +461,15 @@
                       "validators": [],
                       "translatable": true
                     },
-                    "textLocked": {
+                    "disabledText": {
                       "type": "string",
                       "required": false,
                       "default": "",
-                      "title": "Button Text when locked",
+                      "title": "Button Text when disabled",
                       "inputType": "Text",
                       "validators": [],
                       "translatable": true,
-                      "help": "This text can be shown before the Trickle has been unlocked"
+                      "help": "This text can be shown while the button is disabled"
                     },
                     "ariaLabel": {
                       "type": "string",
@@ -480,15 +480,15 @@
                       "validators": [],
                       "translatable": true
                     },
-                    "ariaLabelLocked": {
+                    "disabledAriaLabel": {
                       "type": "string",
                       "required": false,
                       "default": "Continue",
-                      "title": "Button Aria Label when locked",
+                      "title": "Button Aria Label when disabled",
                       "inputType": "Text",
                       "validators": [],
                       "translatable": true,
-                      "help": "The aria label when 'Button Text when locked' is set"
+                      "help": "The aria label when 'Button Text when disabled' is set"
                     },
                     "startText": {
                       "type": "string",
