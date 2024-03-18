@@ -206,6 +206,15 @@
                       "validators": [],
                       "translatable": true
                     },
+                    "ariaLabel": {
+                      "type": "string",
+                      "required": false,
+                      "default": "Continue",
+                      "title": "Button Aria Label",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    },
                     "disabledText": {
                       "type": "string",
                       "required": false,
@@ -215,15 +224,6 @@
                       "validators": [],
                       "translatable": true,
                       "help": "This text can be shown while the button is disabled"
-                    },
-                    "ariaLabel": {
-                      "type": "string",
-                      "required": false,
-                      "default": "Continue",
-                      "title": "Button Aria Label",
-                      "inputType": "Text",
-                      "validators": [],
-                      "translatable": true
                     },
                     "disabledAriaLabel": {
                       "type": "string",
@@ -461,6 +461,15 @@
                       "validators": [],
                       "translatable": true
                     },
+                    "ariaLabel": {
+                      "type": "string",
+                      "required": false,
+                      "default": "Continue",
+                      "title": "Button Aria Label",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    },
                     "disabledText": {
                       "type": "string",
                       "required": false,
@@ -470,15 +479,6 @@
                       "validators": [],
                       "translatable": true,
                       "help": "This text can be shown while the button is disabled"
-                    },
-                    "ariaLabel": {
-                      "type": "string",
-                      "required": false,
-                      "default": "Continue",
-                      "title": "Button Aria Label",
-                      "inputType": "Text",
-                      "validators": [],
-                      "translatable": true
                     },
                     "disabledAriaLabel": {
                       "type": "string",

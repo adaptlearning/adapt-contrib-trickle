@@ -121,19 +121,19 @@
                     "translatable": true
                   }
                 },
+                "ariaLabel": {
+                  "type": "string",
+                  "title": "Default button ARIA label",
+                  "default": "Continue",
+                  "_adapt": {
+                    "translatable": true
+                  }
+                },
                 "disabledText": {
                   "type": "string",
                   "title": "Button text when disabled",
                   "default": "",
                   "description": "This text can be shown while the button is disabled",
-                  "_adapt": {
-                    "translatable": true
-                  }
-                },
-                "ariaLabel": {
-                  "type": "string",
-                  "title": "Default button ARIA label",
-                  "default": "Continue",
                   "_adapt": {
                     "translatable": true
                   }

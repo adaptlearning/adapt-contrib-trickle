@@ -70,9 +70,9 @@ The attributes listed below are properly formatted as JSON in [*example.json*](h
 
 >>**text** (string):  Defines the default button text. The default is `"Continue"`.
 
->>**disabledText** (string):  Defines the default button text when the button is disabled. If not set, `finalText`, `startText` or `text` will be used in that order. `_styleBeforeCompletion` must be set to `visible` so that the button is shown while disabled. The default is `""`.
-
 >>**ariaLabel** (string):  Defines the default button aria label. The default is `""`.
+
+>>**disabledText** (string):  Defines the default button text when the button is disabled. If not set, `finalText`, `startText` or `text` will be used in that order. `_styleBeforeCompletion` must be set to `visible` so that the button is shown while disabled. The default is `""`.
 
 >>**disabledAriaLabel** (string):  Defines the button aria label when using `disabledText`. The default is `""`.
 
