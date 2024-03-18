@@ -26,6 +26,8 @@
             "_hasIcon": false,
             "text": "Continue",
             "ariaLabel": "",
+            "disabledText": "",
+            "disabledAriaLabel": "",
             "startText": "Begin",
             "startAriaLabel": "",
             "finalText": "Finish",

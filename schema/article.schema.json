@@ -134,6 +134,24 @@
                     "translatable": true
                   }
                 },
+                "disabledText": {
+                  "type": "string",
+                  "title": "Button text when disabled",
+                  "default": "",
+                  "description": "This text can be shown while the button is disabled",
+                  "_adapt": {
+                    "translatable": true
+                  }
+                },
+                "disabledAriaLabel": {
+                  "type": "string",
+                  "title": "Button ARIA label when disabled",
+                  "default": "",
+                  "description": "The aria label when 'Button text when disabled' is set",
+                  "_adapt": {
+                    "translatable": true
+                  }
+                },
                 "startText": {
                   "type": "string",
                   "title": "First button text",

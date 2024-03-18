@@ -32,8 +32,8 @@ class TrickleButtonView extends ComponentView {
     this.openPopupCount = 0;
     this.isAwaitingPopupClose = false;
     this.wasButtonClicked = false;
-    this.model.calculateButtonText();
     this.calculateButtonState();
+    this.model.calculateButtonText();
     this.setupEventListeners();
     this.render();
     if (!this.model.isEnabled()) {
@@ -131,6 +131,7 @@ class TrickleButtonView extends ComponentView {
     const isButtonLocked = (this.model.get('_isButtonVisible')) && isButtonDisabled;
     $button.toggleClass('is-locked', isButtonLocked);
     const $buttonText = this.$('.js-trickle-btn-text');
+    this.model.calculateButtonText();
     const text = this.model.get('buttonText');
     const ariaLabel = this.model.get('buttonAriaLabel');
     $buttonText.html(text);

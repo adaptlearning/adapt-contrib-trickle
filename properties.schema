@@ -215,6 +215,26 @@
                       "validators": [],
                       "translatable": true
                     },
+                    "disabledText": {
+                      "type": "string",
+                      "required": false,
+                      "default": "",
+                      "title": "Button Text when disabled",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true,
+                      "help": "This text can be shown while the button is disabled"
+                    },
+                    "disabledAriaLabel": {
+                      "type": "string",
+                      "required": false,
+                      "default": "",
+                      "title": "Button Aria Label when disabled",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true,
+                      "help": "The aria label when 'Button Text when disabled' is set"
+                    },
                     "startText": {
                       "type": "string",
                       "required": false,
@@ -449,6 +469,26 @@
                       "inputType": "Text",
                       "validators": [],
                       "translatable": true
+                    },
+                    "disabledText": {
+                      "type": "string",
+                      "required": false,
+                      "default": "",
+                      "title": "Button Text when disabled",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true,
+                      "help": "This text can be shown while the button is disabled"
+                    },
+                    "disabledAriaLabel": {
+                      "type": "string",
+                      "required": false,
+                      "default": "Continue",
+                      "title": "Button Aria Label when disabled",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true,
+                      "help": "The aria label when 'Button Text when disabled' is set"
                     },
                     "startText": {
                       "type": "string",

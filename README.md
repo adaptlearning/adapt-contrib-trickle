@@ -72,6 +72,10 @@ The attributes listed below are properly formatted as JSON in [*example.json*](h
 
 >>**ariaLabel** (string):  Defines the default button aria label. The default is `""`.
 
+>>**disabledText** (string):  Defines the default button text when the button is disabled. If not set, `startText`, `finalText` or `text` will be used in that order. `_styleBeforeCompletion` must be set to `visible` so that the button is shown while disabled. The default is `""`.
+
+>>**disabledAriaLabel** (string):  Defines the button aria label when using `disabledText`. The default is `""`.
+
 >>**startText** (string):  Defines the first item button text when set on the article with **\_onChildren** set to `true`. The default is `"Begin"`.
 
 >>**startAriaLabel** (string):  Defines the first item button aria label when set on the article with **\_onChildren** set to `true`. The default is `""`.
