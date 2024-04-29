@@ -40,6 +40,8 @@ The attributes listed below are properly formatted as JSON in [*example.json*](h
 
 >**\_isEnabled** (boolean):  Turns on and off the **Trickle** extension. Can be set in *config.json*, *articles.json* and *blocks.json* to disable **Trickle** where not required. Also useful to disable during course development.
 
+>**\_isInherited** (boolean):  If set to `true`, the block settings will inherit from the parent article. The default is `false`.
+
 >**\_autoScroll** (boolean):  If set to `true`, the page will scroll automatically to the destination specified in **\_scrollTo** when the button is clicked. The learner must manually scroll if this is set to `false`. The default is `true`.
 
 >**\_scrollDuration** (number):  This number specifies the duration of the scroll animation in milliseconds. The default is `500`.
