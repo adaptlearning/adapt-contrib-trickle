@@ -1,34 +1,61 @@
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { getModelInheritanceChain, getModelConfig, getModelContainer } from '../../js/models';
+import {
+  getModelInheritanceChain,
+  getModelConfig,
+  getModelContainer,
+  _getAncestorNextSiblings,
+  getCompletionAttribute,
+  isLocked,
+  applyLocks
+} from '../../js/models';
+import { lookup, setupContent } from '../utils';
+import Adapt from 'core/js/adapt';
+import components from 'core/js/components';
+import ContentObjectModel from 'core/js/models/contentObjectModel';
+import MockAdaptModel from '../MockAdaptModel';
 
 jest.mock('core/js/adapt', () => ({
-  __esModule: true
+  __esModule: true,
+  default: {
+    config: {},
+    course: {}
+  }
 }));
 jest.mock('core/js/components', () => ({
-  __esModule: true
+  __esModule: true,
+  default: {
+    getModelClass: jest.fn()
+  }
 }));
 jest.mock('core/js/data', () => ({
   __esModule: true,
   default: { isReady: true }
 }));
 jest.mock('core/js/logging', () => ({
-  __esModule: true
+  __esModule: true,
+  default: {} // this is enough to have logTrickleState return early
 }));
-jest.mock('core/js/models/contentObjectModel', () => ({
-  __esModule: true
-}));
+jest.mock('core/js/models/contentObjectModel', () => {
+  const originalModule = jest.requireActual('../MockContentObjectModel');
+  return {
+    __esModule: true,
+    ...originalModule
+  };
+});
 jest.mock('core/js/models/courseModel', () => ({
   __esModule: true
 }));
 
-class MockModel extends Backbone.Model {
-  getParent() { return this.get('_parent'); }
-}
-
 describe('getModelInheritanceChain', () => {
   describe('when given an article', () => {
     it('should return only the article in an array', () => {
-      const article = new MockModel({ _type: 'article' });
+      const [content] = setupContent([
+        ['course', 'm05'],
+        ['page', 'co-05'],
+        ['article', 'a-05']
+      ]);
+
+      const article = lookup(content, 'a-05');
 
       expect(getModelInheritanceChain(article)).toStrictEqual([article]);
     });
@@ -36,54 +63,56 @@ describe('getModelInheritanceChain', () => {
 
   describe('when given a block', () => {
     it('should return null when trickle is only enabled on the article', () => {
-      const article = new MockModel({
-        _type: 'article',
-        _trickle: { _isEnabled: true, _onChildren: false }
-      });
-      const block = new MockModel({ _type: 'block', _parent: article });
+      const [content] = setupContent([
+        ['course', 'm05'],
+        ['page', 'co-05'],
+        ['article', 'a-05', { _trickle: { _isEnabled: true, _onChildren: false } }],
+        ['block', 'b-05']
+      ]);
 
-      const inheritance = getModelInheritanceChain(block);
+      const inheritance = getModelInheritanceChain(lookup(content, 'b-05'));
 
       expect(inheritance).toBeNull();
     });
 
     it('should return [block] if it has a trickle configuration', () => {
-      const article = new MockModel({
-        _type: 'article'
-      });
-      const block = new MockModel({
-        _type: 'block',
-        _parent: article,
-        _trickle: { _isEnabled: true }
-      });
+
+      const [content] = setupContent([
+        ['course', 'm05'],
+        ['page', 'co-05'],
+        ['article', 'a-05'],
+        ['block', 'b-05', { _trickle: { _isEnabled: true } }]
+      ]);
+
+      const block = lookup(content, 'b-05');
 
       expect(getModelInheritanceChain(block)).toStrictEqual([block]);
     });
 
     it('should return [block, article] if they both have trickle configurations', () => {
-      const article = new MockModel({
-        _type: 'article',
-        _trickle: { _isEnabled: true, _onChildren: false }
-      });
-      const block = new MockModel({
-        _type: 'block',
-        _parent: article,
-        _trickle: { _isEnabled: true }
-      });
+      const [content] = setupContent([
+        ['course', 'm05'],
+        ['page', 'co-05'],
+        ['article', 'a-05', { _trickle: { _isEnabled: true, _onChildren: false } }],
+        ['block', 'b-05', { _trickle: { _isEnabled: true } }]
+      ]);
+
+      const article = lookup(content, 'a-05');
+      const block = lookup(content, 'b-05');
 
       expect(getModelInheritanceChain(block)).toStrictEqual([block, article]);
     });
 
     it('should omit the block if it explicitly requires inheritance', () => {
-      const article = new MockModel({
-        _type: 'article',
-        _trickle: { _isEnabled: true, _onChildren: false }
-      });
-      const block = new MockModel({
-        _type: 'block',
-        _parent: article,
-        _trickle: { _isEnabled: true, _isInherited: true }
-      });
+      const [content] = setupContent([
+        ['course', 'm05'],
+        ['page', 'co-05'],
+        ['article', 'a-05', { _trickle: { _isEnabled: true, _onChildren: false } }],
+        ['block', 'b-05', { _trickle: { _isEnabled: true, _isInherited: true } }]
+      ]);
+
+      const article = lookup(content, 'a-05');
+      const block = lookup(content, 'b-05');
 
       expect(getModelInheritanceChain(block)).toStrictEqual([article]);
     });
@@ -92,70 +121,36 @@ describe('getModelInheritanceChain', () => {
 
 describe('getModelConfig', () => {
 
-  it('should return null if trickle is not enabled via the model or via inheritance', () => {
-    const article = new MockModel({
-      _type: 'article',
-      _trickle: { _isEnabled: false, _onChildren: true }
-    });
-    const block = new MockModel({
-      _type: 'block',
-      _parent: article
-    });
+  it('should return null if the derived configuration is not explicitly enabled', () => {
+    const [content] = setupContent([
+      ['course', 'm05'],
+      ['page', 'co-05'],
+      ['article', 'a-05', { _trickle: { _onChildren: true } }],
+      ['block', 'b-05'],
+      ['article', 'a-10', { _trickle: { _isEnabled: true } }],
+      ['block', 'b-10', { _trickle: { _isEnabled: false } }]
+    ]);
 
-    const config = getModelConfig(block);
-
-    expect(config).toBeNull();
+    expect(getModelConfig(lookup(content, 'b-05'))).toBeNull();
+    expect(getModelConfig(lookup(content, 'b-10'))).toBeNull();
   });
 
-  it('should return null if the derived configuration is not enabled', () => {
-    const article = new MockModel({
-      _type: 'article',
-      _trickle: { _isEnabled: true }
-    });
-    const block = new MockModel({
-      _type: 'block',
-      _parent: article,
-      _trickle: { _isEnabled: false }
-    });
+  it('should override inherited configuration with defaults and then own properties', () => {
+    const [content] = setupContent([
+      ['course', 'm05'],
+      ['page', 'co-05'],
+      ['article', 'a-05', { _trickle: { _isEnabled: false, _button: { _isEnabled: false } } }],
+      ['block', 'b-05', { _trickle: { _isEnabled: true } }],
+      ['article', 'a-10', { _trickle: { _isEnabled: false, _scrollDuration: 250 } }],
+      ['block', 'b-10', { _trickle: { _isEnabled: true } }]
+    ]);
 
-    const config = getModelConfig(block);
+    const b05 = getModelConfig(lookup(content, 'b-05'));
+    const b10 = getModelConfig(lookup(content, 'b-10'));
 
-    expect(config).toBeNull();
-  });
-
-  describe('when given a block', () => {
-
-    it('should override inherited configuration with defaults and then own properties', () => {
-      const article = new MockModel({
-        _type: 'article',
-        _trickle: { _isEnabled: false, _button: { _isEnabled: false } }
-      });
-      const block = new MockModel({
-        _type: 'block',
-        _parent: article,
-        _trickle: { _isEnabled: true }
-      });
-
-      const config = getModelConfig(block);
-
-      expect(config._button._isEnabled).toBeTruthy();
-      expect(config._isEnabled).toBeTruthy();
-    });
-
-    it('should inherit configuration from the article ', () => {
-      const article = new MockModel({
-        _type: 'article',
-        _trickle: { _isEnabled: false, _scrollDuration: 250 }
-      });
-      const block = new MockModel({
-        _type: 'block',
-        _parent: article,
-        _trickle: { _isEnabled: true }
-      });
-
-      const config = getModelConfig(block);
-      expect(config._scrollDuration).toStrictEqual(250);
-    });
+    expect(b05._button._isEnabled).toBeTruthy();
+    expect(b05._isEnabled).toBeTruthy();
+    expect(b10._scrollDuration).toStrictEqual(250);
   });
 });
 
@@ -164,18 +159,158 @@ describe('getModelContainer', () => {
   // TODO: getModelContainer should ignore _onChildren:true on block (per README) but does not
 
   it('should identify the article as the container when given a block', () => {
-    const article = new MockModel({
-      _type: 'article',
-      _trickle: { _isEnabled: true } // _onChildren is inferred by getModelConfigDefaults
-    });
-    const block = new MockModel({
-      _type: 'block',
-      _parent: article,
-      _trickle: { _isEnabled: true }
-    });
+    const [content] = setupContent([
+      ['course', 'm05'],
+      ['page', 'co-05'],
+      ['article', 'a-05', { _trickle: { _isEnabled: true } }],
+      ['block', 'b-05', { _trickle: { _isEnabled: true } }]
+    ]);
 
-    const config = getModelContainer(block);
+    expect(getModelContainer(lookup(content, 'b-05'))).toStrictEqual(lookup(content, 'a-05'));
+  });
+});
 
-    expect(config).toStrictEqual(article);
+describe('getCompletionAttribute', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('should try the derived configuration then the global configuration then default to _isComplete', () => {
+    const [content, config] = setupContent([
+      ['course', 'm05'],
+      ['page', 'co-05'],
+      ['article', 'a-05'],
+      ['block', 'b-05', { _trickle: { _isEnabled: true, _completionAttribute: '_isInteractionComplete' } }],
+      ['block', 'b-10', { _trickle: { _isEnabled: true } }]
+    ]);
+
+    // supply the returned config as trickle will check the global configuration
+    jest.replaceProperty(Adapt, 'config', config);
+
+    expect(getCompletionAttribute(lookup(content, 'b-05'))).toStrictEqual('_isInteractionComplete');
+    expect(getCompletionAttribute(lookup(content, 'b-10'))).toStrictEqual('_isComplete');
+
+    config.set('_trickle', { _completionAttribute: '_isVisited' });
+
+    expect(getCompletionAttribute(lookup(content, 'b-10'))).toStrictEqual('_isVisited');
+  });
+});
+
+describe('isLocked', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('should lock until completion or until trickle button has been completed ', () => {
+    const [content, config, generateId] = setupContent([
+      ['course', 'm05'],
+      ['page', 'co-05', { __class: ContentObjectModel }], // trickle will do instanceof checks
+      ['article', 'a-05'],
+      ['block', 'b-00', { _trickle: { _isEnabled: true } }],
+      ['block', 'b-05', { _trickle: { _isEnabled: true }, _isOptional: true }],
+      ['block', 'b-10', { _trickle: { _isEnabled: true, _stepLocking: { _isEnabled: false } } }],
+      ['block', 'b-15', { _trickle: { _isEnabled: true, _stepLocking: { _isCompletionRequired: false } } }]
+    ]);
+
+    // supply the returned config as trickle will check the global configuration
+    jest.replaceProperty(Adapt, 'config', config);
+
+    class MockTrickleButtonModel extends MockAdaptModel {};
+
+    // mock TrickleButtonModel
+    jest.spyOn(components, 'getModelClass').mockImplementation(() => MockTrickleButtonModel);
+
+    const b15 = lookup(content, 'b-15');
+    const trickleButton = new MockTrickleButtonModel({ _id: generateId(), _parentId: b15.get('_id') });
+
+    // add a mock trickle button as a child of b-15
+    b15.getChildren().add(trickleButton);
+
+    expect(isLocked(lookup(content, 'b-00'))).toBeTruthy(); // incomplete so locked
+    expect(isLocked(lookup(content, 'b-05'))).toBeFalsy(); // optional so not locked
+    expect(isLocked(lookup(content, 'b-10'))).toBeFalsy(); // step locking disabled so not locked
+    expect(isLocked(lookup(content, 'b-15'))).toBeTruthy(); // trickle button incomplete so locked
+
+    trickleButton.set('_isComplete', true);
+
+    expect(isLocked(lookup(content, 'b-15'))).toBeFalsy(); // trickle button complete so not locked
+  });
+});
+
+describe('applyLocks', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('should lock content that follows trickled content that is incomplete', () => {
+    // locates sites by getting all course descendant models but ignores unavailable
+    // iterates over each site but ignores sites not trickle enabled, for each site:
+    // - assume site unlocked until proven otherwise
+    // - iterates over all subsequent blocks/articles, for each model:
+    //   - marks as _isTrickled:true except TrickleButtonModels which are marked _isTrickled:false
+    //   - marks as _isLocked according to whether the site is locked, but does not unlock if already locked
+    //   - cascades this _isLocked property to descendants
+    // update only those model whose locks have changed
+
+    const [content, config] = setupContent([
+      ['course', 'm05'],
+      ['page', 'co-05', { __class: ContentObjectModel }],
+      ['article', 'a-05', { _trickle: { _isEnabled: true } }],
+      ['block', 'b-05'],
+      ['article', 'a-10', { _trickle: { _isEnabled: true, _onChildren: false } }],
+      ['block', 'b-10'],
+      ['article', 'a-15']
+    ]);
+
+    // trickle will check Adapt.config and Adapt.course
+    jest.replaceProperty(Adapt, 'config', config);
+    jest.replaceProperty(Adapt, 'course', lookup(content, 'm05'));
+
+    class MockTrickleButtonModel extends MockAdaptModel {};
+
+    jest.spyOn(components, 'getModelClass').mockImplementation(() => MockTrickleButtonModel);
+
+    applyLocks();
+
+    expect(lookup(content, 'a-05').get('_isLocked')).toBeFalsy();
+    expect(lookup(content, 'b-05').get('_isLocked')).toBeFalsy();
+    expect(lookup(content, 'a-10').get('_isLocked')).toBeTruthy();
+    expect(lookup(content, 'b-10').get('_isLocked')).toBeTruthy();
+    expect(lookup(content, 'a-15').get('_isLocked')).toBeTruthy();
+
+    lookup(content, 'a-05').set('_isComplete', true);
+    lookup(content, 'b-05').set('_isComplete', true);
+
+    applyLocks();
+
+    expect(lookup(content, 'a-10').get('_isLocked')).toBeFalsy();
+    expect(lookup(content, 'b-10').get('_isLocked')).toBeFalsy();
+    expect(lookup(content, 'a-15').get('_isLocked')).toBeTruthy();
+  });
+});
+
+describe('_getAncestorNextSiblings', () => {
+  describe('when given a block', () => {
+    it('should return the blocks that follow it and the articles that follow its parent', () => {
+
+      const [content] = setupContent([
+        ['course', 'm05'],
+        ['page', 'co-05', { __class: ContentObjectModel }],
+        ['article', 'a-05'],
+        ['block', 'b-05'],
+        ['block', 'b-10'],
+        ['article', 'a-10'],
+        ['block', 'b-15']
+      ]);
+
+      const b05 = lookup(content, 'b-05');
+      const b10 = lookup(content, 'b-10');
+      const a10 = lookup(content, 'a-10');
+      const siblings = _getAncestorNextSiblings(b05);
+
+      expect(siblings).toHaveLength(2);
+      expect(siblings).toContain(b10);
+      expect(siblings).toContain(a10);
+    });
   });
 });
