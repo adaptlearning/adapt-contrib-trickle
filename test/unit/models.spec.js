@@ -243,15 +243,6 @@ describe('applyLocks', () => {
   });
 
   it('should lock content that follows trickled content that is incomplete', () => {
-    // locates sites by getting all course descendant models but ignores unavailable
-    // iterates over each site but ignores sites not trickle enabled, for each site:
-    // - assume site unlocked until proven otherwise
-    // - iterates over all subsequent blocks/articles, for each model:
-    //   - marks as _isTrickled:true except TrickleButtonModels which are marked _isTrickled:false
-    //   - marks as _isLocked according to whether the site is locked, but does not unlock if already locked
-    //   - cascades this _isLocked property to descendants
-    // update only those model whose locks have changed
-
     const [content, config] = setupContent([
       ['course', 'm05'],
       ['page', 'co-05', { __class: ContentObjectModel }],
