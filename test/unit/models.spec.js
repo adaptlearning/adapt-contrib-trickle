@@ -6,10 +6,12 @@ import {
   _getAncestorNextSiblings,
   getCompletionAttribute,
   isLocked,
-  applyLocks
+  applyLocks,
+  addButtonComponents
 } from '../../js/models';
 import { lookup, setupContent } from '../utils';
 import Adapt from 'core/js/adapt';
+import data from 'core/js/data';
 import components from 'core/js/components';
 import ContentObjectModel from 'core/js/models/contentObjectModel';
 import MockAdaptModel from '../MockAdaptModel';
@@ -29,7 +31,7 @@ jest.mock('core/js/components', () => ({
 }));
 jest.mock('core/js/data', () => ({
   __esModule: true,
-  default: { isReady: true }
+  default: Object.assign(new globalThis.Backbone.Collection(), { isReady: true })
 }));
 jest.mock('core/js/logging', () => ({
   __esModule: true,
@@ -43,7 +45,8 @@ jest.mock('core/js/models/contentObjectModel', () => {
   };
 });
 jest.mock('core/js/models/courseModel', () => ({
-  __esModule: true
+  __esModule: true,
+  default: jest.fn()
 }));
 
 describe('getModelInheritanceChain', () => {
@@ -93,7 +96,7 @@ describe('getModelInheritanceChain', () => {
       const [content] = setupContent([
         ['course', 'm05'],
         ['page', 'co-05'],
-        ['article', 'a-05', { _trickle: { _isEnabled: true, _onChildren: false } }],
+        ['article', 'a-05', { _trickle: { _isEnabled: true } }],
         ['block', 'b-05', { _trickle: { _isEnabled: true } }]
       ]);
 
@@ -303,5 +306,48 @@ describe('_getAncestorNextSiblings', () => {
       expect(siblings).toContain(b10);
       expect(siblings).toContain(a10);
     });
+  });
+});
+
+describe('addButtonComponents', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+    data.reset();
+  });
+
+  it('should append a trickle button once to all content models where trickle is enabled', () => {
+    const [content] = setupContent([
+      ['course', 'm05'],
+      ['page', 'co-05'],
+      ['article', 'a-05', { _trickle: { _isEnabled: true } }],
+      ['block', 'b-05'],
+      ['component', 'c-05'],
+      ['block', 'b-10'],
+      ['component', 'c-10']
+    ]);
+
+    class MockTrickleButtonModel extends MockAdaptModel {
+      setupModel() {}
+    };
+
+    jest.spyOn(components, 'getModelClass').mockImplementation(() => MockTrickleButtonModel);
+
+    data.add(content);
+
+    const getTrickleButtonChildren = (id) => {
+      const model = lookup(content, id);
+      return model.getChildren().filter(child => child instanceof MockTrickleButtonModel);
+    };
+
+    addButtonComponents();
+    addButtonComponents(); // run twice to ensure no duplication
+
+    expect(getTrickleButtonChildren('m05')).toHaveLength(0);
+    expect(getTrickleButtonChildren('co-05')).toHaveLength(0);
+    expect(getTrickleButtonChildren('a-05')).toHaveLength(0);
+    expect(getTrickleButtonChildren('b-05')).toHaveLength(1);
+    expect(getTrickleButtonChildren('c-05')).toHaveLength(0);
+    expect(getTrickleButtonChildren('b-10')).toHaveLength(1);
+    expect(getTrickleButtonChildren('c-10')).toHaveLength(0);
   });
 });
