@@ -315,6 +315,8 @@ export function addButtonComponents() {
     trickleButtonModel.setupModel();
     // This line would usually append a trickle button to an article or block
     buttonModelSite.getChildren().add(trickleButtonModel);
+    // Add trickle button to data collection
+    data.add(trickleButtonModel);
   });
 }
 
