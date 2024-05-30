@@ -176,15 +176,21 @@ describe('getModelContainer', () => {
 
   // TODO: getModelContainer should ignore _onChildren:true on block (per README) but does not
 
-  it('should identify the article as the container when given a block', () => {
+  it('should return the first model in the inheritance chain with _onChildren: true or the first model in the inheritance chain', () => {
     const [content] = setupContent([
       ['course', 'm05'],
       ['page', 'co-05'],
       ['article', 'a-05', { _trickle: { _isEnabled: true } }],
-      ['block', 'b-05', { _trickle: { _isEnabled: true } }]
+      ['block', 'b-05', { _trickle: { _isEnabled: true } }],
+      ['article', 'a-10'],
+      ['block', 'b-10', { _trickle: { _isEnabled: true } }],
+      ['article', 'a-15', { _trickle: { _isEnabled: true, _onChildren: false } }],
+      ['block', 'b-15', { _trickle: { _isEnabled: true, _isInherited: true } }]
     ]);
 
     expect(getModelContainer(lookup(content, 'b-05'))).toStrictEqual(lookup(content, 'a-05'));
+    expect(getModelContainer(lookup(content, 'b-10'))).toStrictEqual(lookup(content, 'b-10'));
+    expect(getModelContainer(lookup(content, 'b-15'))).toStrictEqual(lookup(content, 'a-15'));
   });
 });
 
