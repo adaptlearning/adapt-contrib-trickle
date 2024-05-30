@@ -6,10 +6,17 @@ import data from 'core/js/data';
 import components from 'core/js/components';
 import MockAdaptModel from '../MockAdaptModel';
 
-jest.mock('../../js/models', () => ({
-  __esModule: true,
-  default: {}
-}));
+jest.mock('../../js/models', () => {
+  const mocks = {
+    checkApplyLocks: jest.fn(),
+    addButtonComponents: jest.fn(),
+    applyLocks: jest.fn(),
+    debouncedApplyLocks: jest.fn(),
+    getModelConfig: jest.fn(),
+    isModelArticleWithOnChildren: jest.fn()
+  };
+  return { __esModule: true, default: mocks, ...mocks };
+});
 
 jest.mock('core/js/adapt', () => ({
   __esModule: true,
@@ -71,7 +78,7 @@ describe('isTrickling', () => {
     jest.restoreAllMocks();
   });
 
-  it('should return true if trickle has locked any content', () => {
+  it('should return true if the current page is locked by trickle', () => {
     expect(Controller.isTrickling).toBeTruthy();
 
     lookup(content, 'trickle-1').set({ _isComplete: true });
@@ -85,5 +92,47 @@ describe('isTrickling', () => {
     lookup(content, 'a-05').set({ _requireCompletionOf: Number.POSITIVE_INFINITY, _canRequestChild: true });
 
     expect(Controller.isTrickling).toBeTruthy();
+  });
+});
+
+describe('kill', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('should turn off all trickle locking, continue rendering and set the page model state as killed', () => {
+    class MockTrickleButtonModel extends MockAdaptModel {
+      setCompletionStatus = jest.fn();
+    };
+
+    jest.spyOn(components, 'getModelClass').mockImplementation(() => MockTrickleButtonModel);
+
+    const [content] = setupContent([
+      ['course', 'm05'],
+      ['page', 'co-05'],
+      ['article', 'a-05'],
+      ['block', 'b-05', { _isTrickled: true, _isLocked: false }],
+      ['component', 'trickle-1', { __class: MockTrickleButtonModel, _component: 'trickle-button', _isLocked: true }],
+      ['block', 'b-10', { _isTrickled: true, _isLocked: true }],
+      ['component', 'trickle-2', { __class: MockTrickleButtonModel, _component: 'trickle-button', _isLocked: true }],
+      ['block', 'b-15', { _isLocked: true }]
+    ]);
+
+    jest.replaceProperty(Adapt, 'course', lookup(content, 'm05'));
+    jest.replaceProperty(Adapt, 'parentView', { model: lookup(content, 'co-05') });
+    jest.spyOn(Controller, 'continue').mockImplementation(jest.fn());
+
+    Controller.kill();
+
+    content.forEach(i => {
+      if (i instanceof MockTrickleButtonModel === false) return;
+
+      expect(i.setCompletionStatus).toHaveBeenCalled();
+    });
+
+    expect(content.filter(i => i.get('_isTrickled')).every(i => !i.get('_isLocked'))).toBeTruthy();
+    expect(lookup(content, 'b-15').get('_isLocked')).toBeTruthy();
+    expect(Controller.continue).toHaveBeenCalled();
+    expect(Controller.isKilled).toBeTruthy();
   });
 });
