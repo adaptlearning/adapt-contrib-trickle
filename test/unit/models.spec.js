@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { afterEach, describe, expect, it, jest } from '@jest/globals';
 import {
   getModelInheritanceChain,
   getModelConfig,
@@ -120,6 +120,21 @@ describe('getModelInheritanceChain', () => {
       expect(getModelInheritanceChain(block)).toStrictEqual([article]);
     });
   });
+
+  it('should return null for anything that is not a block or article', () => {
+
+    const [content] = setupContent([
+      ['course', 'm05', { _trickle: { _isEnabled: true } }],
+      ['page', 'co-05', { _trickle: { _isEnabled: true } }],
+      ['article', 'a-05'],
+      ['block', 'b-05'],
+      ['component', 'c-05', { _trickle: { _isEnabled: true } }]
+    ]);
+
+    expect(getModelInheritanceChain(lookup(content, 'm05'))).toBeNull();
+    expect(getModelInheritanceChain(lookup(content, 'co-05'))).toBeNull();
+    expect(getModelInheritanceChain(lookup(content, 'c-05'))).toBeNull();
+  });
 });
 
 describe('getModelConfig', () => {
@@ -205,7 +220,7 @@ describe('isLocked', () => {
   });
 
   it('should lock until completion or until trickle button has been completed ', () => {
-    const [content, config, generateId] = setupContent([
+    const [content, config] = setupContent([
       ['course', 'm05'],
       ['page', 'co-05', { __class: ContentObjectModel }], // trickle will do instanceof checks
       ['article', 'a-05'],
@@ -224,7 +239,7 @@ describe('isLocked', () => {
     jest.spyOn(components, 'getModelClass').mockImplementation(() => MockTrickleButtonModel);
 
     const b15 = lookup(content, 'b-15');
-    const trickleButton = new MockTrickleButtonModel({ _id: generateId(), _parentId: b15.get('_id') });
+    const trickleButton = new MockTrickleButtonModel({ _id: 'trickle-1', _parentId: 'b-15' });
 
     // add a mock trickle button as a child of b-15
     b15.getChildren().add(trickleButton);

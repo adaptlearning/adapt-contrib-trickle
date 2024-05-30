@@ -1,28 +1,21 @@
 import MockAdaptModel from './MockAdaptModel';
 
-export function makeIdGenerator () {
-  let seed = 1;
-  return () => (seed++).toString();
-}
-
 /**
  * Interpret a course from a simplified data structure. See generateHierarchy.
  * @param {array} data course data
  * @param {array} langs content will be duplicated for each language in the list (e.g. ['en', 'fr'])
  * @param {string} courseId the course identifier (e.g. 'm05')
  * @param {string} defaultLanguage which language will serve as the default (e.g. 'en')
- * @returns a tuple of (course content, config, ID generator)
+ * @returns a tuple of (course content, config)
  */
 export function setupContent (data, langs = ['en'], courseId = 'm05', defaultLanguage = 'en') {
-  const generateId = makeIdGenerator();
   const config = new MockAdaptModel({
-    _id: generateId(),
     _type: 'config',
     _courseId: courseId,
     _defaultLanguage: defaultLanguage
   });
 
-  const rawContent = generateModels(data, langs, courseId, generateId);
+  const rawContent = generateModels(data, langs, courseId);
   const content = rawContent.map(obj => {
     const ModelClass = obj.__class || MockAdaptModel;
     delete obj.__class;
@@ -32,7 +25,7 @@ export function setupContent (data, langs = ['en'], courseId = 'm05', defaultLan
   assignChildren(content);
   assignParent(content);
 
-  return [content, config, generateId];
+  return [content, config];
 }
 
 /**
@@ -61,19 +54,15 @@ function assignParent(models) {
   });
 }
 
-function generateModels (data, langs, courseId, generateId) {
-  const hierarchy = generateHierarchy(data, courseId, generateId);
+function generateModels (data, langs, courseId) {
+  const hierarchy = generateHierarchy(data, courseId);
 
   hierarchy.forEach(i => (i._lang = langs[0]));
 
   const hierarchiesForOtherLangs = langs.slice(1).map(lang => {
-    // create a set of new identifiers for the new models
-    const idMap = hierarchy.reduce((m, i) => { m[i._id] = generateId(); return m; }, {});
     // create the new models for [lang]
     return hierarchy.map(i => {
       return Object.assign({}, i, {
-        _id: idMap[i._id],
-        ...(i._parentId && { _parentId: idMap[i._parentId] }),
         _lang: lang
       });
     });
@@ -83,10 +72,9 @@ function generateModels (data, langs, courseId, generateId) {
 }
 
 /**
- * generateHierarchy takes a flattened list of tuples that define content models and converts them into objects with hierarchical relationships. Hierarchy is inferred from list order unless parentage is specified. Each tuple is specified as [_type {string}, _friendlyId {string}, props {Object}]
+ * generateHierarchy takes a flattened list of tuples that define content models and converts them into objects with hierarchical relationships. Hierarchy is inferred from list order unless parentage is specified. Each tuple is specified as [_type {string}, _id {string}, props {Object}]
  * @param {*} data a flat list of tuples describing the required models (see below for examples)
  * @param {*} courseId a unique identifier that relates the generated content
- * @param {*} generateId a function that returns a unique identifier
  * @returns
  */
 
@@ -137,21 +125,16 @@ function generateModels (data, langs, courseId, generateId) {
 ]
 */
 
-function generateHierarchy (data, courseId, generateId) {
-  const models = data.map(([_type, _friendlyId, extra]) => ({ _type, _friendlyId, ...extra }));
+function generateHierarchy (data, courseId) {
+  const models = data.map(([_type, _id, extra]) => ({ _type, _id, ...extra }));
   const course = models[0];
 
   course._courseId = courseId;
-  // provide with _id if one not given
-  course._id = course._id || generateId();
 
   let hasEncounteredMenu = false;
 
   const children = models.slice(1).filter(i => {
     i._courseId = courseId;
-
-    // ensure all models have an _id
-    if (!i._id) i._id = generateId();
 
     // children of course can only be menu or page
     if (!['menu', 'page'].includes(i._type)) return false;

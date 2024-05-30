@@ -1,8 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import Controller from '../../js/controller';
+import models from '../../js/models';
 import { lookup, setupContent } from '../utils';
 import Adapt from 'core/js/adapt';
-import data from 'core/js/data';
+import router from 'core/js/router';
 import components from 'core/js/components';
 import MockAdaptModel from '../MockAdaptModel';
 
@@ -46,11 +47,15 @@ jest.mock('core/js/wait', () => ({
 }));
 jest.mock('core/js/a11y', () => ({
   __esModule: true,
-  default: {}
+  default: {
+    focusFirst: jest.fn()
+  }
 }));
 jest.mock('core/js/router', () => ({
   __esModule: true,
-  default: {}
+  default: {
+    navigateToElement: jest.fn()
+  }
 }));
 
 describe('isTrickling', () => {
@@ -95,12 +100,50 @@ describe('isTrickling', () => {
   });
 });
 
+describe('scroll', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('should scroll to the next section as defined by the trickle configuration on the specified model', async () => {
+    const [content] = setupContent([
+      ['course', 'm05'],
+      ['page', 'co-05'],
+      ['article', 'a-05', { _trickle: { _onChildren: true } }],
+      ['block', 'b-05', { _trickle: { _isEnabled: false } }],
+      ['block', 'b-10', { _trickle: { _isEnabled: true, _button: { _isEnabled: false } } }],
+      ['block', 'b-15', { _trickle: { _isEnabled: true, _button: { _isEnabled: true }, _autoScroll: true, _scrollTo: 'b-20' } }],
+      ['block', 'b-20']
+    ]);
+
+    jest.replaceProperty(Adapt, 'course', lookup(content, 'm05'));
+    jest.replaceProperty(Adapt, 'parentView', { model: lookup(content, 'co-05'), renderTo: jest.fn() });
+
+    const a05 = lookup(content, 'a-05');
+    const b05 = lookup(content, 'b-05');
+    const b10 = lookup(content, 'b-10');
+    const b15 = lookup(content, 'b-15');
+
+    jest.spyOn(models, 'getModelConfig').mockImplementation(m => lookup(content, m.get('_id')).get('_trickle'));
+    jest.spyOn(models, 'isModelArticleWithOnChildren').mockImplementation(m => m === a05);
+
+    await expect(Controller.scroll(a05)).resolves.toBeFalsy();
+    await expect(Controller.scroll(b05)).resolves.toBeFalsy();
+    await expect(Controller.scroll(b10)).resolves.toBeFalsy();
+    await Controller.scroll(b15);
+
+    expect(Adapt.parentView.renderTo).toHaveBeenCalledWith('b-20');
+    expect(router.navigateToElement).toHaveBeenCalledWith('.b-20', expect.anything());
+
+  });
+});
+
 describe('kill', () => {
   afterEach(() => {
     jest.restoreAllMocks();
   });
 
-  it('should turn off all trickle locking, continue rendering and set the page model state as killed', () => {
+  it('should turn off all trickle locking, continue rendering and set the page model state as killed', async () => {
     class MockTrickleButtonModel extends MockAdaptModel {
       setCompletionStatus = jest.fn();
     };
@@ -122,7 +165,7 @@ describe('kill', () => {
     jest.replaceProperty(Adapt, 'parentView', { model: lookup(content, 'co-05') });
     jest.spyOn(Controller, 'continue').mockImplementation(jest.fn());
 
-    Controller.kill();
+    await Controller.kill();
 
     content.forEach(i => {
       if (i instanceof MockTrickleButtonModel === false) return;
