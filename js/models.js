@@ -197,6 +197,13 @@ export function applyLocks() {
   const modelsById = {};
   // Fetch the component model from the store incase it needs overriding by another extension
   const TrickleButtonModel = components.getModelClass('trickle-button');
+  const setDescendantLocks = ((model, id) => {
+    model.getAllDescendantModels().forEach(descendant => {
+      const descendantId = descendant.get('_id');
+      modelsById[descendantId] = descendant;
+      locks[descendantId] = locks[id];
+    });
+  });
   // Check all models for trickle potential
   Adapt.course.getAllDescendantModels(true).filter(model => model.get('_isAvailable')).forEach(siteModel => {
     const trickleConfig = getModelConfig(siteModel);
@@ -205,6 +212,7 @@ export function applyLocks() {
     const id = siteModel.get('_id');
     modelsById[id] = siteModel;
     locks[id] = locks[id] || false;
+    if (!locks[id]) setDescendantLocks(siteModel, id);
     // Apply lock to all subsequent models
     const subsequentLockingModels = _getAncestorNextSiblings(siteModel);
     subsequentLockingModels.forEach((model, index) => {
@@ -219,12 +227,8 @@ export function applyLocks() {
       locks[id] = locks[id] || isModelLocked;
       // Don't modify the children if they are managed by another locking mechanism
       if (model.get('_lockType')) return;
-      // Cascade inherited locks through the hierarchyd
-      model.getAllDescendantModels().forEach(descendant => {
-        const descendantId = descendant.get('_id');
-        modelsById[descendantId] = descendant;
-        locks[descendantId] = locks[id];
-      });
+      // Cascade inherited locks through the hierarchy
+      setDescendantLocks(model, id);
     });
   });
   // Apply only changed locking states
