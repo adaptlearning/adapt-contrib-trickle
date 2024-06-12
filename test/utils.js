@@ -1,4 +1,9 @@
-import AdaptModel from 'core/js/models/adaptModel';
+import LockingModel from 'core/js/models/lockingModel';
+import CourseModel from 'core/js/models/courseModel';
+import ContentObjectModel from 'core/js/models/contentObjectModel';
+import ArticleModel from 'core/js/models/articleModel';
+import BlockModel from 'core/js/models/blockModel';
+import ComponentModel from 'core/js/models/componentModel';
 
 /**
  * Interpret a course from a simplified data structure. See generateHierarchy.
@@ -9,15 +14,27 @@ import AdaptModel from 'core/js/models/adaptModel';
  * @returns a tuple of (course content, config)
  */
 export function setupContent (data, langs = ['en'], courseId = 'm05', defaultLanguage = 'en') {
-  const config = new AdaptModel({
+  const config = new LockingModel({
     _type: 'config',
     _courseId: courseId,
     _defaultLanguage: defaultLanguage
   });
 
+  const getClass = (obj) => {
+    if (obj.__class) return obj.__class;
+    switch (obj._type) {
+      case 'course': return CourseModel;
+      case 'menu':
+      case 'page': return ContentObjectModel;
+      case 'article': return ArticleModel;
+      case 'block': return BlockModel;
+      case 'component': return ComponentModel;
+    }
+  };
+
   const rawContent = generateModels(data, langs, courseId);
   const content = rawContent.map(obj => {
-    const ModelClass = obj.__class || AdaptModel;
+    const ModelClass = getClass(obj);
     delete obj.__class;
     return new ModelClass(obj);
   });
