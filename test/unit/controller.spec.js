@@ -5,7 +5,7 @@ import { lookup, setupContent } from '../utils';
 import Adapt from 'core/js/adapt';
 import router from 'core/js/router';
 import components from 'core/js/components';
-import MockAdaptModel from '../MockAdaptModel';
+import AdaptModel from 'core/js/models/AdaptModel';
 
 jest.mock('../../js/models', () => {
   const mocks = {
@@ -27,23 +27,9 @@ jest.mock('core/js/adapt', () => ({
     parentView: {}
   }, globalThis.Backbone.Events)
 }));
-jest.mock('core/js/components', () => ({
-  __esModule: true,
-  default: {
-    getModelClass: jest.fn()
-  }
-}));
 jest.mock('core/js/data', () => ({
   __esModule: true,
   default: Object.assign(new globalThis.Backbone.Collection(), { isReady: true })
-}));
-jest.mock('core/js/logging', () => ({
-  __esModule: true,
-  default: {} // this is enough to have logTrickleState return early
-}));
-jest.mock('core/js/wait', () => ({
-  __esModule: true,
-  default: {}
 }));
 jest.mock('core/js/a11y', () => ({
   __esModule: true,
@@ -62,7 +48,7 @@ describe('isTrickling', () => {
   let content;
 
   beforeEach(() => {
-    class MockTrickleButtonModel extends MockAdaptModel {};
+    class MockTrickleButtonModel extends AdaptModel {};
     jest.spyOn(components, 'getModelClass').mockImplementation(() => MockTrickleButtonModel);
 
     [content] = setupContent([
@@ -144,7 +130,7 @@ describe('kill', () => {
   });
 
   it('should turn off all trickle locking, continue rendering and set the page model state as killed', async () => {
-    class MockTrickleButtonModel extends MockAdaptModel {
+    class MockTrickleButtonModel extends AdaptModel {
       setCompletionStatus = jest.fn();
     };
 

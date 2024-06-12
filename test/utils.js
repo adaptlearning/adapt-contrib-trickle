@@ -1,4 +1,4 @@
-import MockAdaptModel from './MockAdaptModel';
+import AdaptModel from 'core/js/models/adaptModel';
 
 /**
  * Interpret a course from a simplified data structure. See generateHierarchy.
@@ -9,7 +9,7 @@ import MockAdaptModel from './MockAdaptModel';
  * @returns a tuple of (course content, config)
  */
 export function setupContent (data, langs = ['en'], courseId = 'm05', defaultLanguage = 'en') {
-  const config = new MockAdaptModel({
+  const config = new AdaptModel({
     _type: 'config',
     _courseId: courseId,
     _defaultLanguage: defaultLanguage
@@ -17,7 +17,7 @@ export function setupContent (data, langs = ['en'], courseId = 'm05', defaultLan
 
   const rawContent = generateModels(data, langs, courseId);
   const content = rawContent.map(obj => {
-    const ModelClass = obj.__class || MockAdaptModel;
+    const ModelClass = obj.__class || AdaptModel;
     delete obj.__class;
     return new ModelClass(obj);
   });

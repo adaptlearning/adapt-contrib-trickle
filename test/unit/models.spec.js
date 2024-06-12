@@ -14,39 +14,18 @@ import Adapt from 'core/js/adapt';
 import data from 'core/js/data';
 import components from 'core/js/components';
 import ContentObjectModel from 'core/js/models/contentObjectModel';
-import MockAdaptModel from '../MockAdaptModel';
+import AdaptModel from 'core/js/models/adaptModel';
 
 jest.mock('core/js/adapt', () => ({
   __esModule: true,
-  default: {
+  default: Object.assign({
     config: {},
     course: {}
-  }
-}));
-jest.mock('core/js/components', () => ({
-  __esModule: true,
-  default: {
-    getModelClass: jest.fn()
-  }
+  }, globalThis.Backbone.Events)
 }));
 jest.mock('core/js/data', () => ({
   __esModule: true,
   default: Object.assign(new globalThis.Backbone.Collection(), { isReady: true })
-}));
-jest.mock('core/js/logging', () => ({
-  __esModule: true,
-  default: {} // this is enough to have logTrickleState return early
-}));
-jest.mock('core/js/models/contentObjectModel', () => {
-  const originalModule = jest.requireActual('../MockContentObjectModel');
-  return {
-    __esModule: true,
-    ...originalModule
-  };
-});
-jest.mock('core/js/models/courseModel', () => ({
-  __esModule: true,
-  default: jest.fn()
 }));
 
 describe('getModelInheritanceChain', () => {
@@ -239,7 +218,7 @@ describe('isLocked', () => {
     // supply the returned config as trickle will check the global configuration
     jest.replaceProperty(Adapt, 'config', config);
 
-    class MockTrickleButtonModel extends MockAdaptModel {};
+    class MockTrickleButtonModel extends AdaptModel {};
 
     // mock TrickleButtonModel
     jest.spyOn(components, 'getModelClass').mockImplementation(() => MockTrickleButtonModel);
@@ -281,7 +260,7 @@ describe('applyLocks', () => {
     jest.replaceProperty(Adapt, 'config', config);
     jest.replaceProperty(Adapt, 'course', lookup(content, 'm05'));
 
-    class MockTrickleButtonModel extends MockAdaptModel {};
+    class MockTrickleButtonModel extends AdaptModel {};
 
     jest.spyOn(components, 'getModelClass').mockImplementation(() => MockTrickleButtonModel);
 
@@ -347,7 +326,7 @@ describe('addButtonComponents', () => {
       ['component', 'c-10']
     ]);
 
-    class MockTrickleButtonModel extends MockAdaptModel {
+    class MockTrickleButtonModel extends AdaptModel {
       setupModel() {}
     };
 
