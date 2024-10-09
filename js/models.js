@@ -197,13 +197,13 @@ export function applyLocks() {
   const modelsById = {};
   // Fetch the component model from the store incase it needs overriding by another extension
   const TrickleButtonModel = components.getModelClass('trickle-button');
-  const setDescendantLocks = ((model, id) => {
+  const setDescendantLocks = (model, id) => {
     model.getAllDescendantModels().forEach(descendant => {
       const descendantId = descendant.get('_id');
       modelsById[descendantId] = descendant;
       locks[descendantId] = locks[id];
     });
-  });
+  };
   // Check all models for trickle potential
   Adapt.course.getAllDescendantModels(true).filter(model => model.get('_isAvailable')).forEach(siteModel => {
     const trickleConfig = getModelConfig(siteModel);
@@ -236,7 +236,7 @@ export function applyLocks() {
     const model = modelsById[id];
     const wasLocked = model.get('_isLocked');
     if (wasLocked === isModelLocked) return;
-    model.set('_isLocked', isModelLocked);
+    model.set('_isLocked', isModelLocked, { pluginName: 'trickle' });
   });
   logTrickleState();
 }
