@@ -28,6 +28,14 @@
                       "_adapt": {
                         "translatable": true
                       }
+                    },
+                    "additionalContentLoaded": {
+                      "type": "string",
+                      "title": "Additional content loaded",
+                      "default": "Additional content has been loaded.",
+                      "_adapt": {
+                        "translatable": true
+                      }
                     }
                   }
                 }
