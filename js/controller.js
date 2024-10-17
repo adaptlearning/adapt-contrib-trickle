@@ -115,8 +115,21 @@ class TrickleController extends Backbone.Controller {
    */
   async continue() {
     applyLocks();
-    await Adapt.parentView.addChildren();
+    const addedCount = await Adapt.parentView.addChildren();
     await Adapt.parentView.whenReady();
+    if (!addedCount) return;
+    this.announceContentLoaded();
+  }
+
+  /**
+   * Announce a message to screenreaders letting them know that additional
+   * content has been loaded on the page.
+   */
+  announceContentLoaded() {
+    const globals = Adapt.course.get('_globals');
+    const message = globals?._extensions?._trickle?.additionalContentLoaded;
+    if (!message) return;
+    console.log(message);
   }
 
   /**
