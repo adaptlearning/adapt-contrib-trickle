@@ -202,8 +202,22 @@ class TrickleButtonView extends ComponentView {
    */
   async continue() {
     const parent = this.model.getParent();
-    await controller.continue();
+    const childrenAdded = await controller.continue();
     await controller.scroll(parent);
+    if (!childrenAdded) return;
+    this.announceContentLoaded();
+  }
+
+  /**
+   * Announce a message to screenreaders letting them know that additional
+   * content has been loaded on the page.
+   */
+  announceContentLoaded() {
+    const globals = Adapt.course.get('_globals');
+    const message = globals?._extensions?._trickle?.additionalContentLoaded;
+    if (!message) return;
+    const $status = this.$el.find('.trickle__status');
+    $status.html(message);
   }
 
   tryButtonAutoHide() {
