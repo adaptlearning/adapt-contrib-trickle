@@ -217,7 +217,11 @@ class TrickleButtonView extends ComponentView {
     const message = globals?._extensions?._trickle?.additionalContentLoaded;
     if (!message) return;
     const $status = this.$el.find('.trickle__status');
-    $status.html(message);
+
+    // Add a delay to give the accessibility API time to catch the change
+    setTimeout(() => {
+      $status.html(message);
+    }, 2000);
   }
 
   tryButtonAutoHide() {

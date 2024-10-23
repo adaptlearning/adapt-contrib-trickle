@@ -32,7 +32,7 @@
                     "additionalContentLoaded": {
                       "type": "string",
                       "title": "Additional content loaded",
-                      "default": "Additional content has been loaded.",
+                      "default": "Additional content has been loaded on the page.",
                       "_adapt": {
                         "translatable": true
                       }
