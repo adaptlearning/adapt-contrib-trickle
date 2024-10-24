@@ -1,5 +1,6 @@
 import Adapt from 'core/js/adapt';
 import a11y from 'core/js/a11y';
+import notify from 'core/js/notify';
 import ComponentView from 'core/js/views/componentView';
 import controller from './controller';
 import {
@@ -203,25 +204,27 @@ class TrickleButtonView extends ComponentView {
   async continue() {
     const parent = this.model.getParent();
     const childrenAdded = await controller.continue();
-    await controller.scroll(parent);
     if (!childrenAdded) return;
-    this.announceContentLoaded();
+    await this.announceContentLoaded();
+    await controller.scroll(parent);
   }
 
   /**
    * Announce a message to screenreaders letting them know that additional
    * content has been loaded on the page.
    */
-  announceContentLoaded() {
+  async announceContentLoaded() {
     const globals = Adapt.course.get('_globals');
     const message = globals?._extensions?._trickle?.additionalContentLoaded;
     if (!message) return;
-    const $status = this.$el.find('.trickle__status');
 
-    // Add a delay to give the accessibility API time to catch the change
-    setTimeout(() => {
-      $status.html(message);
-    }, 2000);
+    notify.create({ _type: 'a11y-push', body: message });
+
+    // Rough estimate: 200ms per word + buffer
+    const words = message.split(' ').length;
+    const delay = (words * 200) + 300;
+
+    return new Promise(resolve => setTimeout(resolve, delay));
   }
 
   tryButtonAutoHide() {

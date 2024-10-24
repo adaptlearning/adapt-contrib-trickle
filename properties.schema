@@ -15,8 +15,10 @@
     "additionalContentLoaded": {
       "type": "string",
       "required": true,
-      "default": "Additional content has been loaded on the page.",
+      "title": "Additional content loaded.",
+      "default": "Content loaded",
       "inputType": "Text",
+      "help": "Announced to screen readers when additional content is loaded. Recommend keeping this short.",
       "validators": [],
       "translatable": true
     }
