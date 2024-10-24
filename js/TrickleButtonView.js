@@ -219,13 +219,12 @@ class TrickleButtonView extends ComponentView {
     const globals = Adapt.course.get('_globals');
     const message = globals?._extensions?._trickle?.additionalContentLoaded;
     if (!message) return;
-
     notify.create({ _type: 'a11y-push', body: message });
 
+    // Allow time enough for the message to be read before focusing.
     // Rough estimate: 200ms per word + buffer
     const words = message.split(' ').length;
     const delay = (words * 200) + 300;
-
     return new Promise(resolve => setTimeout(resolve, delay));
   }
 
