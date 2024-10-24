@@ -16,7 +16,7 @@
       "type": "string",
       "required": true,
       "title": "Additional content loaded.",
-      "default": "Content loaded",
+      "default": "Loading.",
       "inputType": "Text",
       "help": "Announced to screen readers when additional content is loaded. Recommend keeping this short.",
       "validators": [],
