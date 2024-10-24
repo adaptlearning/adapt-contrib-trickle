@@ -204,8 +204,10 @@ class TrickleButtonView extends ComponentView {
   async continue() {
     const parent = this.model.getParent();
     const childrenAdded = await controller.continue();
-    if (!childrenAdded) return;
-    await this.announceContentLoaded();
+    if (childrenAdded) {
+      await this.announceContentLoaded();
+    }
+
     await controller.scroll(parent);
   }
 
