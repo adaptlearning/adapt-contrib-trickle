@@ -6,7 +6,7 @@ describe('Trickle - v2.1.1 to v2.1.2', async () => {
 
   let configuredBlocks, configuredArticles;
 
-  whereFromPlugin('Trickle - from v2.1.1', { name: 'adapt-contrib-trickle', version: '<2.1.2' });
+  whereFromPlugin('Trickle - from v2.1.1', { name: 'adapt-contrib-trickle', version: '>=2.0.0 <2.1.2' });
 
   whereContent('Trickle is configured', content => {
     configuredBlocks = content.filter(({ _type, _trickle }) => _trickle && _type === 'block');
@@ -76,7 +76,7 @@ describe('Trickle - v2.1.3 to v2.1.5', async () => {
   whereFromPlugin('Trickle - from v2.1.3', { name: 'adapt-contrib-trickle', version: '<2.1.5' });
 
   whereContent('Trickle is configured', content => {
-    config = getConfig(content);
+    config = getConfig();
     configuredBlocks = content.filter(({ _type, _trickle }) => _trickle && _type === 'block');
     configuredArticles = content.filter(({ _type, _trickle }) => _trickle && _type === 'article');
     return config._trickle || configuredBlocks.length || configuredArticles.length;
@@ -213,7 +213,7 @@ describe('Trickle - v2.1.5 to v2.2.0', async () => {
 
   whereContent('Trickle is configured', content => {
     course = content.find(({ _type }) => _type === 'course');
-    return getConfig(content)._trickle;
+    return getConfig()._trickle;
   });
 
   mutateContent('Trickle - add globals if missing', async (content) => {
