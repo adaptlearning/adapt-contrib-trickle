@@ -1,10 +1,12 @@
-import { describe, getConfig, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin } from 'adapt-migrations';
+import { describe, getConfig, getCourse, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin, testStopWhere, testSuccessWhere } from 'adapt-migrations';
 import _ from 'lodash';
 
 describe('Trickle - v2.1.1 to v2.1.2', async () => {
   // https://github.com/adaptlearning/adapt-contrib-trickle/compare/v2.1.1..v2.1.2
 
   let configuredBlocks, configuredArticles;
+  const newStartText = 'Begin';
+  const newFinalText = 'Finish';
 
   whereFromPlugin('Trickle - from v2.1.1', { name: 'adapt-contrib-trickle', version: '>=2.0.0 <2.1.2' });
 
@@ -17,55 +19,67 @@ describe('Trickle - v2.1.1 to v2.1.2', async () => {
   mutateContent('Trickle - add block attribute startText', async (content) => {
     configuredBlocks.forEach(block => {
       if (!_.has(block._trickle, '_button')) _.set(block._trickle, '_button', {});
-      block._trickle._button.startText = 'Begin';
+      block._trickle._button.startText = newStartText;
     });
-
     return true;
   });
 
   mutateContent('Trickle - add block attribute finalText', async (content) => {
     configuredBlocks.forEach(block => {
       if (!_.has(block._trickle, '_button')) _.set(block._trickle, '_button', {});
-      block._trickle._button.finalText = 'Finish';
+      block._trickle._button.finalText = newFinalText;
     });
-
     return true;
   });
 
   mutateContent('Trickle - add article attribute startText', async (content) => {
     configuredArticles.forEach(article => {
       if (!_.has(article._trickle, '_button')) _.set(article._trickle, '_button', {});
-      article._trickle._button.startText = 'Begin';
+      article._trickle._button.startText = newStartText;
     });
-
     return true;
   });
 
   checkContent('Trickle - check block attribute startText', async (content) => {
-    const isValid = configuredBlocks.every(block => block._trickle._button.startText === 'Begin');
-
+    const isValid = configuredBlocks.every(block => block._trickle._button.startText === newStartText);
     if (!isValid) throw new Error('Trickle - block attribute startText');
-
     return true;
   });
 
   checkContent('Trickle - check block attribute finalText', async (content) => {
-    const isValid = configuredBlocks.every(block => block._trickle._button.finalText === 'Finish');
-
+    const isValid = configuredBlocks.every(block => block._trickle._button.finalText === newFinalText);
     if (!isValid) throw new Error('Trickle - block attribute finalText');
-
     return true;
   });
 
   checkContent('Trickle - check article attribute startText', async (content) => {
-    const isValid = configuredArticles.every(article => article._trickle._button.startText === 'Begin');
-
+    const isValid = configuredArticles.every(article => article._trickle._button.startText === newStartText);
     if (!isValid) throw new Error('Trickle - article attribute startText');
-
     return true;
   });
 
-  updatePlugin('Trickle - update to v2.1.2', { name: 'adapt-contrib-trickle', version: '2.1.2', framework: '">=2.0.6' });
+  updatePlugin('Trickle - update to v2.1.2', { name: 'adapt-contrib-trickle', version: '2.1.2', framework: '>=2.0.6' });
+
+  testSuccessWhere('trickle with both configured/non configured articles/blocks', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '2.1.1' }],
+    content: [
+      { _type: 'article', _trickle: {} },
+      { _type: 'article' },
+      { _type: 'block', _trickle: {} },
+      { _type: 'block' }
+    ]
+  });
+
+  testStopWhere('trickle no configured articles/blocks', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '2.1.1' }],
+    content: [
+      { _type: 'course' }
+    ]
+  });
+
+  testStopWhere('trickle incorrect version', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '2.1.2' }]
+  });
 });
 
 describe('Trickle - v2.1.3 to v2.1.5', async () => {
@@ -86,7 +100,6 @@ describe('Trickle - v2.1.3 to v2.1.5', async () => {
     if (config?._completionAttribute === '_isInteractionComplete') {
       config._completionAttribute = '_isComplete';
     }
-
     return true;
   });
 
@@ -95,7 +108,6 @@ describe('Trickle - v2.1.3 to v2.1.5', async () => {
       if (article._trickle._button?._isFullWidth !== 'true') return;
       article._trickle._button._isFullWidth = true;
     });
-
     return true;
   });
 
@@ -104,7 +116,6 @@ describe('Trickle - v2.1.3 to v2.1.5', async () => {
       if (article._trickle._button?._autoHide !== 'true') return;
       article._trickle._button._autoHide = true;
     });
-
     return true;
   });
 
@@ -113,16 +124,15 @@ describe('Trickle - v2.1.3 to v2.1.5', async () => {
       if (_.has(block._trickle, '_isEnabled')) return;
       block._trickle._isEnabled = true;
     });
-
     return true;
   });
 
   mutateContent('Trickle - update block attribute _button._isEnabled', async (content) => {
     configuredBlocks.forEach(block => {
-      if (_.has(block._trickle, '_button._isEnabled')) return;
+      const blockButton = block._trickle._button;
+      if (blockButton?._isEnabled || !blockButton) return;
       block._trickle._button._isEnabled = true;
     });
-
     return true;
   });
 
@@ -131,7 +141,6 @@ describe('Trickle - v2.1.3 to v2.1.5', async () => {
       if (block._trickle._button?._isFullWidth !== 'true') return;
       block._trickle._button._isFullWidth = true;
     });
-
     return true;
   });
 
@@ -140,67 +149,90 @@ describe('Trickle - v2.1.3 to v2.1.5', async () => {
       if (block._trickle._button?._autoHide !== 'true') return;
       block._trickle._button._autoHide = true;
     });
-
     return true;
   });
 
   checkContent('Trickle - check config attribute _completionAttribute', async (content) => {
     const isValid = config?._completionAttribute !== '_isInteractionComplete';
-
     if (!isValid) throw new Error('Trickle - config attribute _completionAttribute');
-
     return true;
   });
 
   checkContent('Trickle - check article attribute _button._isFullWidth', async (content) => {
     const isValid = configuredArticles.every(({ _trickle }) => !_.has(_trickle, '_button') || _trickle._button._isFullWidth !== 'true');
-
     if (!isValid) throw new Error('Trickle - article attribute _button._isFullWidth');
-
     return true;
   });
 
   checkContent('Trickle - check article attribute _button._autoHide', async (content) => {
     const isValid = configuredArticles.every(({ _trickle }) => !_.has(_trickle, '_button') || _trickle._button._autoHide !== 'true');
-
     if (!isValid) throw new Error('Trickle - article attribute _button._autoHide');
-
     return true;
   });
 
   checkContent('Trickle - check block attribute _isEnabled', async (content) => {
     const isValid = configuredBlocks.every(block => _.has(block._trickle, '_isEnabled'));
-
     if (!isValid) throw new Error('Trickle - block attribute _isEnabled');
-
     return true;
   });
 
   checkContent('Trickle - check block attribute _button._isEnabled', async (content) => {
     const isValid = configuredBlocks.every(({ _trickle }) => !_.has(_trickle, '_button') || _.has(_trickle._button, '_isEnabled'));
-
     if (!isValid) throw new Error('Trickle - block attribute _button._isEnabled');
-
     return true;
   });
 
   checkContent('Trickle - check block attribute _button._isFullWidth', async (content) => {
     const isValid = configuredBlocks.every(({ _trickle }) => !_.has(_trickle, '_button') || _trickle._button._isFullWidth !== 'true');
-
     if (!isValid) throw new Error('Trickle - block attribute _button._isFullWidth');
-
     return true;
   });
 
   checkContent('Trickle - check block attribute _button._autoHide', async (content) => {
     const isValid = configuredBlocks.every(({ _trickle }) => !_.has(_trickle, '_button') || _trickle._button._autoHide !== 'true');
-
     if (!isValid) throw new Error('Trickle - block attribute _button._autoHide');
-
     return true;
   });
 
-  updatePlugin('Trickle - update to v2.1.5', { name: 'adapt-contrib-trickle', version: '2.1.5', framework: '">=2.2' });
+  updatePlugin('Trickle - update to v2.1.5', { name: 'adapt-contrib-trickle', version: '2.1.5', framework: '>=2.2.0' });
+
+  testSuccessWhere('trickle with both configured/non configured articles/blocks and empty article/block/config._trickle', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '2.1.3' }],
+    content: [
+      { _type: 'article', _trickle: {} },
+      { _type: 'article', _trickle: { _button: {} } },
+      { _type: 'article' },
+      { _type: 'block', _trickle: {} },
+      { _type: 'block', _trickle: { _button: {} } },
+      { _type: 'block' },
+      { _type: 'config', _trickle: {} }
+    ]
+  });
+
+  testSuccessWhere('trickle with both configured/non configured articles/blocks and defaults', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '2.1.3' }],
+    content: [
+      { _type: 'article', _trickle: { _button: { _isFullWidth: true } } },
+      { _type: 'article' },
+      { _type: 'block', _trickle: { _button: { _isEnabled: true, _isFullWidth: true, _autoHide: true } } },
+      { _type: 'block' },
+      { _type: 'config', _trickle: { _completionAttribute: '_isInteractionComplete', _button: {} } }
+    ]
+  });
+
+  testStopWhere('trickle no configured articles/blocks and empty config', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '2.1.3' }],
+    content: [
+      { _type: 'course' },
+      { _type: 'article' },
+      { _type: 'block' },
+      { _type: 'config' }
+    ]
+  });
+
+  testStopWhere('trickle incorrect version', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '2.1.5' }]
+  });
 });
 
 describe('Trickle - v2.1.5 to v2.2.0', async () => {
@@ -212,7 +244,7 @@ describe('Trickle - v2.1.5 to v2.2.0', async () => {
   whereFromPlugin('Trickle - from v2.1.5', { name: 'adapt-contrib-trickle', version: '<2.2.0' });
 
   whereContent('Trickle is configured', content => {
-    course = content.find(({ _type }) => _type === 'course');
+    course = getCourse();
     return getConfig()._trickle;
   });
 
@@ -233,5 +265,33 @@ describe('Trickle - v2.1.5 to v2.2.0', async () => {
     return true;
   });
 
-  updatePlugin('Trickle - update to v2.2.0', { name: 'adapt-contrib-trickle', version: '2.2.0', framework: '">=2.2' });
+  updatePlugin('Trickle - update to v2.2.0', { name: 'adapt-contrib-trickle', version: '2.2.0', framework: '>=2.2.0' });
+
+  testSuccessWhere('trickle with config._trickle and empty course', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '2.1.5' }],
+    content: [
+      { _type: 'config', _trickle: {} },
+      { _type: 'course' }
+    ]
+  });
+
+  testSuccessWhere('trickle with config._trickle and course with globals', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '2.1.5' }],
+    content: [
+      { _type: 'config', _trickle: {} },
+      { _type: 'course', _globals: { _extensions: { _trickle: {} } } }
+    ]
+  });
+
+  testStopWhere('trickle with empty course and config', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '2.1.5' }],
+    content: [
+      { _type: 'course' },
+      { _type: 'config' }
+    ]
+  });
+
+  testStopWhere('trickle incorrect version', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '2.2.0' }]
+  });
 });

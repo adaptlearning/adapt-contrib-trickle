@@ -1,9 +1,8 @@
-import { describe, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin } from 'adapt-migrations';
+import { describe, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin, testStopWhere, testSuccessWhere } from 'adapt-migrations';
 import _ from 'lodash';
 
 describe('Trickle - v2.2.1 to v3.0.0', async () => {
   // https://github.com/adaptlearning/adapt-contrib-trickle/compare/v2.2.1..v3.0.0
-
   let configuredBlocks, configuredArticles;
 
   whereFromPlugin('Trickle - from v2.2.1', { name: 'adapt-contrib-trickle', version: '<3.0.0' });
@@ -21,7 +20,6 @@ describe('Trickle - v2.2.1 to v3.0.0', async () => {
       if (!_.isFinite(scrollDuration)) return;
       article._trickle._scrollDuration = scrollDuration;
     });
-
     return true;
   });
 
@@ -32,7 +30,6 @@ describe('Trickle - v2.2.1 to v3.0.0', async () => {
       if (!_.isFinite(scrollDuration)) return;
       block._trickle._scrollDuration = scrollDuration;
     });
-
     return true;
   });
 
@@ -41,9 +38,7 @@ describe('Trickle - v2.2.1 to v3.0.0', async () => {
       const scrollDuration = _.toNumber(_trickle._scrollDuration);
       return !_.isFinite(scrollDuration) || _trickle._scrollDuration === scrollDuration;
     });
-
     if (!isValid) throw new Error('Trickle - article attribute _scrollDuration');
-
     return true;
   });
 
@@ -52,11 +47,47 @@ describe('Trickle - v2.2.1 to v3.0.0', async () => {
       const scrollDuration = _.toNumber(_trickle._scrollDuration);
       return !_.isFinite(scrollDuration) || _trickle._scrollDuration === scrollDuration;
     });
-
     if (!isValid) throw new Error('Trickle - block attribute _scrollDuration');
-
     return true;
   });
 
-  updatePlugin('Trickle - update to v3.0.0', { name: 'adapt-contrib-trickle', version: '3.0.0', framework: '">=3' });
+  updatePlugin('Trickle - update to v3.0.0', { name: 'adapt-contrib-trickle', version: '3.0.0', framework: '>=3.0.0' });
+
+  testSuccessWhere('trickle with both configured/non configured articles/blocks and default article/block._trickle._scrollDuration', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '2.2.1' }],
+    content: [
+      { _type: 'article', _trickle: { _scrollDuration: '500' } },
+      { _type: 'article', _trickle: { _scrollDuration: '500' } },
+      { _type: 'article' },
+      { _type: 'block', _trickle: { _scrollDuration: '500' } },
+      { _type: 'block', _trickle: { _scrollDuration: '500' } },
+      { _type: 'block' },
+      { _type: 'config', _trickle: {} }
+    ]
+  });
+
+  testSuccessWhere('trickle with both configured/non configured articles/blocks and empty article/block/config._trickle', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '2.2.1' }],
+    content: [
+      { _type: 'article', _trickle: {} },
+      { _type: 'article', _trickle: {} },
+      { _type: 'article' },
+      { _type: 'block', _trickle: {} },
+      { _type: 'block', _trickle: {} },
+      { _type: 'block' },
+      { _type: 'config', _trickle: {} }
+    ]
+  });
+
+  testStopWhere('trickle with empty course and config', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '2.2.1' }],
+    content: [
+      { _type: 'course' },
+      { _type: 'config' }
+    ]
+  });
+
+  testStopWhere('trickle incorrect version', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '3.0.0' }]
+  });
 });
