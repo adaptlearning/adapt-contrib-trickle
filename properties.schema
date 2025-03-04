@@ -33,7 +33,7 @@
                   "title": "Is Enabled",
                   "inputType": "Checkbox",
                   "validators": [],
-                  "help": "Controls whether the Trickle extension is enabled or disabled."
+                  "help": "Controls whether the Trickle extension is enabled or disabled globally."
                 },
                 "_logState": {
                   "type": "boolean",
