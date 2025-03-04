@@ -11,6 +11,16 @@
       "inputType": "Text",
       "validators": [],
       "translatable": true
+    },
+    "additionalContentLoaded": {
+      "type": "string",
+      "required": true,
+      "title": "Additional content loaded.",
+      "default": "Loading.",
+      "inputType": "Text",
+      "help": "Announced to screen readers when additional content is loaded. Recommend keeping this short.",
+      "validators": [],
+      "translatable": true
     }
   },
   "properties": {
