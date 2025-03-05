@@ -13,6 +13,12 @@
           "title": "Trickle",
           "default": {},
           "properties": {
+            "_isEnabled": {
+              "type": "boolean",
+              "title": "Enable Trickle globally",
+              "description": "Controls whether the Trickle extension is enabled or disabled globally.",
+              "default": true
+            },
             "_logState": {
               "type": "boolean",
               "title": "Log state",
