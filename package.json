@@ -1,6 +1,6 @@
 {
   "name": "adapt-contrib-trickle",
-  "version": "7.5.0",
+  "version": "7.5.1",
   "framework": ">=5.31.24",
   "homepage": "https://github.com/adaptlearning/adapt-contrib-trickle",
   "bugs": "https://github.com/adaptlearning/adapt-contrib-trickle/issues",
