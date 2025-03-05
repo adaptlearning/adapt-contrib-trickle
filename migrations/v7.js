@@ -114,17 +114,34 @@ describe('Trickle - v7.5.0 to v7.5.1', async () => {
 
   mutateContent('Trickle - check config attribute _isEnabled', async (content) => {
     if (!_.has(config._trickle, '_isEnabled')) config._trickle._isEnabled = true;
-
     return true;
   });
 
   checkContent('Trickle - check config attribute _isEnabled', async (content) => {
     const isValid = _.has(config._trickle, '_isEnabled');
-
     if (!isValid) throw new Error('Trickle - config attribute _isEnabled');
-
     return true;
   });
 
   updatePlugin('Trickle - update to v7.5.1', { name: 'adapt-contrib-trickle', version: '7.5.1', framework: '">=5.19.1' });
+
+  testSuccessWhere('trickle with empty course._trickle', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '7.5.0' }],
+    content: [
+      { _type: 'config', _trickle: {} }
+    ]
+  });
+
+  testStopWhere('trickle with empty config', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '7.5.0' }],
+    content: [
+      { _type: 'article' },
+      { _type: 'block' },
+      { _type: 'config' }
+    ]
+  });
+
+  testStopWhere('trickle incorrect version', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '7.5.1' }]
+  });
 });
