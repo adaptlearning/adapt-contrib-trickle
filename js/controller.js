@@ -227,7 +227,7 @@ class TrickleController extends Backbone.Controller {
         model.setCompletionStatus();
       }
       if (!model.get('_isTrickled')) return;
-      model.set('_isLocked', false);
+      model.set('_isLocked', false, { pluginName: 'trickle' });
     });
     await this.continue();
   }
