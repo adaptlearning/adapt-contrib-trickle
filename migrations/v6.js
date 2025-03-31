@@ -122,7 +122,7 @@ describe('Trickle - v6.3.4 to v6.3.5', async () => {
   whereFromPlugin('Trickle - from v6.3.4', { name: 'adapt-contrib-trickle', version: '<6.3.5' });
 
   whereContent('Trickle is configured', content => {
-    config = getConfig(content);
+    config = getConfig();
     return config._trickle;
   });
 
@@ -140,20 +140,20 @@ describe('Trickle - v6.3.4 to v6.3.5', async () => {
   updatePlugin('Trickle - update to v6.3.5', { name: 'adapt-contrib-trickle', version: '6.3.5', framework: '>=5.19.1' });
 
   testSuccessWhere('trickle with config._trickle', {
-    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '6.1.0' }],
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '6.3.4' }],
     content: [
       { _type: 'config', _trickle: {} }
     ]
   });
 
   testStopWhere('trickle with empty config', {
-    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '6.1.0' }],
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '6.3.4' }],
     content: [
       { _type: 'config' }
     ]
   });
 
   testStopWhere('trickle incorrect version', {
-    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '6.2.0' }]
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '6.3.5' }]
   });
 });

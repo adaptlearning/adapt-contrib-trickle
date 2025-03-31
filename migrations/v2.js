@@ -63,8 +63,10 @@ describe('Trickle - v2.1.1 to v2.1.2', async () => {
   testSuccessWhere('trickle with both configured/non configured articles/blocks', {
     fromPlugins: [{ name: 'adapt-contrib-trickle', version: '2.1.1' }],
     content: [
+      { _type: 'article', _trickle: { _button: {} } },
       { _type: 'article', _trickle: {} },
       { _type: 'article' },
+      { _type: 'block', _trickle: { _button: {} } },
       { _type: 'block', _trickle: {} },
       { _type: 'block' }
     ]
@@ -87,6 +89,11 @@ describe('Trickle - v2.1.3 to v2.1.5', async () => {
 
   let config, configuredBlocks, configuredArticles;
 
+  const stringToBoolean = (str, defaultValue) => {
+    if (typeof str !== 'string') return defaultValue;
+    return str.toLowerCase() === 'true';
+  };
+
   whereFromPlugin('Trickle - from v2.1.3', { name: 'adapt-contrib-trickle', version: '<2.1.5' });
 
   whereContent('Trickle is configured', content => {
@@ -105,16 +112,16 @@ describe('Trickle - v2.1.3 to v2.1.5', async () => {
 
   mutateContent('Trickle - update article attribute _button._isFullWidth', async (content) => {
     configuredArticles.forEach(article => {
-      if (article._trickle._button?._isFullWidth !== 'true') return;
-      article._trickle._button._isFullWidth = true;
+      if (!article._trickle._button?._isFullWidth) return;
+      article._trickle._button._isFullWidth = stringToBoolean(article._trickle._button._isFullWidth, true);
     });
     return true;
   });
 
   mutateContent('Trickle - update article attribute _button._autoHide', async (content) => {
     configuredArticles.forEach(article => {
-      if (article._trickle._button?._autoHide !== 'true') return;
-      article._trickle._button._autoHide = true;
+      if (!article._trickle._button?._autoHide) return;
+      article._trickle._button._autoHide = stringToBoolean(article._trickle._button._autoHide, true);
     });
     return true;
   });
@@ -138,16 +145,16 @@ describe('Trickle - v2.1.3 to v2.1.5', async () => {
 
   mutateContent('Trickle - update block attribute _button._isFullWidth', async (content) => {
     configuredBlocks.forEach(block => {
-      if (block._trickle._button?._isFullWidth !== 'true') return;
-      block._trickle._button._isFullWidth = true;
+      if (!block._trickle._button?._isFullWidth) return;
+      block._trickle._button._isFullWidth = stringToBoolean(block._trickle._button._isFullWidth, true);
     });
     return true;
   });
 
   mutateContent('Trickle - update block attribute _button._autoHide', async (content) => {
     configuredBlocks.forEach(block => {
-      if (block._trickle._button?._autoHide !== 'true') return;
-      block._trickle._button._autoHide = true;
+      if (!block._trickle._button?._autoHide) return;
+      block._trickle._button._autoHide = stringToBoolean(block._trickle._button._autoHide, true);
     });
     return true;
   });
@@ -213,8 +220,11 @@ describe('Trickle - v2.1.3 to v2.1.5', async () => {
     fromPlugins: [{ name: 'adapt-contrib-trickle', version: '2.1.3' }],
     content: [
       { _type: 'article', _trickle: { _button: { _isFullWidth: true } } },
+      { _type: 'article', _trickle: { _button: { _isFullWidth: 'true' } } },
+      { _type: 'article', _trickle: { _button: { _isFullWidth: 'false' } } },
       { _type: 'article' },
-      { _type: 'block', _trickle: { _button: { _isEnabled: true, _isFullWidth: true, _autoHide: true } } },
+      { _type: 'block', _trickle: { _button: { _isEnabled: true, _isFullWidth: 'true', _autoHide: 'true' } } },
+      { _type: 'block', _trickle: { _button: { _isEnabled: true, _isFullWidth: 'false', _autoHide: 'false' } } },
       { _type: 'block' },
       { _type: 'config', _trickle: { _completionAttribute: '_isInteractionComplete', _button: {} } }
     ]

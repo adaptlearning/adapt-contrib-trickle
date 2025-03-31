@@ -112,7 +112,7 @@ describe('Trickle - v7.5.0 to v7.5.1', async () => {
     return config._trickle;
   });
 
-  mutateContent('Trickle - check config attribute _isEnabled', async (content) => {
+  mutateContent('Trickle - add config attribute _isEnabled', async (content) => {
     if (!_.has(config._trickle, '_isEnabled')) config._trickle._isEnabled = true;
     return true;
   });

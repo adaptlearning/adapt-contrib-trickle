@@ -47,22 +47,9 @@ describe('Trickle - v3.0.1 to v4.0.0', async () => {
     fromPlugins: [{ name: 'adapt-contrib-trickle', version: '3.0.1' }],
     content: [
       { _type: 'article', _trickle: { _button: {} } },
-      { _type: 'article', _trickle: { _button: {} } },
-      { _type: 'article' },
-      { _type: 'block', _trickle: { _button: {} } },
-      { _type: 'block', _trickle: { _button: {} } },
-      { _type: 'block' },
-      { _type: 'config', _trickle: {} }
-    ]
-  });
-
-  testSuccessWhere('trickle with both configured/non configured articles/blocks and empty article/block/config._trickle', {
-    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '3.0.1' }],
-    content: [
-      { _type: 'article', _trickle: {} },
       { _type: 'article', _trickle: {} },
       { _type: 'article' },
-      { _type: 'block', _trickle: {} },
+      { _type: 'block', _trickle: { _button: {} } },
       { _type: 'block', _trickle: {} },
       { _type: 'block' },
       { _type: 'config', _trickle: {} }
