@@ -115,9 +115,11 @@ class TrickleController extends Backbone.Controller {
    */
   async continue() {
     applyLocks();
-    const addedCount = await Adapt.parentView.addChildren();
+    const addedChildren = await Adapt.parentView.addChildren({
+      returnNewDescendants: true
+    });
     await Adapt.parentView.whenReady();
-    return addedCount;
+    return addedChildren;
   }
 
   /**

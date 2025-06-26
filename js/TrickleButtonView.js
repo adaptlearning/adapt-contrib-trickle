@@ -7,6 +7,7 @@ import {
   getModelConfig,
   getCompletionAttribute
 } from './models';
+import wait from 'core/js/wait';
 
 /** @typedef {import('core/js/modelEvent').default} ModelEvent  */
 
@@ -73,7 +74,7 @@ class TrickleButtonView extends ComponentView {
     this.$el.on('onscreen', this.tryButtonAutoHide);
     this.listenTo(Adapt, {
       'popup:opened': this.onPopupOpened,
-      'popup:closed': this.onPopupClosed
+      'popup:closing': this.onPopupClosed
     });
     const parentModel = this.model.getParent();
     const completionAttribute = getCompletionAttribute(parentModel);
@@ -101,6 +102,8 @@ class TrickleButtonView extends ComponentView {
     this.openPopupCount--;
     if (this.openPopupCount) return;
     if (this.isAwaitingPopupClose) {
+      this._isWaiting = true;
+      wait.begin();
       // Had completed with an open popup, perform final part of finishing
       return this.finish();
     }
@@ -188,7 +191,7 @@ class TrickleButtonView extends ComponentView {
   async finish() {
     this.stopListening(Adapt, {
       'popup:opened': this.onPopupOpened,
-      'popup:closed': this.onPopupClosed
+      'popup:closing': this.onPopupClosed
     });
     this.updateButtonState();
     const isStepLockingCompletionRequired = this.model.isStepLockingCompletionRequired();
@@ -204,10 +207,14 @@ class TrickleButtonView extends ComponentView {
   async continue() {
     const parent = this.model.getParent();
     const childrenAdded = await controller.continue();
-    if (childrenAdded) {
+    if (childrenAdded.length) {
       await this.announceContentLoaded();
     }
-
+    if (this._isWaiting) {
+      this._isWaiting = false;
+      a11y.setPopupCloseTo(childrenAdded[0]?.$el);
+      wait.end();
+    }
     await controller.scroll(parent);
   }
 
