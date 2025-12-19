@@ -4,6 +4,7 @@ import models from './models';
 import trickleButton from './trickleButton';
 import TrickleButtonModel from './TrickleButtonModel';
 import TrickleButtonView from './TrickleButtonView';
+import { getTrickleButtonHeight } from './helpers';
 
 // Export main API
 export default (Adapt.trickle = controller);
@@ -14,5 +15,6 @@ export {
   models,
   trickleButton,
   TrickleButtonModel,
-  TrickleButtonView
+  TrickleButtonView,
+  getTrickleButtonHeight
 };
