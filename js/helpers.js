@@ -1,23 +1,26 @@
 /**
- * Get the height of the trickle button within a given parent container.
- * Used by other plugins to account for trickle space when positioning UI.
- * @param {Element} parentElement - The container to search within
+ * Get the height of any visible trickle button.
+ * Useful for other plugins to avoid overlapping the trickle button.
  * @returns {number} Height of trickle button including margins, or 0 if not found
  */
-export function getTrickleButtonHeight(parentElement) {
-  if (!parentElement) return 0;
+export function getTrickleButtonHeight() {
+  // Find all trickle buttons and get the one with actual height (the visible one)
+  const trickles = document.querySelectorAll('.trickle-button, .trickle');
+  let visibleTrickle = null;
+  let maxHeight = 0;
 
-  const selector = [
-    '.trickle-button',
-    '.js-trickle-button',
-    '[data-trickle]'
-  ].join(', ');
+  trickles.forEach(trickle => {
+    const rect = trickle.getBoundingClientRect();
+    if (rect.height > maxHeight) {
+      maxHeight = rect.height;
+      visibleTrickle = trickle;
+    }
+  });
 
-  const trickle = parentElement.querySelector(selector);
-  if (!trickle || trickle.offsetHeight === 0) return 0;
+  if (!visibleTrickle || maxHeight === 0) return 0;
 
-  const styles = window.getComputedStyle(trickle);
-  const marginTop = parseFloat(styles.marginTop);
-  const marginBottom = parseFloat(styles.marginBottom);
-  return trickle.offsetHeight + marginTop + marginBottom;
+  const styles = window.getComputedStyle(visibleTrickle);
+  const marginTop = parseFloat(styles.marginTop) || 0;
+  const marginBottom = parseFloat(styles.marginBottom) || 0;
+  return maxHeight + marginTop + marginBottom;
 }
