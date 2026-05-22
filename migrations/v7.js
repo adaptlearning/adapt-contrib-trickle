@@ -1,4 +1,4 @@
-import { describe, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin, testStopWhere, testSuccessWhere, getConfig } from 'adapt-migrations';
+import { describe, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin, testStopWhere, testSuccessWhere, getConfig, getCourse } from 'adapt-migrations';
 import _ from 'lodash';
 
 describe('Trickle - v7.1.3 to v7.2.0', async () => {
@@ -143,5 +143,56 @@ describe('Trickle - v7.5.0 to v7.5.1', async () => {
 
   testStopWhere('trickle incorrect version', {
     fromPlugins: [{ name: 'adapt-contrib-trickle', version: '7.5.1' }]
+  });
+});
+
+describe('Trickle - @@CURRENT_VERSION to @@RELEASE_VERSION', async () => {
+  // https://github.com/adaptlearning/adapt-contrib-trickle/compare/@@CURRENT_VERSION..@@RELEASE_VERSION
+
+  let course, courseTrickleGlobals;
+  const additionalContentLoaded = 'Loading.';
+
+  whereFromPlugin('Trickle - from @@CURRENT_VERSION', { name: 'adapt-contrib-trickle', version: '<@@RELEASE_VERSION' });
+
+  whereContent('Trickle - where course is present', async (content) => {
+    course = getCourse();
+    return course;
+  });
+
+  mutateContent('Trickle - add globals if missing', async (content) => {
+    if (!_.has(course, '_globals._extensions._trickle')) _.set(course, '_globals._extensions._trickle', {});
+    courseTrickleGlobals = course._globals._extensions._trickle;
+    return true;
+  });
+
+  mutateContent('Trickle - add global attribute additionalContentLoaded', async (content) => {
+    if (!_.has(courseTrickleGlobals, 'additionalContentLoaded')) courseTrickleGlobals.additionalContentLoaded = additionalContentLoaded;
+    return true;
+  });
+
+  checkContent('Trickle - check global attribute additionalContentLoaded', async (content) => {
+    const isValid = _.has(courseTrickleGlobals, 'additionalContentLoaded');
+    if (!isValid) throw new Error('Trickle - global attribute additionalContentLoaded');
+    return true;
+  });
+
+  updatePlugin('Trickle - update to @@RELEASE_VERSION', { name: 'adapt-contrib-trickle', version: '@@RELEASE_VERSION', framework: '>=5.46.4' });
+
+  testSuccessWhere('trickle with course, no globals', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '@@CURRENT_VERSION' }],
+    content: [
+      { _type: 'course' }
+    ]
+  });
+
+  testSuccessWhere('trickle with course, with other globals', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '@@CURRENT_VERSION' }],
+    content: [
+      { _type: 'course', _globals: { _extensions: { _trickle: {} } } }
+    ]
+  });
+
+  testStopWhere('trickle incorrect version', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '@@RELEASE_VERSION' }]
   });
 });
