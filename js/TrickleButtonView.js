@@ -206,10 +206,12 @@ class TrickleButtonView extends ComponentView {
    */
   async continue() {
     const parent = this.model.getParent();
+    // Announce "Loading" concurrent with the load so the message plays during
+    // the load wait rather than after content is ready (which would race with
+    // the focus shift to the next component).
+    const announcePromise = this.announceContentLoaded();
     const childrenAdded = await controller.continue();
-    if (childrenAdded.length) {
-      await this.announceContentLoaded();
-    }
+    await announcePromise;
     if (this._isWaiting) {
       this._isWaiting = false;
       a11y.setPopupCloseTo(childrenAdded[0]?.$el);
