@@ -86,14 +86,8 @@ export default class TrickleButtonModel extends ComponentModel {
   }
 
   /**
-   * Trickle no longer locks this page (killed) but this end-of-page button was
-   * left incomplete on a previous visit. As the button is part of the page
-   * completion data, leaving it incomplete blocks the page from ever
-   * completing on revisit. Complete it so it no longer blocks completion.
-   * Scoped to the end-of-page button as that is the only button which can be
-   * left incomplete once all page content is complete (other step buttons must
-   * be clicked to progress, or auto-complete when disabled).
-   * @returns {boolean} true if the button should be completed on revisit
+   * @returns {boolean} true if an end-of-page button left incomplete on a
+   * previous visit should be completed so it stops blocking page completion
    */
   shouldCompleteOnRevisit() {
     if (this.get('_isComplete')) return false;
