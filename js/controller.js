@@ -172,6 +172,8 @@ class TrickleController extends Backbone.Controller {
       // Navigate to another content object
       const model = data.findById(scrollToId);
       const contentObject = model.isTypeGroup('contentobject') ? model : model.findAncestor('contentobject');
+      // Do not allow navigation into locked content (#200)
+      if (model.get('_isLocked') || contentObject.get('_isLocked')) return;
       await router.navigateToElement(contentObject.get('_id'));
       // Recalculate the relative id after the page is ready as it may change
       scrollToId = getScrollToId();

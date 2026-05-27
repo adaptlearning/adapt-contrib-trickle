@@ -86,6 +86,20 @@ export default class TrickleButtonModel extends ComponentModel {
   }
 
   /**
+   * Trickle no longer locks this page (killed) but this button was left
+   * incomplete on a previous visit. As the button is part of the page
+   * completion data, leaving it incomplete blocks the page from ever
+   * completing on revisit. Complete it so it no longer blocks completion.
+   * @returns {boolean} true if the button should be completed on revisit
+   */
+  shouldCompleteOnRevisit() {
+    if (this.get('_isComplete')) return false;
+    if (this.isStepLockedOnRevisit()) return false;
+    if (!this.isStepUnlocked()) return false;
+    return controller.isKilled;
+  }
+
+  /**
    * @return {boolean} true if completion is not required or if completion has been fulfilled
    * and the button has been clicked
    */
