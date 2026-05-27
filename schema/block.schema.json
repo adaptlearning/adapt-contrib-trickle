@@ -67,6 +67,7 @@
                 "_styleBeforeCompletion": {
                   "type": "string",
                   "title": "Visibility before completion",
+                  "description": "Button visibility before step completion. Default: hidden.",
                   "default": "hidden",
                   "enum": [
                     "hidden",
@@ -78,6 +79,7 @@
                 "_styleAfterClick": {
                   "type": "string",
                   "title": "Visibility after completion",
+                  "description": "Button visibility after step completion. Default: hidden. Ignored when Full Width is true; the button is always hidden after completion to prevent stacked buttons.",
                   "default": "hidden",
                   "enum": [
                     "hidden",

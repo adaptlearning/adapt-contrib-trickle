@@ -142,7 +142,7 @@
                       "title": "Initial Visibility",
                       "inputType": {"type": "Select", "options":["hidden", "visible", "disabled"]},
                       "validators": ["required"],
-                      "help": "Set button visibility before completion"
+                      "help": "Button visibility before step completion. Default: hidden."
                     },
                     "_styleAfterClick": {
                       "type": "string",
@@ -152,7 +152,7 @@
                       "title": "Final Visibility",
                       "inputType": {"type": "Select", "options":["hidden", "visible", "disabled"]},
                       "validators": ["required"],
-                      "help": "Set button visibility after completion"
+                      "help": "Button visibility after step completion. Default: hidden. Ignored when Full Width is true; the button is always hidden after completion to prevent stacked buttons."
                     },
                     "_isFullWidth": {
                       "type": "boolean",
@@ -398,7 +398,7 @@
                       "default": "hidden",
                       "title": "Initial Visibility",
                       "inputType": {"type": "Select", "options":["hidden", "visible", "disabled"]},
-                      "help": "Set button visibility before completion"
+                      "help": "Button visibility before step completion. Default: hidden."
                     },
                     "_styleAfterClick": {
                       "type": "string",
@@ -407,7 +407,7 @@
                       "default": "hidden",
                       "title": "Final Visibility",
                       "inputType": {"type": "Select", "options":["hidden", "visible", "disabled"]},
-                      "help": "Set button visibility after completion"
+                      "help": "Button visibility after step completion. Default: hidden. Ignored when Full Width is true; the button is always hidden after completion to prevent stacked buttons."
                     },
                     "_isFullWidth": {
                       "type": "boolean",
