@@ -41,6 +41,10 @@ class TrickleButtonView extends ComponentView {
     if (!this.model.isEnabled()) {
       this.setCompletionStatus();
     }
+    if (this.model.shouldCompleteOnRevisit()) {
+      this.model.setCompletionStatus();
+      this.updateButtonState();
+    }
     _.defer(this.setReadyStatus.bind(this));
   }
 
