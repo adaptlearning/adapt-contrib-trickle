@@ -146,13 +146,13 @@ describe('Trickle - v7.5.0 to v7.5.1', async () => {
   });
 });
 
-describe('Trickle - @@CURRENT_VERSION to @@RELEASE_VERSION', async () => {
-  // https://github.com/adaptlearning/adapt-contrib-trickle/compare/@@CURRENT_VERSION..@@RELEASE_VERSION
+describe('Trickle - 7.8.0 to 7.9.0', async () => {
+  // https://github.com/adaptlearning/adapt-contrib-trickle/compare/7.8.0..7.9.0
 
   let course, courseTrickleGlobals;
   const additionalContentLoaded = 'Loading.';
 
-  whereFromPlugin('Trickle - from @@CURRENT_VERSION', { name: 'adapt-contrib-trickle', version: '<@@RELEASE_VERSION' });
+  whereFromPlugin('Trickle - from 7.8.0', { name: 'adapt-contrib-trickle', version: '<7.9.0' });
 
   whereContent('Trickle - where course is present', async (content) => {
     course = getCourse();
@@ -176,23 +176,23 @@ describe('Trickle - @@CURRENT_VERSION to @@RELEASE_VERSION', async () => {
     return true;
   });
 
-  updatePlugin('Trickle - update to @@RELEASE_VERSION', { name: 'adapt-contrib-trickle', version: '@@RELEASE_VERSION', framework: '>=5.46.4' });
+  updatePlugin('Trickle - update to 7.9.0', { name: 'adapt-contrib-trickle', version: '7.9.0', framework: '>=5.46.4' });
 
   testSuccessWhere('trickle with course, no globals', {
-    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '@@CURRENT_VERSION' }],
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '7.8.0' }],
     content: [
       { _type: 'course' }
     ]
   });
 
   testSuccessWhere('trickle with course, with other globals', {
-    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '@@CURRENT_VERSION' }],
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '7.8.0' }],
     content: [
       { _type: 'course', _globals: { _extensions: { _trickle: {} } } }
     ]
   });
 
   testStopWhere('trickle incorrect version', {
-    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '@@RELEASE_VERSION' }]
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '7.9.0' }]
   });
 });
