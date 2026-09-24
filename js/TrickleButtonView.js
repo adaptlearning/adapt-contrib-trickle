@@ -97,9 +97,8 @@ class TrickleButtonView extends ComponentView {
   }
 
   async onPopupClosed() {
-    // This fires before the closing popup is removed from the stack, so more
-    // than one means another popup is still open behind it
-    if (a11y.popupStack.length > 1) return;
+    const isAnotherPopupOpen = (a11y.popupStack.length > 1);
+    if (isAnotherPopupOpen) return;
     if (this.isAwaitingPopupClose) {
       this._isWaiting = true;
       wait.begin();
