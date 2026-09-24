@@ -32,6 +32,7 @@ class TrickleButtonView extends ComponentView {
 
   initialize() {
     this.isAwaitingPopupClose = false;
+    this.isPopupClosing = false;
     this.wasButtonClicked = false;
     this.calculateButtonState();
     this.model.calculateButtonText();
@@ -47,7 +48,12 @@ class TrickleButtonView extends ComponentView {
    * Taking account of open popups, recalculate the button visible and enabled states
    */
   calculateButtonState() {
-    const isDisabledByPopups = a11y.isPopupOpen;
+    // A popup which is closing is still on the stack, so discount it when
+    // deciding whether the button should be disabled by an open popup
+    const openPopupCount = a11y.popupStack.length;
+    const isDisabledByPopups = this.isPopupClosing
+      ? (openPopupCount > 1)
+      : (openPopupCount > 0);
     this.model.calculateButtonState(isDisabledByPopups, this.wasButtonClicked);
   }
 
@@ -91,7 +97,8 @@ class TrickleButtonView extends ComponentView {
   }
 
   async onPopupClosed() {
-    if (a11y.isPopupOpen) return;
+    const isAnotherPopupOpen = (a11y.popupStack.length > 1);
+    if (isAnotherPopupOpen) return;
     if (this.isAwaitingPopupClose) {
       this._isWaiting = true;
       wait.begin();
@@ -100,7 +107,9 @@ class TrickleButtonView extends ComponentView {
     }
     const shouldUserInteractWithButton = (this.model.isStepUnlocked() && !this.model.isFinished());
     if (!shouldUserInteractWithButton) return;
+    this.isPopupClosing = true;
     this.updateButtonState();
+    this.isPopupClosing = false;
     await Adapt.parentView.addChildren();
   }
 
