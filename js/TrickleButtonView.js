@@ -100,8 +100,11 @@ class TrickleButtonView extends ComponentView {
     // The closing popup is still on the stack, so discount it
     const isAnotherPopupOpen = (a11y.popupStack.length > 1);
     if (isAnotherPopupOpen) return;
-    this._isWaiting = true;
-    wait.begin();
+    // Only finish() with step locking completion required continues and ends the wait
+    if (this.model.isStepLockingCompletionRequired()) {
+      this._isWaiting = true;
+      wait.begin();
+    }
     // Had completed with an open popup, perform final part of finishing
     return this.finish();
   }
