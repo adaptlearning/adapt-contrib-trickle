@@ -32,7 +32,6 @@ class TrickleButtonView extends ComponentView {
 
   initialize() {
     this.isAwaitingPopupClose = false;
-    this.isPopupClosing = false;
     this.wasButtonClicked = false;
     this.calculateButtonState();
     this.model.calculateButtonText();
@@ -48,12 +47,7 @@ class TrickleButtonView extends ComponentView {
    * Taking account of open popups, recalculate the button visible and enabled states
    */
   calculateButtonState() {
-    // A popup which is closing is still on the stack, so discount it when
-    // deciding whether the button should be disabled by an open popup
-    const openPopupCount = a11y.popupStack.length;
-    const isDisabledByPopups = this.isPopupClosing
-      ? (openPopupCount > 1)
-      : (openPopupCount > 0);
+    const isDisabledByPopups = a11y.isPopupOpen;
     this.model.calculateButtonState(isDisabledByPopups, this.wasButtonClicked);
   }
 
@@ -79,7 +73,8 @@ class TrickleButtonView extends ComponentView {
     this.$el.on('onscreen', this.tryButtonAutoHide);
     this.listenTo(Adapt, {
       'popup:opened': this.onPopupOpened,
-      'popup:closing': this.onPopupClosed
+      'popup:closing': this.onPopupClosing,
+      'popup:closed': this.onPopupClosed
     });
     const parentModel = this.model.getParent();
     const completionAttribute = getCompletionAttribute(parentModel);
@@ -96,20 +91,26 @@ class TrickleButtonView extends ComponentView {
     this.updateButtonState();
   }
 
-  async onPopupClosed() {
+  /**
+   * Runs before the closing popup is removed from the stack, so that finishing
+   * can hold the close with a wait until the next content has rendered
+   */
+  onPopupClosing() {
+    if (!this.isAwaitingPopupClose) return;
+    // The closing popup is still on the stack, so discount it
     const isAnotherPopupOpen = (a11y.popupStack.length > 1);
     if (isAnotherPopupOpen) return;
-    if (this.isAwaitingPopupClose) {
-      this._isWaiting = true;
-      wait.begin();
-      // Had completed with an open popup, perform final part of finishing
-      return this.finish();
-    }
+    this._isWaiting = true;
+    wait.begin();
+    // Had completed with an open popup, perform final part of finishing
+    return this.finish();
+  }
+
+  async onPopupClosed() {
+    if (a11y.isPopupOpen) return;
     const shouldUserInteractWithButton = (this.model.isStepUnlocked() && !this.model.isFinished());
     if (!shouldUserInteractWithButton) return;
-    this.isPopupClosing = true;
     this.updateButtonState();
-    this.isPopupClosing = false;
     await Adapt.parentView.addChildren();
   }
 
@@ -191,7 +192,8 @@ class TrickleButtonView extends ComponentView {
   async finish() {
     this.stopListening(Adapt, {
       'popup:opened': this.onPopupOpened,
-      'popup:closing': this.onPopupClosed
+      'popup:closing': this.onPopupClosing,
+      'popup:closed': this.onPopupClosed
     });
     this.updateButtonState();
     const isStepLockingCompletionRequired = this.model.isStepLockingCompletionRequired();
