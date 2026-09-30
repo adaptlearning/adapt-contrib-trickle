@@ -171,19 +171,13 @@ export default class TrickleButtonModel extends ComponentModel {
    * @param {boolean} isButtonHiddenForced Set to true to signify that the button must not be visible
    */
   calculateButtonState(isButtonDisableForced = false, isButtonHiddenForced = false) {
-    if (!this.isEnabled()) {
-      this.set({
-        _isButtonVisible: false,
-        _isButtonDisabled: !this.isStepUnlocked()
-      });
-      return;
-    };
-
     const trickleConfig = getModelConfig(this.getParent());
-    if (this.isLastInContentObject() && trickleConfig._button._showEndOfPage === false) {
+    const isButtonHiddenByConfig = !this.isEnabled() ||
+      (this.isLastInContentObject() && trickleConfig._button._showEndOfPage === false);
+    if (isButtonHiddenByConfig) {
       return this.set({
         _isButtonVisible: false,
-        _isButtonDisabled: true
+        _isButtonDisabled: !this.isStepUnlocked()
       });
     }
 
