@@ -73,7 +73,8 @@ class TrickleButtonView extends ComponentView {
     this.$el.on('onscreen', this.tryButtonAutoHide);
     this.listenTo(Adapt, {
       'popup:opened': this.onPopupOpened,
-      'popup:closing': this.onPopupClosed
+      'popup:closing': this.onPopupClosing,
+      'popup:closed': this.onPopupClosed
     });
     const parentModel = this.model.getParent();
     const completionAttribute = getCompletionAttribute(parentModel);
@@ -90,14 +91,26 @@ class TrickleButtonView extends ComponentView {
     this.updateButtonState();
   }
 
-  async onPopupClosed() {
-    if (a11y.isPopupOpen) return;
-    if (this.isAwaitingPopupClose) {
+  /**
+   * Runs before the closing popup is removed from the stack, so that finishing
+   * can hold the close with a wait until the next content has rendered
+   */
+  onPopupClosing() {
+    if (!this.isAwaitingPopupClose) return;
+    // The closing popup is still on the stack, so discount it
+    const isAnotherPopupOpen = (a11y.popupStack.length > 1);
+    if (isAnotherPopupOpen) return;
+    // Only finish() with step locking completion required continues and ends the wait
+    if (this.model.isStepLockingCompletionRequired()) {
       this._isWaiting = true;
       wait.begin();
-      // Had completed with an open popup, perform final part of finishing
-      return this.finish();
     }
+    // Had completed with an open popup, perform final part of finishing
+    return this.finish();
+  }
+
+  async onPopupClosed() {
+    if (a11y.isPopupOpen) return;
     const shouldUserInteractWithButton = (this.model.isStepUnlocked() && !this.model.isFinished());
     if (!shouldUserInteractWithButton) return;
     this.updateButtonState();
@@ -182,7 +195,8 @@ class TrickleButtonView extends ComponentView {
   async finish() {
     this.stopListening(Adapt, {
       'popup:opened': this.onPopupOpened,
-      'popup:closing': this.onPopupClosed
+      'popup:closing': this.onPopupClosing,
+      'popup:closed': this.onPopupClosed
     });
     this.updateButtonState();
     const isStepLockingCompletionRequired = this.model.isStepLockingCompletionRequired();
