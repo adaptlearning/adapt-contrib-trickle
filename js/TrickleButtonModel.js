@@ -86,6 +86,18 @@ export default class TrickleButtonModel extends ComponentModel {
   }
 
   /**
+   * @returns {boolean} true if an end-of-page button left incomplete on a
+   * previous visit should be completed so it stops blocking page completion
+   */
+  shouldCompleteOnRevisit() {
+    if (this.get('_isComplete')) return false;
+    if (!this.isLastInContentObject()) return false;
+    if (this.isStepLockedOnRevisit()) return false;
+    if (!this.isStepUnlocked()) return false;
+    return controller.isKilled;
+  }
+
+  /**
    * @return {boolean} true if completion is not required or if completion has been fulfilled
    * and the button has been clicked
    */
