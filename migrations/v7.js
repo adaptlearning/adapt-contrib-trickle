@@ -196,3 +196,53 @@ describe('Trickle - 7.8.0 to 7.9.0', async () => {
     fromPlugins: [{ name: 'adapt-contrib-trickle', version: '7.9.0' }]
   });
 });
+
+describe('Trickle - 7.10.0 to 7.10.1', async () => {
+  // v5.0.0 replaced the button's 'scroll' style after click with 'visible' (the button stays in
+  // place once used), but content authored before then kept 'scroll' through later upgrades with
+  // no migration, so it reaches any version and fails the schema. Applies from any earlier version.
+  let trickleItems;
+
+  whereFromPlugin('Trickle - from before 7.10.1', { name: 'adapt-contrib-trickle', version: '<7.10.1' });
+
+  whereContent('Trickle - where an article or block has the legacy scroll style', async (content) => {
+    trickleItems = content.filter(({ _type }) => ['article', 'block'].includes(_type));
+    return trickleItems.some(item => _.get(item, '_trickle._button._styleAfterClick') === 'scroll');
+  });
+
+  mutateContent('Trickle - replace _styleAfterClick scroll with visible', async (content) => {
+    trickleItems.forEach(item => {
+      if (_.get(item, '_trickle._button._styleAfterClick') !== 'scroll') return;
+      item._trickle._button._styleAfterClick = 'visible';
+    });
+    return true;
+  });
+
+  checkContent('Trickle - check no _styleAfterClick is scroll', async (content) => {
+    const isValid = trickleItems.every(item => _.get(item, '_trickle._button._styleAfterClick') !== 'scroll');
+    if (!isValid) throw new Error('Trickle - _styleAfterClick scroll not replaced');
+    return true;
+  });
+
+  updatePlugin('Trickle - update to 7.10.1', { name: 'adapt-contrib-trickle', version: '7.10.1', framework: '>=5.46.4' });
+
+  testSuccessWhere('blocks and articles with the legacy scroll style', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '7.1.1' }],
+    content: [
+      { _id: 'a-100', _type: 'article', _trickle: { _button: { _styleAfterClick: 'scroll' } } },
+      { _id: 'b-100', _type: 'block', _trickle: { _button: { _styleAfterClick: 'scroll' } } },
+      { _id: 'b-105', _type: 'block', _trickle: { _button: { _styleAfterClick: 'hidden' } } }
+    ]
+  });
+
+  testStopWhere('no legacy scroll style', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '7.1.1' }],
+    content: [
+      { _id: 'b-100', _type: 'block', _trickle: { _button: { _styleAfterClick: 'hidden' } } }
+    ]
+  });
+
+  testStopWhere('incorrect version', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '7.10.1' }]
+  });
+});
