@@ -11,6 +11,16 @@
       "inputType": "Text",
       "validators": [],
       "translatable": true
+    },
+    "additionalContentLoaded": {
+      "type": "string",
+      "required": true,
+      "title": "Additional content loaded.",
+      "default": "Loading.",
+      "inputType": "Text",
+      "help": "Announced to screen readers when additional content is loaded. Recommend keeping this short.",
+      "validators": [],
+      "translatable": true
     }
   },
   "properties": {
@@ -158,9 +168,10 @@
                       "type": "boolean",
                       "required": false,
                       "default": true,
-                      "title": "Full Width",
+                      "title": "Dock To Bottom Of Window",
                       "inputType": "Checkbox",
-                      "validators": []
+                      "validators": [],
+                      "help": "Fixes the full-width button to the bottom of the window so it stays in view. Default: true. Forces Step Locking Enabled on, and the button is always hidden after completion regardless of Final Visibility."
                     },
                     "_autoHide": {
                       "type": "boolean",
@@ -296,7 +307,8 @@
                       "default": true,
                       "title": "Enabled",
                       "inputType": "Checkbox",
-                      "validators": []
+                      "validators": [],
+                      "help": "Hides content after the step until the learner is allowed to move on. Default: true. Forced on when the button is docked to the bottom of the window."
                     },
                     "_isCompletionRequired": {
                       "type": "boolean",
@@ -413,9 +425,10 @@
                       "type": "boolean",
                       "required": false,
                       "default": true,
-                      "title": "Full Width",
+                      "title": "Dock To Bottom Of Window",
                       "inputType": "Checkbox",
-                      "validators": []
+                      "validators": [],
+                      "help": "Fixes the full-width button to the bottom of the window so it stays in view. Default: true. Forces Step Locking Enabled on, and the button is always hidden after completion regardless of Final Visibility."
                     },
                     "_autoHide": {
                       "type": "boolean",
@@ -551,7 +564,8 @@
                       "default": true,
                       "title": "Enabled",
                       "inputType": "Checkbox",
-                      "validators": []
+                      "validators": [],
+                      "help": "Hides content after the step until the learner is allowed to move on. Default: true. Forced on when the button is docked to the bottom of the window."
                     },
                     "_isCompletionRequired": {
                       "type": "boolean",

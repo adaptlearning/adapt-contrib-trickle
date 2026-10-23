@@ -1,4 +1,4 @@
-import { describe, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin, testStopWhere, testSuccessWhere, getConfig } from 'adapt-migrations';
+import { describe, whereContent, whereFromPlugin, mutateContent, checkContent, updatePlugin, testStopWhere, testSuccessWhere, getConfig, getCourse } from 'adapt-migrations';
 import _ from 'lodash';
 
 describe('Trickle - v7.1.3 to v7.2.0', async () => {
@@ -143,5 +143,106 @@ describe('Trickle - v7.5.0 to v7.5.1', async () => {
 
   testStopWhere('trickle incorrect version', {
     fromPlugins: [{ name: 'adapt-contrib-trickle', version: '7.5.1' }]
+  });
+});
+
+describe('Trickle - 7.8.0 to 7.9.0', async () => {
+  // https://github.com/adaptlearning/adapt-contrib-trickle/compare/7.8.0..7.9.0
+
+  let course, courseTrickleGlobals;
+  const additionalContentLoaded = 'Loading.';
+
+  whereFromPlugin('Trickle - from 7.8.0', { name: 'adapt-contrib-trickle', version: '<7.9.0' });
+
+  whereContent('Trickle - where course is present', async (content) => {
+    course = getCourse();
+    return course;
+  });
+
+  mutateContent('Trickle - add globals if missing', async (content) => {
+    if (!_.has(course, '_globals._extensions._trickle')) _.set(course, '_globals._extensions._trickle', {});
+    courseTrickleGlobals = course._globals._extensions._trickle;
+    return true;
+  });
+
+  mutateContent('Trickle - add global attribute additionalContentLoaded', async (content) => {
+    if (!_.has(courseTrickleGlobals, 'additionalContentLoaded')) courseTrickleGlobals.additionalContentLoaded = additionalContentLoaded;
+    return true;
+  });
+
+  checkContent('Trickle - check global attribute additionalContentLoaded', async (content) => {
+    const isValid = _.has(courseTrickleGlobals, 'additionalContentLoaded');
+    if (!isValid) throw new Error('Trickle - global attribute additionalContentLoaded');
+    return true;
+  });
+
+  updatePlugin('Trickle - update to 7.9.0', { name: 'adapt-contrib-trickle', version: '7.9.0', framework: '>=5.46.4' });
+
+  testSuccessWhere('trickle with course, no globals', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '7.8.0' }],
+    content: [
+      { _type: 'course' }
+    ]
+  });
+
+  testSuccessWhere('trickle with course, with other globals', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '7.8.0' }],
+    content: [
+      { _type: 'course', _globals: { _extensions: { _trickle: {} } } }
+    ]
+  });
+
+  testStopWhere('trickle incorrect version', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '7.9.0' }]
+  });
+});
+
+describe('Trickle - 7.10.0 to 7.10.1', async () => {
+  // v5.0.0 replaced the button's 'scroll' style after click with 'visible' (the button stays in
+  // place once used), but content authored before then kept 'scroll' through later upgrades with
+  // no migration, so it reaches any version and fails the schema. Applies from any earlier version.
+  let trickleItems;
+
+  whereFromPlugin('Trickle - from before 7.10.1', { name: 'adapt-contrib-trickle', version: '<7.10.1' });
+
+  whereContent('Trickle - where an article or block has the legacy scroll style', async (content) => {
+    trickleItems = content.filter(({ _type }) => ['article', 'block'].includes(_type));
+    return trickleItems.some(item => _.get(item, '_trickle._button._styleAfterClick') === 'scroll');
+  });
+
+  mutateContent('Trickle - replace _styleAfterClick scroll with visible', async (content) => {
+    trickleItems.forEach(item => {
+      if (_.get(item, '_trickle._button._styleAfterClick') !== 'scroll') return;
+      item._trickle._button._styleAfterClick = 'visible';
+    });
+    return true;
+  });
+
+  checkContent('Trickle - check no _styleAfterClick is scroll', async (content) => {
+    const isValid = trickleItems.every(item => _.get(item, '_trickle._button._styleAfterClick') !== 'scroll');
+    if (!isValid) throw new Error('Trickle - _styleAfterClick scroll not replaced');
+    return true;
+  });
+
+  updatePlugin('Trickle - update to 7.10.1', { name: 'adapt-contrib-trickle', version: '7.10.1', framework: '>=5.46.4' });
+
+  testSuccessWhere('blocks and articles with the legacy scroll style', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '7.1.1' }],
+    content: [
+      { _id: 'a-100', _type: 'article', _trickle: { _button: { _styleAfterClick: 'scroll' } } },
+      { _id: 'b-100', _type: 'block', _trickle: { _button: { _styleAfterClick: 'scroll' } } },
+      { _id: 'b-105', _type: 'block', _trickle: { _button: { _styleAfterClick: 'hidden' } } }
+    ]
+  });
+
+  testStopWhere('no legacy scroll style', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '7.1.1' }],
+    content: [
+      { _id: 'b-100', _type: 'block', _trickle: { _button: { _styleAfterClick: 'hidden' } } }
+    ]
+  });
+
+  testStopWhere('incorrect version', {
+    fromPlugins: [{ name: 'adapt-contrib-trickle', version: '7.10.1' }]
   });
 });
