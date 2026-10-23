@@ -86,15 +86,17 @@ export default class TrickleButtonModel extends ComponentModel {
   }
 
   /**
-   * @returns {boolean} true if an end-of-page button left incomplete on a
-   * previous visit should be completed so it stops blocking page completion
+   * The end-of-page button navigates to the next content object rather than
+   * unlocking content, so it is made optional to stop it holding up completion
    */
-  shouldCompleteOnRevisit() {
-    if (this.get('_isComplete')) return false;
-    if (!this.isLastInContentObject()) return false;
-    if (this.isStepLockedOnRevisit()) return false;
-    if (!this.isStepUnlocked()) return false;
-    return controller.isKilled;
+  checkIsOptional() {
+    const isOptional = this.isLastInContentObject();
+    if (Boolean(this.get('_isOptional')) === isOptional) return;
+    this.set('_isOptional', isOptional);
+    // Optional children do not count towards completion, so recheck the parent
+    const parentModel = this.getParent();
+    parentModel.checkCompletionStatus();
+    parentModel.checkInteractionCompletionStatus();
   }
 
   /**
@@ -102,6 +104,8 @@ export default class TrickleButtonModel extends ComponentModel {
    * and the button has been clicked
    */
   isFinished() {
+    // The end-of-page button stays available after it is clicked
+    if (this.isLastInContentObject()) return false;
     const isStepUnlocked = this.isStepUnlocked();
     const isStepLockingCompletionRequired = this.isStepLockingCompletionRequired();
     const isButtonComplete = this.get('_isComplete');
@@ -199,6 +203,8 @@ export default class TrickleButtonModel extends ComponentModel {
       });
     }
 
+    if (this.isLastInContentObject()) return this.calculateEndOfPageButtonState(isButtonDisableForced);
+
     const isTrickleKilled = controller.isKilled;
     const isStepUnlocked = this.isStepUnlocked() || isTrickleKilled;
     const isFinished = this.isFinished() || isTrickleKilled;
@@ -241,6 +247,31 @@ export default class TrickleButtonModel extends ComponentModel {
     this.set({
       _isButtonVisible: isButtonVisible,
       _isButtonDisabled: !isButtonEnabled
+    });
+  }
+
+  /**
+   * Calculate the end-of-page button visible and enabled states. As it navigates
+   * rather than unlocks, it does not finish, so it stays available on revisit
+   * and is locked while the next content object is locked
+   * @param {boolean} isButtonDisableForced Set to true to signify that the button must not be enabled
+   */
+  calculateEndOfPageButtonState(isButtonDisableForced = false) {
+    const trickleConfig = getModelConfig(this.getParent());
+    const isStepUnlocked = this.isStepUnlocked();
+    const isStepLockingCompletionRequired = this.isStepLockingCompletionRequired();
+    const isButtonVisibleBeforeCompletion = (trickleConfig._button._styleBeforeCompletion !== 'hidden');
+    const isButtonEnabledBeforeCompletion = (trickleConfig._button._styleBeforeCompletion !== 'disabled');
+    const isScrollToLocked = controller.isScrollToLocked(this.getParent());
+
+    const isButtonVisible = isStepUnlocked || isButtonVisibleBeforeCompletion;
+    const isButtonEnabled = isStepLockingCompletionRequired
+      ? (isStepUnlocked && !isButtonDisableForced)
+      : (isStepUnlocked || isButtonEnabledBeforeCompletion);
+
+    this.set({
+      _isButtonVisible: isButtonVisible,
+      _isButtonDisabled: !isButtonEnabled || isScrollToLocked
     });
   }
 
