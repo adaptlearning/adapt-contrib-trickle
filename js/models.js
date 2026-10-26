@@ -205,7 +205,8 @@ export function applyLocks() {
     });
   };
   // Check all models for trickle potential
-  Adapt.course.getAllDescendantModels(true).filter(model => model.get('_isAvailable')).forEach(siteModel => {
+  // Skip models inside an unavailable ancestor, as the learner cannot reach them
+  Adapt.course.getAllDescendantModels(true).filter(model => model.get('_isAvailable') && model.getAncestorModels().every(ancestor => ancestor.get('_isAvailable'))).forEach(siteModel => {
     const trickleConfig = getModelConfig(siteModel);
     if (!isEnabled(siteModel, { trickleConfig })) return;
     const isModelLocked = isLocked(siteModel, { trickleConfig });
@@ -284,7 +285,10 @@ export function _getAncestorNextSiblings(fromModel) {
   inPageAncestors.slice(1).forEach((grandParent, previousIndex) => {
     const parent = inPageAncestors[previousIndex];
     const allGrandParentChildren = grandParent.getAvailableChildModels();
-    const subsequentAncestorSiblings = allGrandParentChildren.slice(allGrandParentChildren.findIndex(child => child === parent) + 1);
+    const parentIndex = allGrandParentChildren.findIndex(child => child === parent);
+    // An unavailable parent has no subsequent siblings to lock
+    if (parentIndex === -1) return;
+    const subsequentAncestorSiblings = allGrandParentChildren.slice(parentIndex + 1);
     subsequentInPageAncestors.push(...subsequentAncestorSiblings);
   });
   // Combine and return entire set
