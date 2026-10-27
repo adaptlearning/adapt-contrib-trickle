@@ -446,7 +446,7 @@
                       "title": "Show end-of-page button",
                       "inputType": "Checkbox",
                       "validators": [],
-                      "help": "When set to `false`, hides this button only if it appears at the end of a page."
+                      "help": "Shows a button at the end of the page that takes the learner to the next page. Default: true. It does not count towards completion, stays available on revisit and is locked while the next page is locked."
                     },
                     "_className": {
                       "type": "string",

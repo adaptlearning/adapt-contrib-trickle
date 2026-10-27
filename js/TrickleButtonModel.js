@@ -172,6 +172,10 @@ export default class TrickleButtonModel extends ComponentModel {
    * on revisit
    */
   checkIfResetOnRevisit() {
+    // Runs before the view exists, so set optional here too
+    this.checkIsOptional();
+    // Nothing follows the end-of-page button, so there is nothing to relock
+    if (this.isLastInContentObject()) return;
     if (this.isFinished() && !this.isStepLockedOnRevisit()) return;
     if (!this.get('_isComplete') && !this.get('_isInteractionComplete')) return;
     this.set({
