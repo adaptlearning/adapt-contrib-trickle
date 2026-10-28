@@ -1,4 +1,7 @@
 import Adapt from 'core/js/adapt';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { templates } from 'core/js/reactHelpers';
 import a11y from 'core/js/a11y';
 import notify from 'core/js/notify';
 import ComponentView from 'core/js/views/componentView';
@@ -24,14 +27,15 @@ class TrickleButtonView extends ComponentView {
     ].filter(Boolean).join(' ');
   }
 
-  events() {
-    return {
-      'click .js-trickle-btn': 'onButtonClick'
-    };
-  }
-
   initialize() {
+    _.bindAll(this, 'onButtonClick');
+    this.isJSX = true;
     this.isAwaitingPopupClose = false;
+    // A new view starts unmeasured and with the incomplete content label readable
+    this.model.set({
+      _isButtonAutoHidden: false,
+      _isIncompleteContentLabelDisabled: false
+    });
     this.wasButtonClicked = false;
     this.calculateButtonState();
     this.model.calculateButtonText();
@@ -55,7 +59,9 @@ class TrickleButtonView extends ComponentView {
     const data = this.model.toJSON();
     data._globals = Adapt.course.get('_globals');
     data._trickle = getModelConfig(this.model.getParent());
-    this.$el.html(Handlebars.templates[TrickleButtonView.template](data));
+    data.onButtonClick = this.onButtonClick;
+    const Template = templates[TrickleButtonView.template.replace('.jsx', '')];
+    ReactDOM.render(<Template {...data} />, this.el);
   }
 
   setupEventListeners() {
@@ -122,28 +128,18 @@ class TrickleButtonView extends ComponentView {
    */
   updateButtonState() {
     this.calculateButtonState();
-    const isButtonHidden = !(this.model.get('_isButtonVisible') && !this.model.get('_isButtonAutoHidden'));
-    this.$('.js-trickle-btn-container').toggleClass('u-display-none', isButtonHidden);
     const isButtonDisabled = this.model.get('_isButtonDisabled');
-    const $button = this.$('.js-trickle-btn');
-    const $ariaLabel = this.$('.aria-label');
-    a11y.toggleEnabled($button, !isButtonDisabled);
     if (!isButtonDisabled) {
+      const $ariaLabel = this.$('.aria-label');
       // move focus forward if it's on the aria-label
       if (document.activeElement instanceof HTMLElement && document.activeElement.isSameNode($ariaLabel[0])) {
         a11y.focusNext($ariaLabel);
       }
       // make label unfocusable as it is no longer needed
-      a11y.toggleAccessibleEnabled($ariaLabel, false);
+      this.model.set('_isIncompleteContentLabelDisabled', true);
     }
-    const isButtonLocked = (this.model.get('_isButtonVisible')) && isButtonDisabled;
-    $button.toggleClass('is-locked', isButtonLocked);
-    const $buttonText = this.$('.js-trickle-btn-text');
     this.model.calculateButtonText();
-    const text = this.model.get('buttonText');
-    const ariaLabel = this.model.get('buttonAriaLabel');
-    $buttonText.html(text);
-    $button.attr('aria-label', ariaLabel);
+    this.render();
   }
 
   /**
@@ -258,6 +254,6 @@ class TrickleButtonView extends ComponentView {
 
 }
 
-TrickleButtonView.template = 'trickle-button';
+TrickleButtonView.template = 'trickle-button.jsx';
 
 export default TrickleButtonView;
