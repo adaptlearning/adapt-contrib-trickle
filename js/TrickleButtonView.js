@@ -60,7 +60,7 @@ class TrickleButtonView extends ComponentView {
     data._globals = Adapt.course.get('_globals');
     data._trickle = getModelConfig(this.model.getParent());
     data.onButtonClick = this.onButtonClick;
-    const Template = templates[TrickleButtonView.template.replace('.jsx', '')];
+    const Template = templates[this.constructor.template.replace('.jsx', '')];
     ReactDOM.render(<Template {...data} />, this.el);
   }
 
