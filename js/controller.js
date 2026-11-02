@@ -123,6 +123,52 @@ class TrickleController extends Backbone.Controller {
   }
 
   /**
+   * Returns the id to scroll to as defined by the trickle configuration on the
+   * specified model
+   * @param {Backbone.Model} fromModel
+   * @returns {string|undefined}
+   */
+  getScrollToId(fromModel) {
+    const trickleConfig = getModelConfig(fromModel);
+    const scrollTo = trickleConfig._scrollTo;
+    const firstCharacter = scrollTo.substr(0, 1);
+    switch (firstCharacter) {
+      case '@': {
+        // NAVIGATE BY RELATIVE TYPE
+        // Allows trickle to scroll to a sibling / cousin component
+        // relative to the current trickle item
+        const relativeModel = fromModel.findRelativeModel(scrollTo, {
+          filter: model => model.get('_isAvailable')
+        });
+        if (relativeModel === undefined) return;
+        return relativeModel.get('_id');
+      }
+      case '.':
+        // NAVIGATE BY CLASS
+        return scrollTo.substr(1, scrollTo.length - 1);
+      default:
+        return scrollTo;
+    }
+  }
+
+  /**
+   * Returns true if the scroll destination is in another content object and
+   * either it or its content object is locked
+   * @param {Backbone.Model} fromModel
+   * @returns {boolean}
+   */
+  isScrollToLocked(fromModel) {
+    const scrollToId = this.getScrollToId(fromModel);
+    // Use findWhere as findById warns when given a class name
+    const model = scrollToId && data.findWhere({ _id: scrollToId });
+    if (!model) return false;
+    const contentObject = model.isTypeGroup('contentobject') ? model : model.findAncestor('contentobject');
+    const isInSameContentObject = (contentObject === fromModel.findAncestor('contentobject'));
+    if (isInSameContentObject) return false;
+    return Boolean(model.get('_isLocked') || contentObject.get('_isLocked'));
+  }
+
+  /**
    * Scroll to the next section as defined by the trickle configuration on the
    * specified model
    * @param {Backbone.Model} fromModel
@@ -139,29 +185,7 @@ class TrickleController extends Backbone.Controller {
       return;
     }
 
-    const getScrollToId = () => {
-      const scrollTo = trickleConfig._scrollTo;
-      const firstCharacter = scrollTo.substr(0, 1);
-      switch (firstCharacter) {
-        case '@': {
-          // NAVIGATE BY RELATIVE TYPE
-          // Allows trickle to scroll to a sibling / cousin component
-          // relative to the current trickle item
-          const relativeModel = fromModel.findRelativeModel(scrollTo, {
-            filter: model => model.get('_isAvailable')
-          });
-          if (relativeModel === undefined) return;
-          return relativeModel.get('_id');
-        }
-        case '.':
-          // NAVIGATE BY CLASS
-          return scrollTo.substr(1, scrollTo.length - 1);
-        default:
-          return scrollTo;
-      }
-    };
-
-    let scrollToId = getScrollToId();
+    let scrollToId = this.getScrollToId(fromModel);
     if (!scrollToId) {
       logging.error(`Cannot scroll to the next id as none was found at id: "${fromModel.get('_id')}" with _scrollTo: "${trickleConfig._scrollTo}". Suggestion: Set _showEndOfPage to false.`);
       return;
@@ -174,10 +198,14 @@ class TrickleController extends Backbone.Controller {
       applyLocks();
       // Navigate to another content object
       const model = data.findById(scrollToId);
+      // A class name from _scrollTo will not match a model
+      if (!model) return;
+      // Do not allow navigation into locked content
+      if (this.isScrollToLocked(fromModel)) return;
       const contentObject = model.isTypeGroup('contentobject') ? model : model.findAncestor('contentobject');
       await router.navigateToElement(contentObject.get('_id'));
       // Recalculate the relative id after the page is ready as it may change
-      scrollToId = getScrollToId();
+      scrollToId = this.getScrollToId(fromModel);
       await router.navigateToElement(scrollToId);
       return;
     }

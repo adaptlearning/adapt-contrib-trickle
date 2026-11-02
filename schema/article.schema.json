@@ -108,6 +108,7 @@
                 "_showEndOfPage": {
                   "type": "boolean",
                   "title": "Show end of page button",
+                  "description": "Shows a button at the end of the page that takes the learner to the next page. Default: true. It does not count towards completion, stays available on revisit and is locked while the next page is locked.",
                   "default": true
                 },
                 "_className": {

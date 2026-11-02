@@ -3,6 +3,7 @@ import a11y from 'core/js/a11y';
 import notify from 'core/js/notify';
 import ComponentView from 'core/js/views/componentView';
 import controller from './controller';
+import data from 'core/js/data';
 import {
   getModelConfig,
   getCompletionAttribute
@@ -47,6 +48,7 @@ class TrickleButtonView extends ComponentView {
    * Taking account of open popups, recalculate the button visible and enabled states
    */
   calculateButtonState() {
+    this.model.checkIsOptional();
     const isDisabledByPopups = a11y.isPopupOpen;
     this.model.calculateButtonState(isDisabledByPopups, this.wasButtonClicked);
   }
@@ -66,6 +68,10 @@ class TrickleButtonView extends ComponentView {
     this.onParentComplete = (...args) => _.delay(() => onParentComplete(...args), 100);
     this.listenTo(Adapt.parentView, 'postRemove', this.onRemove);
     this.listenTo(Adapt, 'trickle:killed', this.updateButtonState);
+    if (this.model.isLastInContentObject()) {
+      // Lock and unlock the end-of-page button with the next content object
+      this.listenTo(data, 'change:_isLocked', _.debounce(this.updateButtonState.bind(this), 1));
+    }
     if (this.model.isStepUnlocked() && this.model.isFinished()) {
       // Already complete, no need to listen to anything else
       return;
@@ -164,7 +170,9 @@ class TrickleButtonView extends ComponentView {
     this.model.setCompletionStatus();
     this.wasButtonClicked = true;
     const isStepLockingCompletionRequired = this.model.isStepLockingCompletionRequired();
-    if (isStepLockingCompletionRequired && !wasComplete) return;
+    // The end-of-page button is optional, so its parent does not wait for this click
+    const isEndOfPage = this.model.isLastInContentObject();
+    if (isStepLockingCompletionRequired && !wasComplete && !isEndOfPage) return;
     // Assuming step locking completion is NOT required, continue and scroll
     await this.continue();
   }
@@ -180,6 +188,8 @@ class TrickleButtonView extends ComponentView {
       [`bubble:change:${completionAttribute}`]: this.onStepUnlocked,
       [`change:${completionAttribute}`]: this.onParentComplete
     });
+    // The end-of-page button navigates when clicked, not when its parent completes
+    if (this.model.isLastInContentObject()) return this.updateButtonState();
     if (controller.isKilled) return;
     if (a11y.isPopupOpen) {
       // Has completed with an open popup, defer finish until popup closed
